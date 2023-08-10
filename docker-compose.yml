@@ -1,0 +1,40 @@
+version: '3'
+
+volumes:
+  song_storage:
+  minio-data:
+
+services:
+  song_storage:
+    image: postgres:latest
+    container_name: song_storage
+    ports:
+      - '5432:5432'
+    volumes:
+      - song_storage:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+  minio:
+    image: minio/minio:latest
+    container_name: minio
+    environment:
+      - MINIO_ROOT_USER=${MINIO_ACCESS_KEY}
+      - MINIO_ROOT_PASSWORD=${MINIO_SECRET_KEY}
+    command: server ~/minio --console-address :9090
+    ports:
+      - '9090:9090'
+      - '9000:9000'
+    volumes:
+      - minio-data:/minio
+  flowt_app:
+    build: .
+    container_name: flowt_app
+    ports:
+      - '8080:8080'
+    depends_on:
+      - song_storage
+      - minio
+    env_file:
+      - .env
