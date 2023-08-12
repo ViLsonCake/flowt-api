@@ -24,12 +24,12 @@ public class UserEntity {
     @Column(name = "password")
     private String password;
     @Column(name = "description")
-    private String description;
+    private String description = "";
     @Column(name = "region")
-    private String region;
-    private boolean emailVerify;
-    private boolean artistVerify;
-    private boolean active;
+    private String region = "Earth";
+    private boolean emailVerify = false;
+    private boolean artistVerify = false;
+    private boolean active = false;
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)

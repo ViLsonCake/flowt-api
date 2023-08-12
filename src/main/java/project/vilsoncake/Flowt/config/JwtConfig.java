@@ -10,6 +10,6 @@ import org.springframework.stereotype.Component;
 public class JwtConfig {
     private String accessSecret;
     private String refreshSecret;
-    private String accessLifetime;
-    private String refreshLifetime;
+    private Integer accessLifetime;
+    private Integer refreshLifetime;
 }
