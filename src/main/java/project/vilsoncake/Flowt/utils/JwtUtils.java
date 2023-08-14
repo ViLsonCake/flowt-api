@@ -74,10 +74,6 @@ public class JwtUtils {
         return getAllClaimsFromRefresh(token).get("roles", List.class);
     }
 
-    public Integer getExpirationRefreshTime() {
-        return jwtConfig.getRefreshLifetime();
-    }
-
     private Claims getAllClaimsFromRefresh(String token) {
         return Jwts.parser()
                 .setSigningKey(jwtConfig.getRefreshSecret())
