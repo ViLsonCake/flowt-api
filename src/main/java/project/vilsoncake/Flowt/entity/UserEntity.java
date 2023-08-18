@@ -29,7 +29,7 @@ public class UserEntity {
     private String region = "Earth";
     private boolean emailVerify = false;
     private boolean artistVerify = false;
-    private boolean active = false;
+    private boolean active = true;
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)

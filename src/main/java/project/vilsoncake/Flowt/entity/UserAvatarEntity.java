@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "use_avatar")
+@Table(name = "user_avatar")
 @Data
 @NoArgsConstructor
 public class UserAvatarEntity {
