@@ -10,4 +10,7 @@ import java.util.Optional;
 @Repository
 public interface VerifyCodeRepository extends JpaRepository<VerifyCodeEntity, Long> {
     Optional<VerifyCodeEntity> findByUser(UserEntity user);
+    Optional<VerifyCodeEntity> findByCode(String code);
+    Boolean existsByCode(String code);
+    Boolean existsByUser(UserEntity user);
 }

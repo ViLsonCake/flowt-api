@@ -9,4 +9,6 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "app")
 public class AppConfig {
     private String clientUrl;
+    private String url;
+    private String verifyUrl;
 }

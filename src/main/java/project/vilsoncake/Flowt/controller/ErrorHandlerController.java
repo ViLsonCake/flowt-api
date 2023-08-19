@@ -39,4 +39,10 @@ public class ErrorHandlerController {
         log.warn(exception.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
     }
+
+    @ExceptionHandler
+    public ResponseEntity<String> accountVerifiedError(AccountAlreadyVerifiedException exception) {
+        log.warn(exception.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
+    }
 }

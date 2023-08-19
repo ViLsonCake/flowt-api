@@ -18,4 +18,9 @@ public class VerifyCodeEntity {
     @OneToOne
     @JoinColumn(name = "user_id")
     private UserEntity user;
+
+    public VerifyCodeEntity(String code, UserEntity user) {
+        this.code = code;
+        this.user = user;
+    }
 }

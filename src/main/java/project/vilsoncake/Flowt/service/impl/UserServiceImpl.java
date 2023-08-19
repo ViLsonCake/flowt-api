@@ -18,6 +18,7 @@ import project.vilsoncake.Flowt.exception.PasswordsNotMatchException;
 import project.vilsoncake.Flowt.exception.UsernameAlreadyExistException;
 import project.vilsoncake.Flowt.repository.UserRepository;
 import project.vilsoncake.Flowt.service.UserService;
+import project.vilsoncake.Flowt.service.UserVerifyService;
 
 import java.util.Collection;
 import java.util.Set;
@@ -32,6 +33,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final UserVerifyService userVerifyService;
 
     @Override
     public UserEntity addUser(RegistrationDto registrationDto) {
@@ -47,6 +49,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         user.setPassword(passwordEncoder.encode(registrationDto.getPassword()));
         user.getRoles().add(USER);
         userRepository.save(user);
+
+        // Generate verify code and save
+        userVerifyService.saveAndSendNewCode(user);
 
         log.info("User '{}' saved", user.getUsername());
 
