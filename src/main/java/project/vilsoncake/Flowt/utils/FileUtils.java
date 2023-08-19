@@ -19,4 +19,15 @@ public class FileUtils {
         } while (userAvatarRepository.existsByFilename(uuid));
         return uuid;
     }
+
+    public boolean isValidExtension(String filename) {
+        String[] splitFilename = filename.split("\\.");
+        if (splitFilename.length < 2) return false;
+
+        String extension = splitFilename[splitFilename.length - 1];
+
+        return extension.equalsIgnoreCase("png") ||
+                extension.equalsIgnoreCase("jpg") ||
+                extension.equalsIgnoreCase("jpeg");
+    }
 }

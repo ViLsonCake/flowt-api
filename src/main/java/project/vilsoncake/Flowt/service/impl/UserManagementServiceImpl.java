@@ -8,7 +8,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import project.vilsoncake.Flowt.config.MinioConfig;
+import project.vilsoncake.Flowt.entity.UserAvatarEntity;
 import project.vilsoncake.Flowt.entity.UserEntity;
+import project.vilsoncake.Flowt.exception.InvalidExtensionException;
+import project.vilsoncake.Flowt.exception.MinioFileException;
 import project.vilsoncake.Flowt.repository.UserRepository;
 import project.vilsoncake.Flowt.service.AuthService;
 import project.vilsoncake.Flowt.service.AvatarService;
@@ -31,7 +34,11 @@ public class UserManagementServiceImpl implements UserManagementService {
 
     @Transactional
     @Override
-    public Boolean addUserAvatarByUsername(String authHeader, MultipartFile avatar) {
+    public Boolean addUserAvatarByUsername(String authHeader, MultipartFile avatar) throws InvalidExtensionException {
+        // Validate file
+        if (!fileUtils.isValidExtension(avatar.getOriginalFilename()))
+            throw new InvalidExtensionException("Invalid file extension (must be png or jpg)");
+
         String username = authService.getUsernameFromAuthHeader(authHeader);
         UserEntity user = userRepository.findByUsername(username).orElseThrow(() ->
                 new UsernameNotFoundException("Username not found"));
@@ -50,6 +57,20 @@ public class UserManagementServiceImpl implements UserManagementService {
         // Save file data in minio storage
         minioFileService.saveFile(minioConfig.getUserAvatarBucket(), filename, avatar);
         return true;
+    }
+
+    @Override
+    public byte[] getUserAvatarByUsername(String username) throws MinioFileException {
+        UserEntity user = userRepository.findByUsername(username).orElseThrow(() ->
+                new UsernameNotFoundException("Username not found"));
+
+        UserAvatarEntity userAvatar = user.getUserAvatar();
+
+        if (userAvatar == null) throw new MinioFileException("File not found");
+
+        String avatarFilename = userAvatar.getFilename();
+
+        return minioFileService.getFileContent(minioConfig.getUserAvatarBucket(), avatarFilename);
     }
 
     @Override
