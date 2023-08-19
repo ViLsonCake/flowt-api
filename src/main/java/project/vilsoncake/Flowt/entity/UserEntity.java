@@ -37,6 +37,8 @@ public class UserEntity {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private List<TokenEntity> token;
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
+    private VerifyCodeEntity verifyCode;
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
     private UserAvatarEntity userAvatar;
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
     private LikedEntity liked;
