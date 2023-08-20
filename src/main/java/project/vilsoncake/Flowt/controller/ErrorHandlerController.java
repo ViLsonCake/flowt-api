@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import project.vilsoncake.Flowt.dto.EmailVerifyDto;
 import project.vilsoncake.Flowt.dto.RegistrationValidationDto;
 import project.vilsoncake.Flowt.exception.*;
 
@@ -41,8 +42,8 @@ public class ErrorHandlerController {
     }
 
     @ExceptionHandler
-    public ResponseEntity<String> accountVerifiedError(AccountAlreadyVerifiedException exception) {
+    public ResponseEntity<EmailVerifyDto> accountVerifiedError(AccountAlreadyVerifiedException exception) {
         log.warn(exception.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new EmailVerifyDto(exception.getMessage()));
     }
 }
