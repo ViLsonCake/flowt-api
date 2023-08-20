@@ -3,6 +3,7 @@ version: '3'
 volumes:
   song_storage:
   minio-data:
+  redis-data:
 
 services:
   song_storage:
@@ -16,6 +17,17 @@ services:
       - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+
+  redis:
+    image: redis:7.2-rc-alpine
+    restart: always
+    container_name: redis
+    ports:
+      - '6379:6379'
+    volumes:
+      - ./sysctl.conf:/etc/sysctl.conf
+    command: sh -c "sysctl -p /etc/sysctl.conf && redis-server --save 20 1 --loglevel warning --requirepass ${REDIS_PASSWORD}"
+
   minio:
     image: minio/minio:latest
     container_name: minio
@@ -28,6 +40,7 @@ services:
       - '9000:9000'
     volumes:
       - minio-data:/minio
+
   flowt_app:
     build: .
     container_name: flowt_app
