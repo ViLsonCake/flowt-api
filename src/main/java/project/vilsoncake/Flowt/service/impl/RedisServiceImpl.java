@@ -20,4 +20,15 @@ public class RedisServiceImpl implements RedisService {
     public String getValue(String key) {
         return redisTemplate.opsForValue().get(key);
     }
+
+    @Override
+    public boolean deleteByKey(String key) {
+        redisTemplate.delete(key);
+        return true;
+    }
+
+    @Override
+    public boolean isValidUserCode(String username, Integer code) {
+        return getValue(username).equals(String.valueOf(code));
+    }
 }

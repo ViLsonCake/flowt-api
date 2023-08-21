@@ -49,5 +49,6 @@ services:
     depends_on:
       - song_storage
       - minio
+      - redis
     env_file:
       - .env

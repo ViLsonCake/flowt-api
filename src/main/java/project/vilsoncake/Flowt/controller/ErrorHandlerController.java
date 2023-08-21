@@ -24,6 +24,7 @@ public class ErrorHandlerController {
         if (exception instanceof PasswordsNotMatchException) validationDto.setField("password");
         if (exception instanceof IncorrectCredentialsException) validationDto.setField("login");
         if (exception instanceof TokenNotFoundException) validationDto.setField("token");
+        if (exception instanceof InvalidPasswordCodeException) validationDto.setField("code");
         validationDto.setMessage(exception.getMessage());
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(validationDto);

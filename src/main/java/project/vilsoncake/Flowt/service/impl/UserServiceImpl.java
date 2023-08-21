@@ -2,38 +2,34 @@ package project.vilsoncake.Flowt.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import project.vilsoncake.Flowt.dto.ChangePasswordDto;
 import project.vilsoncake.Flowt.dto.RegistrationDto;
-import project.vilsoncake.Flowt.entity.Role;
 import project.vilsoncake.Flowt.entity.UserEntity;
 import project.vilsoncake.Flowt.exception.EmailAlreadyExistException;
+import project.vilsoncake.Flowt.exception.InvalidPasswordCodeException;
 import project.vilsoncake.Flowt.exception.PasswordsNotMatchException;
 import project.vilsoncake.Flowt.exception.UsernameAlreadyExistException;
 import project.vilsoncake.Flowt.repository.UserRepository;
+import project.vilsoncake.Flowt.service.RedisService;
 import project.vilsoncake.Flowt.service.UserService;
 import project.vilsoncake.Flowt.service.UserVerifyService;
-
-import java.util.Collection;
-import java.util.Set;
-import java.util.stream.Collectors;
+import project.vilsoncake.Flowt.utils.AuthUtils;
 
 import static project.vilsoncake.Flowt.entity.Role.USER;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService, UserDetailsService {
+public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserVerifyService userVerifyService;
+    private final RedisService redisService;
+    private final AuthUtils authUtils;
 
     @Override
     public UserEntity addUser(RegistrationDto registrationDto) {
@@ -59,23 +55,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        // Search user
-        UserEntity user = userRepository.findByUsername(username).orElseThrow(() ->
-                new UsernameNotFoundException(String.format("User '%s' not found", username)));
-        // Convert to UserDetails
-        return User.builder()
-                .username(user.getUsername())
-                .password(user.getPassword())
-                .authorities(rolesToAuthorities(user.getRoles()))
-                .build();
-    }
-
-    private Collection<GrantedAuthority> rolesToAuthorities(Set<Role> roles) {
-        return roles.stream().map(role -> new SimpleGrantedAuthority(role.getAuthority())).collect(Collectors.toList());
-    }
-
-    @Override
     public UserEntity getAuthenticatedUser(String authHeader) {
         return null;
     }
@@ -84,5 +63,24 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public UserEntity getUserByUsername(String username) {
         return userRepository.findByUsername(username).orElseThrow(() ->
                 new UsernameNotFoundException("Username not found"));
+    }
+
+    @Override
+    public boolean changeUserPasswordByUsername(String authHeader, ChangePasswordDto changePasswordDto) {
+        String username = authUtils.getUsernameFromAuthHeader(authHeader);
+        UserEntity user = userRepository.findByUsername(username).orElseThrow(() ->
+                new UsernameNotFoundException("User not found"));
+
+        // Validate password code
+        if(!redisService.isValidUserCode(username, changePasswordDto.getCode()))
+            throw new InvalidPasswordCodeException("Invalid password code");
+
+        user.setPassword(passwordEncoder.encode(changePasswordDto.getNewPassword()));
+        userRepository.save(user);
+
+        // Delete code from redis
+        redisService.deleteByKey(user.getUsername());
+
+        return true;
     }
 }

@@ -17,6 +17,7 @@ import project.vilsoncake.Flowt.service.AuthService;
 import project.vilsoncake.Flowt.service.AvatarService;
 import project.vilsoncake.Flowt.service.MinioFileService;
 import project.vilsoncake.Flowt.service.UserManagementService;
+import project.vilsoncake.Flowt.utils.AuthUtils;
 import project.vilsoncake.Flowt.utils.FileUtils;
 
 @Service
@@ -27,10 +28,10 @@ public class UserManagementServiceImpl implements UserManagementService {
     private final UserRepository userRepository;
     @Qualifier("userAvatarServiceImpl")
     private final AvatarService avatarService;
-    private final AuthService authService;
     private final MinioFileService minioFileService;
     private final MinioConfig minioConfig;
     private final FileUtils fileUtils;
+    private final AuthUtils authUtils;
 
     @Transactional
     @Override
@@ -39,7 +40,7 @@ public class UserManagementServiceImpl implements UserManagementService {
         if (!fileUtils.isValidExtension(avatar.getOriginalFilename()))
             throw new InvalidExtensionException("Invalid file extension (must be png or jpg)");
 
-        String username = authService.getUsernameFromAuthHeader(authHeader);
+        String username = authUtils.getUsernameFromAuthHeader(authHeader);
         UserEntity user = userRepository.findByUsername(username).orElseThrow(() ->
                 new UsernameNotFoundException("Username not found"));
 

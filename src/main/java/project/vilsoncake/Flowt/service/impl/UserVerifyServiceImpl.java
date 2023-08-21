@@ -2,6 +2,7 @@ package project.vilsoncake.Flowt.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import project.vilsoncake.Flowt.config.AppConfig;
 import project.vilsoncake.Flowt.entity.UserEntity;
@@ -13,6 +14,7 @@ import project.vilsoncake.Flowt.repository.VerifyCodeRepository;
 import project.vilsoncake.Flowt.service.MailVerifyService;
 import project.vilsoncake.Flowt.service.RedisService;
 import project.vilsoncake.Flowt.service.UserVerifyService;
+import project.vilsoncake.Flowt.utils.AuthUtils;
 
 import java.util.Random;
 import java.util.UUID;
@@ -28,6 +30,7 @@ public class UserVerifyServiceImpl implements UserVerifyService {
     private final UserRepository userRepository;
     private final MailVerifyService mailVerifyService;
     private final RedisService redisService;
+    private final AuthUtils authUtils;
     private final AppConfig appConfig;
 
     @Override
@@ -67,9 +70,15 @@ public class UserVerifyServiceImpl implements UserVerifyService {
     }
 
     @Override
-    public boolean sendChangePasswordMessage(UserEntity user) {
+    public boolean sendChangePasswordMessage(String authHeader) {
+        // Get username and user
+        String username = authUtils.getUsernameFromAuthHeader(authHeader);
+        UserEntity user = userRepository.findByUsername(username).orElseThrow(() ->
+                new UsernameNotFoundException("User not found"));
+
         // Generate code and save in redis
         Integer randomCode = new Random().nextInt(1000, 9999);
+        System.out.println("opa");
         redisService.setValue(user.getUsername(), String.valueOf(randomCode));
 
         mailVerifyService.sendMessage(
@@ -83,11 +92,6 @@ public class UserVerifyServiceImpl implements UserVerifyService {
         );
 
         return true;
-    }
-
-    @Override
-    public boolean changeUserPasswordByUsername(String username, String password) {
-        return false;
     }
 
     private String generateCode() {
