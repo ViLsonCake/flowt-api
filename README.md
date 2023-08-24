@@ -13,10 +13,11 @@ Permit all
 + POST /auth/registration - registration new user
 + POST /auth/login - create access and refresh jwt tokens
 + GET /auth/refresh - refresh access and refresh tokens
-+ POST /users/avatar - change user avatar
-+ POST /users/change-password - change user password
 + GET /images/user/:username - get user avatar by username
 ___
 Authenticated
++ POST /users/avatar - change user avatar
++ POST /users/change-password - change user password
++ GET /users/authenticated - get authenticated user dto
 + GET /verify/email - send mail with verify-link
 + GET /verify/password - send mail with code for restoring the password
