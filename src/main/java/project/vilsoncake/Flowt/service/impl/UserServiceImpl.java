@@ -7,6 +7,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import project.vilsoncake.Flowt.dto.ChangePasswordDto;
 import project.vilsoncake.Flowt.dto.RegistrationDto;
+import project.vilsoncake.Flowt.dto.UserDto;
 import project.vilsoncake.Flowt.entity.UserEntity;
 import project.vilsoncake.Flowt.exception.EmailAlreadyExistException;
 import project.vilsoncake.Flowt.exception.InvalidPasswordCodeException;
@@ -55,8 +56,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserEntity getAuthenticatedUser(String authHeader) {
-        return null;
+    public UserDto getAuthenticatedUserDto(String authHeader) {
+        String username = authUtils.getUsernameFromAuthHeader(authHeader);
+        return UserDto.fromUser(getUserByUsername(username));
     }
 
     @Override

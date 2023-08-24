@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import project.vilsoncake.Flowt.dto.ChangePasswordDto;
+import project.vilsoncake.Flowt.dto.UserDto;
 import project.vilsoncake.Flowt.exception.InvalidExtensionException;
 import project.vilsoncake.Flowt.exception.MinioFileException;
 import project.vilsoncake.Flowt.service.UserManagementService;
@@ -32,5 +33,10 @@ public class UserController {
             @RequestBody ChangePasswordDto changePasswordDto
             ) {
         return ResponseEntity.ok(userService.changeUserPasswordByUsername(authHeader, changePasswordDto));
+    }
+
+    @GetMapping("/authenticated")
+    public ResponseEntity<UserDto> getAuthenticatedUserDto(@RequestHeader(value = "Authorization", required = false, defaultValue = "") String authHeader) {
+        return ResponseEntity.ok(userService.getAuthenticatedUserDto(authHeader));
     }
 }

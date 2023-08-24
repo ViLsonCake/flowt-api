@@ -47,6 +47,7 @@ public class SecurityConfig {
                         .requestMatchers("/images/**").permitAll()
                         .requestMatchers("/secured/**").fullyAuthenticated()
                         .requestMatchers("/verify/**").fullyAuthenticated()
+                        .requestMatchers("/users/**").fullyAuthenticated()
                         .anyRequest().permitAll()
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
