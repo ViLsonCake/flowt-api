@@ -14,9 +14,7 @@ import project.vilsoncake.Flowt.repository.VerifyCodeRepository;
 import project.vilsoncake.Flowt.service.MailVerifyService;
 import project.vilsoncake.Flowt.service.RedisService;
 import project.vilsoncake.Flowt.service.UserVerifyService;
-import project.vilsoncake.Flowt.utils.AuthUtils;
 
-import java.util.Random;
 import java.util.UUID;
 
 import static project.vilsoncake.Flowt.constant.MessageConst.*;
@@ -30,7 +28,6 @@ public class UserVerifyServiceImpl implements UserVerifyService {
     private final UserRepository userRepository;
     private final MailVerifyService mailVerifyService;
     private final RedisService redisService;
-    private final AuthUtils authUtils;
     private final AppConfig appConfig;
 
     @Override
@@ -70,16 +67,12 @@ public class UserVerifyServiceImpl implements UserVerifyService {
     }
 
     @Override
-    public boolean sendChangePasswordMessage(String authHeader) {
-        // Get username and user
-        String username = authUtils.getUsernameFromAuthHeader(authHeader);
+    public boolean sendChangePasswordMessageByUsername(String username) {
         UserEntity user = userRepository.findByUsername(username).orElseThrow(() ->
                 new UsernameNotFoundException("User not found"));
 
         // Generate code and save in redis
-        Integer randomCode = new Random().nextInt(1000, 9999);
-        System.out.println("opa");
-        redisService.setValue(user.getUsername(), String.valueOf(randomCode));
+        String code = redisService.saveNewPasswordCode(username);
 
         mailVerifyService.sendMessage(
                 user.getEmail(),
@@ -87,11 +80,32 @@ public class UserVerifyServiceImpl implements UserVerifyService {
                 String.format(
                         RESTORE_PASSWORD_TEXT,
                         user.getUsername(),
-                        randomCode
+                        code
                 )
         );
 
         return true;
+    }
+
+    @Override
+    public String sendChangePasswordMessageByEmail(String email) {
+        UserEntity user = userRepository.findByEmail(email).orElseThrow(() ->
+                new UsernameNotFoundException("User not found"));
+
+        // Generate code and save in redis
+        String code = redisService.saveNewPasswordCode(user.getUsername());
+
+        mailVerifyService.sendMessage(
+                user.getEmail(),
+                RESTORE_PASSWORD_SUBJECT,
+                String.format(
+                        RESTORE_PASSWORD_TEXT,
+                        user.getUsername(),
+                        code
+                )
+        );
+
+        return email;
     }
 
     private String generateCode() {

@@ -6,4 +6,5 @@ public interface RedisService {
     String getValue(String key);
     boolean deleteByKey(String key);
     boolean isValidUserCode(String username, Integer code);
+    String saveNewPasswordCode(String username);
 }

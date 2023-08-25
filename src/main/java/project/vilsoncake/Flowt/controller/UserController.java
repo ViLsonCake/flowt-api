@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import project.vilsoncake.Flowt.dto.ChangePasswordDto;
+import project.vilsoncake.Flowt.dto.RestorePasswordDto;
 import project.vilsoncake.Flowt.dto.UserDto;
 import project.vilsoncake.Flowt.exception.InvalidExtensionException;
 import project.vilsoncake.Flowt.exception.MinioFileException;
@@ -33,6 +34,11 @@ public class UserController {
             @RequestBody ChangePasswordDto changePasswordDto
             ) {
         return ResponseEntity.ok(userService.changeUserPasswordByUsername(authHeader, changePasswordDto));
+    }
+
+    @PostMapping("/restore-password")
+    public ResponseEntity<Boolean> restorePassword(@RequestBody RestorePasswordDto restorePasswordDto) {
+        return ResponseEntity.ok(userService.restorePassword(restorePasswordDto));
     }
 
     @GetMapping("/authenticated")

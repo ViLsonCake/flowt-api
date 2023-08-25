@@ -3,9 +3,7 @@ package project.vilsoncake.Flowt.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import project.vilsoncake.Flowt.entity.FollowerEntity;
-import project.vilsoncake.Flowt.entity.SubscribeEntity;
-import project.vilsoncake.Flowt.entity.UserEntity;
+import project.vilsoncake.Flowt.entity.*;
 
 import java.util.List;
 

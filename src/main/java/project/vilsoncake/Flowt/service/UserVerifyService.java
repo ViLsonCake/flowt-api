@@ -1,6 +1,5 @@
 package project.vilsoncake.Flowt.service;
 
-import project.vilsoncake.Flowt.dto.ChangePasswordDto;
 import project.vilsoncake.Flowt.entity.UserEntity;
 import project.vilsoncake.Flowt.exception.AccountAlreadyVerifiedException;
 import project.vilsoncake.Flowt.exception.VerifyCodeNotFoundException;
@@ -8,5 +7,6 @@ import project.vilsoncake.Flowt.exception.VerifyCodeNotFoundException;
 public interface UserVerifyService {
     boolean saveAndSendNewCode(UserEntity user);
     boolean verifyUser(String code) throws VerifyCodeNotFoundException, AccountAlreadyVerifiedException;
-    boolean sendChangePasswordMessage(String authHeader);
+    boolean sendChangePasswordMessageByUsername(String username);
+    String sendChangePasswordMessageByEmail(String email);
 }

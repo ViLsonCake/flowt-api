@@ -7,6 +7,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import project.vilsoncake.Flowt.dto.ChangePasswordDto;
 import project.vilsoncake.Flowt.dto.RegistrationDto;
+import project.vilsoncake.Flowt.dto.RestorePasswordDto;
 import project.vilsoncake.Flowt.dto.UserDto;
 import project.vilsoncake.Flowt.entity.UserEntity;
 import project.vilsoncake.Flowt.exception.EmailAlreadyExistException;
@@ -78,6 +79,24 @@ public class UserServiceImpl implements UserService {
             throw new InvalidPasswordCodeException("Invalid password code");
 
         user.setPassword(passwordEncoder.encode(changePasswordDto.getNewPassword()));
+        userRepository.save(user);
+
+        // Delete code from redis
+        redisService.deleteByKey(user.getUsername());
+
+        return true;
+    }
+
+    @Override
+    public boolean restorePassword(RestorePasswordDto restorePasswordDto) {
+        UserEntity user = userRepository.findByEmail(restorePasswordDto.getEmail()).orElseThrow(() ->
+                new UsernameNotFoundException("User not found"));
+
+        // Validate password code
+        if(!redisService.isValidUserCode(user.getUsername(), restorePasswordDto.getCode()))
+            throw new InvalidPasswordCodeException("Invalid password code");
+
+        user.setPassword(passwordEncoder.encode(restorePasswordDto.getNewPassword()));
         userRepository.save(user);
 
         // Delete code from redis

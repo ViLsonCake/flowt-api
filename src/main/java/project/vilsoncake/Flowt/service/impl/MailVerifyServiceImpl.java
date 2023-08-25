@@ -26,7 +26,7 @@ public class MailVerifyServiceImpl implements MailVerifyService {
         message.setText(body);
 
         mailSender.send(message);
-        log.info("Verify email message send to {}", recipient);
+        log.info("Verify message send to {}", recipient);
         return true;
     }
 }
