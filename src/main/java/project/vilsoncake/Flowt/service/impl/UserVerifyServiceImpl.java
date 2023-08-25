@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import project.vilsoncake.Flowt.config.AppConfig;
+import project.vilsoncake.Flowt.dto.RestorePasswordResponse;
 import project.vilsoncake.Flowt.entity.UserEntity;
 import project.vilsoncake.Flowt.entity.VerifyCodeEntity;
 import project.vilsoncake.Flowt.exception.AccountAlreadyVerifiedException;
@@ -88,7 +89,7 @@ public class UserVerifyServiceImpl implements UserVerifyService {
     }
 
     @Override
-    public String sendChangePasswordMessageByEmail(String email) {
+    public RestorePasswordResponse sendChangePasswordMessageByEmail(String email) {
         UserEntity user = userRepository.findByEmail(email).orElseThrow(() ->
                 new UsernameNotFoundException("User not found"));
 
@@ -105,7 +106,7 @@ public class UserVerifyServiceImpl implements UserVerifyService {
                 )
         );
 
-        return email;
+        return new RestorePasswordResponse(email);
     }
 
     private String generateCode() {

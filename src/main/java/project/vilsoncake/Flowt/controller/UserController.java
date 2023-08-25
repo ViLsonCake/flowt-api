@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 import project.vilsoncake.Flowt.dto.ChangePasswordDto;
 import project.vilsoncake.Flowt.dto.RestorePasswordDto;
 import project.vilsoncake.Flowt.dto.UserDto;
+import project.vilsoncake.Flowt.dto.UsernameDto;
 import project.vilsoncake.Flowt.exception.InvalidExtensionException;
 import project.vilsoncake.Flowt.exception.MinioFileException;
 import project.vilsoncake.Flowt.service.UserManagementService;
@@ -44,5 +45,10 @@ public class UserController {
     @GetMapping("/authenticated")
     public ResponseEntity<UserDto> getAuthenticatedUserDto(@RequestHeader(value = "Authorization", required = false, defaultValue = "") String authHeader) {
         return ResponseEntity.ok(userService.getAuthenticatedUserDto(authHeader));
+    }
+
+    @GetMapping("/username")
+    public ResponseEntity<UsernameDto> getAuthenticatedUserUsername(@RequestHeader(value = "Authorization", required = false, defaultValue = "") String authHeader) {
+        return ResponseEntity.ok(new UsernameDto(userService.getAuthenticatedUserDto(authHeader).getUsername()));
     }
 }
