@@ -21,5 +21,5 @@ Authenticated
 + POST /users/avatar - change user avatar
 + POST /users/change-password - change authenticated user password
 + GET /users/authenticated - get authenticated user dto
-+ GET /verify/email - send mail with verify-link
++ GET /verify/email - verify user email
 + GET /verify/password - send mail with code for restoring the password
