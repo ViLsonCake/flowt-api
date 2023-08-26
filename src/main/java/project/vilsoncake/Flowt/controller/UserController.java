@@ -4,12 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import project.vilsoncake.Flowt.dto.ChangePasswordDto;
-import project.vilsoncake.Flowt.dto.RestorePasswordDto;
-import project.vilsoncake.Flowt.dto.UserDto;
-import project.vilsoncake.Flowt.dto.UsernameDto;
+import project.vilsoncake.Flowt.dto.*;
 import project.vilsoncake.Flowt.exception.InvalidExtensionException;
 import project.vilsoncake.Flowt.exception.MinioFileException;
+import project.vilsoncake.Flowt.service.ChangeUserService;
 import project.vilsoncake.Flowt.service.UserManagementService;
 import project.vilsoncake.Flowt.service.UserService;
 
@@ -21,6 +19,7 @@ import java.util.Map;
 public class UserController {
 
     private final UserManagementService userManagementService;
+    private final ChangeUserService changeUserService;
     private final UserService userService;
 
     @PostMapping("/avatar")
@@ -49,15 +48,42 @@ public class UserController {
         return ResponseEntity.ok(userService.getAuthenticatedUserDto(authHeader));
     }
 
-    @GetMapping("/username")
-    public ResponseEntity<UsernameDto> getAuthenticatedUserUsername(@RequestHeader(value = "Authorization", required = false, defaultValue = "") String authHeader) {
-        return ResponseEntity.ok(new UsernameDto(userService.getAuthenticatedUserDto(authHeader).getUsername()));
-    }
-
     @GetMapping("/subscribe/{username}")
     public ResponseEntity<Map<String, String>> subscribeToUser(
             @RequestHeader(value = "Authorization", required = false, defaultValue = "") String authHeader,
             @PathVariable("username") String username) {
         return ResponseEntity.ok(userManagementService.subscribeToUser(authHeader, username));
+    }
+
+    @PatchMapping("/username")
+    public ResponseEntity<Map<String, String>> changeUsername(
+            @RequestHeader(value = "Authorization", required = false, defaultValue = "") String authHeader,
+            @RequestBody UsernameDto usernameDto
+            ) {
+        return ResponseEntity.ok(changeUserService.changeUserUsername(authHeader, usernameDto));
+    }
+
+    @PatchMapping("/email")
+    public ResponseEntity<Map<String, String>> changeEmail(
+            @RequestHeader(value = "Authorization", required = false, defaultValue = "") String authHeader,
+            @RequestBody EmailDto emailDto
+    ) {
+        return ResponseEntity.ok(changeUserService.changeUserEmail(authHeader, emailDto));
+    }
+
+    @PatchMapping("/region")
+    public ResponseEntity<Map<String, String>> changeRegion(
+            @RequestHeader(value = "Authorization", required = false, defaultValue = "") String authHeader,
+            @RequestBody RegionDto regionDto
+    ) {
+        return ResponseEntity.ok(changeUserService.changeUserRegion(authHeader, regionDto));
+    }
+
+    @PatchMapping("/description")
+    public ResponseEntity<Map<String, String>> changeDescription(
+            @RequestHeader(value = "Authorization", required = false, defaultValue = "") String authHeader,
+            @RequestBody DescriptionDto descriptionDto
+    ) {
+        return ResponseEntity.ok(changeUserService.changeUserDescription(authHeader, descriptionDto));
     }
 }
