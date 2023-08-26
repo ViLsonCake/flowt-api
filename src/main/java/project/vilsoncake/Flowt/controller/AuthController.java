@@ -11,6 +11,8 @@ import project.vilsoncake.Flowt.dto.RegistrationDto;
 import project.vilsoncake.Flowt.service.AuthService;
 import project.vilsoncake.Flowt.service.UserService;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
@@ -20,8 +22,8 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/registration")
-    public ResponseEntity<String> registrationUser(@RequestBody RegistrationDto registrationDto) {
-        return ResponseEntity.ok(String.format("User '%s' saved", userService.addUser(registrationDto).getUsername()));
+    public ResponseEntity<Map<String, String>> registrationUser(@RequestBody RegistrationDto registrationDto) {
+        return ResponseEntity.ok(userService.addUser(registrationDto));
     }
 
     @PostMapping("/login")

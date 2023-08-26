@@ -21,6 +21,8 @@ import project.vilsoncake.Flowt.service.UserService;
 import project.vilsoncake.Flowt.service.UserVerifyService;
 import project.vilsoncake.Flowt.utils.AuthUtils;
 
+import java.util.Map;
+
 import static project.vilsoncake.Flowt.entity.Role.USER;
 
 @Service
@@ -35,7 +37,7 @@ public class UserServiceImpl implements UserService {
     private final AuthUtils authUtils;
 
     @Override
-    public UserEntity addUser(RegistrationDto registrationDto) {
+    public Map<String, String> addUser(RegistrationDto registrationDto) {
         // Handle exception
         if (userRepository.existsUserByUsername(registrationDto.getUsername())) throw new UsernameAlreadyExistException("Username already exists");
         if (userRepository.existsUserByEmail(registrationDto.getEmail())) throw new EmailAlreadyExistException("Email already exists");
@@ -54,7 +56,7 @@ public class UserServiceImpl implements UserService {
 
         log.info("User '{}' saved", user.getUsername());
 
-        return user;
+        return Map.of("message", String.format("User '%s' saved", user.getUsername()));
     }
 
     @Transactional
@@ -71,7 +73,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean changeUserPasswordByUsername(String authHeader, ChangePasswordDto changePasswordDto) {
+    public Map<String, String> changeUserPasswordByUsername(String authHeader, ChangePasswordDto changePasswordDto) {
         String username = authUtils.getUsernameFromAuthHeader(authHeader);
         UserEntity user = userRepository.findByUsername(username).orElseThrow(() ->
                 new UsernameNotFoundException("User not found"));
@@ -86,11 +88,11 @@ public class UserServiceImpl implements UserService {
         // Delete code from redis
         redisService.deleteByKey(user.getUsername());
 
-        return true;
+        return Map.of("username", username);
     }
 
     @Override
-    public boolean restorePassword(RestorePasswordDto restorePasswordDto) {
+    public Map<String, String> restorePassword(RestorePasswordDto restorePasswordDto) {
         UserEntity user = userRepository.findByEmail(restorePasswordDto.getEmail()).orElseThrow(() ->
                 new UsernameNotFoundException("User not found"));
 
@@ -104,6 +106,6 @@ public class UserServiceImpl implements UserService {
         // Delete code from redis
         redisService.deleteByKey(user.getUsername());
 
-        return true;
+        return Map.of("username", user.getUsername());
     }
 }

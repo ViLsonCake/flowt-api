@@ -13,6 +13,8 @@ import project.vilsoncake.Flowt.exception.MinioFileException;
 import project.vilsoncake.Flowt.service.UserManagementService;
 import project.vilsoncake.Flowt.service.UserService;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
@@ -22,7 +24,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/avatar")
-    public ResponseEntity<Boolean> addAvatar(
+    public ResponseEntity<Map<String, String>> addAvatar(
             @RequestHeader(value = "Authorization", required = false, defaultValue = "") String authHeader,
             @RequestParam("file") MultipartFile avatar
     ) throws MinioFileException, InvalidExtensionException {
@@ -30,7 +32,7 @@ public class UserController {
     }
 
     @PostMapping("/change-password")
-    public ResponseEntity<Boolean> changePassword(
+    public ResponseEntity<Map<String, String>> changePassword(
             @RequestHeader(value = "Authorization", required = false, defaultValue = "") String authHeader,
             @RequestBody ChangePasswordDto changePasswordDto
             ) {
@@ -38,7 +40,7 @@ public class UserController {
     }
 
     @PostMapping("/restore-password")
-    public ResponseEntity<Boolean> restorePassword(@RequestBody RestorePasswordDto restorePasswordDto) {
+    public ResponseEntity<Map<String, String>> restorePassword(@RequestBody RestorePasswordDto restorePasswordDto) {
         return ResponseEntity.ok(userService.restorePassword(restorePasswordDto));
     }
 
@@ -53,7 +55,7 @@ public class UserController {
     }
 
     @GetMapping("/subscribe/{username}")
-    public ResponseEntity<?> subscribeToUser(
+    public ResponseEntity<Map<String, String>> subscribeToUser(
             @RequestHeader(value = "Authorization", required = false, defaultValue = "") String authHeader,
             @PathVariable("username") String username) {
         return ResponseEntity.ok(userManagementService.subscribeToUser(authHeader, username));

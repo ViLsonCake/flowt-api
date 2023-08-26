@@ -6,11 +6,12 @@ import project.vilsoncake.Flowt.dto.RestorePasswordDto;
 import project.vilsoncake.Flowt.dto.UserDto;
 import project.vilsoncake.Flowt.entity.UserEntity;
 
+import java.util.Map;
+
 public interface UserService {
-    UserEntity addUser(RegistrationDto registrationDto);
+    Map<String, String> addUser(RegistrationDto registrationDto);
     UserDto getAuthenticatedUserDto(String authHeader);
     UserEntity getUserByUsername(String username);
-    boolean changeUserPasswordByUsername(String authHeader, ChangePasswordDto changePasswordDto);
-    boolean restorePassword(RestorePasswordDto restorePasswordDto);
-
+    Map<String, String> changeUserPasswordByUsername(String authHeader, ChangePasswordDto changePasswordDto);
+    Map<String, String> restorePassword(RestorePasswordDto restorePasswordDto);
 }

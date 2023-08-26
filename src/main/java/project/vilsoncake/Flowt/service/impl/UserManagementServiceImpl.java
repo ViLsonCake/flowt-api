@@ -37,7 +37,7 @@ public class UserManagementServiceImpl implements UserManagementService {
 
     @Transactional
     @Override
-    public Boolean addUserAvatarByUsername(String authHeader, MultipartFile avatar) throws InvalidExtensionException {
+    public Map<String, String> addUserAvatarByUsername(String authHeader, MultipartFile avatar) throws InvalidExtensionException {
         // Validate file
         if (!fileUtils.isValidExtension(avatar.getOriginalFilename()))
             throw new InvalidExtensionException("Invalid file extension (must be png or jpg)");
@@ -59,7 +59,8 @@ public class UserManagementServiceImpl implements UserManagementService {
 
         // Save file data in minio storage
         minioFileService.saveFile(minioConfig.getUserAvatarBucket(), filename, avatar);
-        return true;
+
+        return Map.of("username", username);
     }
 
     @Override
@@ -103,11 +104,11 @@ public class UserManagementServiceImpl implements UserManagementService {
     }
 
     @Override
-    public Long deleteUserByUsername(String username) {
+    public Map<String, String> deleteUserByUsername(String username) {
         UserEntity user = userRepository.findByUsername(username).orElseThrow(() ->
                 new UsernameNotFoundException("Username not found"));
 
         userRepository.delete(user);
-        return user.getUserId();
+        return Map.of("username", user.getUsername());
     }
 }

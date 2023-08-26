@@ -16,6 +16,7 @@ import project.vilsoncake.Flowt.service.MailVerifyService;
 import project.vilsoncake.Flowt.service.RedisService;
 import project.vilsoncake.Flowt.service.UserVerifyService;
 
+import java.util.Map;
 import java.util.UUID;
 
 import static project.vilsoncake.Flowt.constant.MessageConst.*;
@@ -32,7 +33,7 @@ public class UserVerifyServiceImpl implements UserVerifyService {
     private final AppConfig appConfig;
 
     @Override
-    public boolean saveAndSendNewCode(UserEntity user) {
+    public Map<String, String> saveAndSendNewCode(UserEntity user) {
         // Generate new code and save
         String userVerifyCode = generateCode();
         if (!verifyCodeRepository.existsByUser(user)) {
@@ -48,13 +49,13 @@ public class UserVerifyServiceImpl implements UserVerifyService {
                             user.getUsername(),
                             (appConfig.getVerifyUrl() + userVerifyCode)));
 
-            return true;
+            return Map.of("username", user.getUsername());
         }
-        return false;
+        return Map.of("error", "Token not found");
     }
 
     @Override
-    public boolean verifyUser(String code) throws VerifyCodeNotFoundException, AccountAlreadyVerifiedException {
+    public Map<String, String> verifyUser(String code) throws VerifyCodeNotFoundException, AccountAlreadyVerifiedException {
         VerifyCodeEntity verifyCodeEntity = verifyCodeRepository.findByCode(code).orElseThrow(() ->
                 new VerifyCodeNotFoundException("Verify code don't exist"));
 
@@ -64,11 +65,12 @@ public class UserVerifyServiceImpl implements UserVerifyService {
 
         user.setEmailVerify(true);
         userRepository.save(user);
-        return true;
+
+        return Map.of("username", user.getUsername());
     }
 
     @Override
-    public boolean sendChangePasswordMessageByUsername(String username) {
+    public Map<String, String> sendChangePasswordMessageByUsername(String username) {
         UserEntity user = userRepository.findByUsername(username).orElseThrow(() ->
                 new UsernameNotFoundException("User not found"));
 
@@ -85,7 +87,7 @@ public class UserVerifyServiceImpl implements UserVerifyService {
                 )
         );
 
-        return true;
+        return Map.of("username", user.getUsername());
     }
 
     @Override

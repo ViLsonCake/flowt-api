@@ -5,9 +5,11 @@ import project.vilsoncake.Flowt.entity.UserEntity;
 import project.vilsoncake.Flowt.exception.AccountAlreadyVerifiedException;
 import project.vilsoncake.Flowt.exception.VerifyCodeNotFoundException;
 
+import java.util.Map;
+
 public interface UserVerifyService {
-    boolean saveAndSendNewCode(UserEntity user);
-    boolean verifyUser(String code) throws VerifyCodeNotFoundException, AccountAlreadyVerifiedException;
-    boolean sendChangePasswordMessageByUsername(String username);
+    Map<String, String> saveAndSendNewCode(UserEntity user);
+    Map<String, String> verifyUser(String code) throws VerifyCodeNotFoundException, AccountAlreadyVerifiedException;
+    Map<String, String> sendChangePasswordMessageByUsername(String username);
     RestorePasswordResponse sendChangePasswordMessageByEmail(String email);
 }
