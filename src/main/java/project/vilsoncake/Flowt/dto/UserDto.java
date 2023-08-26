@@ -16,7 +16,7 @@ public class UserDto {
     private String region;
     private LikedEntity liked;
     private List<PlaylistEntity> playlists;
-    private List<SubscribeEntity> subscribers;
+    private List<FollowerEntity> subscribes;
     private List<FollowerEntity> followers;
 
     public static UserDto fromUser(UserEntity user) {
@@ -26,8 +26,8 @@ public class UserDto {
         userDto.setRegion(user.getRegion());
         userDto.setLiked(user.getLiked());
         userDto.setPlaylists(user.getPlaylists());
-        userDto.setSubscribers(user.getSubscribes());
-        userDto.setFollowers(user.getFollowers());
+        userDto.setSubscribes(user.getFollowers());
+        userDto.setFollowers(user.getSubscribes());
         return userDto;
     }
 }

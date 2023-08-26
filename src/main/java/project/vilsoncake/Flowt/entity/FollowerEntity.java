@@ -1,5 +1,6 @@
 package project.vilsoncake.Flowt.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,9 +13,17 @@ public class FollowerEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "follower_id")
-    private Long followerId;
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "follower_id")
+    private UserEntity follower;
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "user_id")
     private UserEntity user;
+
+    public FollowerEntity(UserEntity follower, UserEntity user) {
+        this.follower = follower;
+        this.user = user;
+    }
 }

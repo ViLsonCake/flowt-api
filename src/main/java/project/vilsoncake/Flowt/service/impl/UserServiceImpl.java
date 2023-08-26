@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import project.vilsoncake.Flowt.dto.ChangePasswordDto;
 import project.vilsoncake.Flowt.dto.RegistrationDto;
 import project.vilsoncake.Flowt.dto.RestorePasswordDto;
@@ -56,6 +57,7 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
+    @Transactional
     @Override
     public UserDto getAuthenticatedUserDto(String authHeader) {
         String username = authUtils.getUsernameFromAuthHeader(authHeader);

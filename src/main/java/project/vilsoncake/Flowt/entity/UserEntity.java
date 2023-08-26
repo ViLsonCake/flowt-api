@@ -1,5 +1,6 @@
 package project.vilsoncake.Flowt.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -42,8 +43,8 @@ public class UserEntity {
     private UserAvatarEntity userAvatar;
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
     private LikedEntity liked;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
-    private List<SubscribeEntity> subscribes;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "follower")
+    private List<FollowerEntity> subscribes;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private List<FollowerEntity> followers;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")

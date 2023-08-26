@@ -8,17 +8,19 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import project.vilsoncake.Flowt.config.MinioConfig;
+import project.vilsoncake.Flowt.entity.FollowerEntity;
 import project.vilsoncake.Flowt.entity.UserAvatarEntity;
 import project.vilsoncake.Flowt.entity.UserEntity;
 import project.vilsoncake.Flowt.exception.InvalidExtensionException;
 import project.vilsoncake.Flowt.exception.MinioFileException;
 import project.vilsoncake.Flowt.repository.UserRepository;
-import project.vilsoncake.Flowt.service.AuthService;
 import project.vilsoncake.Flowt.service.AvatarService;
 import project.vilsoncake.Flowt.service.MinioFileService;
 import project.vilsoncake.Flowt.service.UserManagementService;
 import project.vilsoncake.Flowt.utils.AuthUtils;
 import project.vilsoncake.Flowt.utils.FileUtils;
+
+import java.util.Map;
 
 @Service
 @Slf4j
@@ -82,6 +84,22 @@ public class UserManagementServiceImpl implements UserManagementService {
         user.setActive(!user.isActive());
         userRepository.save(user);
         return user.isActive();
+    }
+
+    @Override
+    public Map<String, String> subscribeToUser(String authHeader, String username) {
+        String usernameFromToken = authUtils.getUsernameFromAuthHeader(authHeader);
+        UserEntity authenticatedUser = userRepository.findByUsername(usernameFromToken).orElseThrow(() ->
+                new UsernameNotFoundException("User not found"));
+
+        UserEntity followedUser = userRepository.findByUsername(username).orElseThrow(() ->
+                new UsernameNotFoundException("User not found"));
+
+        // Add user to followed and add authenticated user to followers followed user
+        authenticatedUser.getFollowers().add(new FollowerEntity(followedUser, authenticatedUser));
+        userRepository.save(authenticatedUser);
+
+        return Map.of("username", username);
     }
 
     @Override

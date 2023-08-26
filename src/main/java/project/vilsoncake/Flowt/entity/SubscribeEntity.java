@@ -17,4 +17,9 @@ public class SubscribeEntity {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private UserEntity user;
+
+    public SubscribeEntity(Long subscribedId, UserEntity user) {
+        this.subscribedId = subscribedId;
+        this.user = user;
+    }
 }
