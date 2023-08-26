@@ -14,6 +14,7 @@ public class UserDto {
     private String username;
     private String email;
     private String region;
+    private String description;
     private LikedEntity liked;
     private List<PlaylistEntity> playlists;
     private List<FollowerEntity> subscribes;
@@ -24,6 +25,7 @@ public class UserDto {
         userDto.setUsername(user.getUsername());
         userDto.setEmail(user.getEmail());
         userDto.setRegion(user.getRegion());
+        userDto.setDescription(user.getDescription());
         userDto.setLiked(user.getLiked());
         userDto.setPlaylists(user.getPlaylists());
         userDto.setSubscribes(user.getFollowers());
