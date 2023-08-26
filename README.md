@@ -20,6 +20,10 @@ ___
 Authenticated
 + POST /users/avatar - change user avatar
 + POST /users/change-password - change authenticated user password
++ PATCH /users/username - change user username
++ PATCH /users/email - change user email
++ PATCH /users/region - change user region
++ PATCH /users/description - change user description
 + GET /users/authenticated - get authenticated user dto
 + GET /verify/email - verify user email
 + GET /verify/password - send mail with code for restoring the password
