@@ -63,13 +63,22 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto getAuthenticatedUserDto(String authHeader) {
         String username = authUtils.getUsernameFromAuthHeader(authHeader);
-        return UserDto.fromUser(getUserByUsername(username));
+        UserEntity user = userRepository.findByUsername(username).orElseThrow(() ->
+                new UsernameNotFoundException("User not found"));
+        return UserDto.fromUser(user);
+    }
+
+    @Override
+    public UserDto getUserDtoByUsername(String username) {
+        UserEntity user = userRepository.findByUsername(username).orElseThrow(() ->
+                new UsernameNotFoundException("User not found"));
+        return UserDto.fromUser(user);
     }
 
     @Override
     public UserEntity getUserByUsername(String username) {
         return userRepository.findByUsername(username).orElseThrow(() ->
-                new UsernameNotFoundException("Username not found"));
+                new UsernameNotFoundException("User not found"));
     }
 
     @Override
@@ -107,5 +116,17 @@ public class UserServiceImpl implements UserService {
         redisService.deleteByKey(user.getUsername());
 
         return Map.of("username", user.getUsername());
+    }
+
+    @Override
+    public Map<String, String> deleteUser(String username) {
+        UserEntity user = userRepository.findByUsername(username).orElseThrow(() ->
+                new UsernameNotFoundException("Username not found"));
+
+        userRepository.delete(user);
+
+        return Map.of(
+                "username", username
+        );
     }
 }

@@ -20,6 +20,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import project.vilsoncake.Flowt.entity.Role;
+
+import static project.vilsoncake.Flowt.entity.Role.*;
 
 @Configuration
 @EnableWebSecurity
@@ -50,6 +53,7 @@ public class SecurityConfig {
                         .requestMatchers("/verify/**").fullyAuthenticated()
                         .requestMatchers("/users/restore-password").permitAll()
                         .requestMatchers("/users/**").fullyAuthenticated()
+                        .requestMatchers("/admin/**").hasAuthority(ADMIN.getAuthority())
                         .anyRequest().permitAll()
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);

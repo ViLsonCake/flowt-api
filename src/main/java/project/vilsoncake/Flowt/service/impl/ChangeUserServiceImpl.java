@@ -4,10 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import project.vilsoncake.Flowt.dto.DescriptionDto;
-import project.vilsoncake.Flowt.dto.EmailDto;
-import project.vilsoncake.Flowt.dto.RegionDto;
-import project.vilsoncake.Flowt.dto.UsernameDto;
+import project.vilsoncake.Flowt.dto.*;
 import project.vilsoncake.Flowt.entity.UserEntity;
 import project.vilsoncake.Flowt.exception.EmailAlreadyExistException;
 import project.vilsoncake.Flowt.exception.UsernameAlreadyExistException;
@@ -16,6 +13,8 @@ import project.vilsoncake.Flowt.service.ChangeUserService;
 import project.vilsoncake.Flowt.utils.AuthUtils;
 
 import java.util.Map;
+
+import static project.vilsoncake.Flowt.entity.Role.MODERATOR;
 
 @Service
 @Slf4j
@@ -79,5 +78,29 @@ public class ChangeUserServiceImpl implements ChangeUserService {
         userRepository.save(user);
 
         return Map.of("description", descriptionDto.getNewDescription());
+    }
+
+    @Override
+    public ChangeAuthorityDto changeUserAuthority(String username) {
+        UserEntity user = userRepository.findByUsername(username).orElseThrow(() ->
+                new UsernameNotFoundException("Username not found"));
+
+        // Add to user moderator role or delete if user has
+        if (!user.getRoles().contains(MODERATOR)) user.getRoles().add(MODERATOR);
+        else user.getRoles().remove(MODERATOR);
+        userRepository.save(user);
+
+        return new ChangeAuthorityDto(user.getUsername(), user.getEmail(), user.getRoles(), user.isActive());
+    }
+
+    @Override
+    public Map<String, Boolean> changeUserActive(String username) {
+        UserEntity user = userRepository.findByUsername(username).orElseThrow(() ->
+                new UsernameNotFoundException("Username not found"));
+
+        user.setActive(!user.isActive());
+        userRepository.save(user);
+
+        return Map.of("active", user.isActive());
     }
 }
