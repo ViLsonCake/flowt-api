@@ -20,9 +20,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import project.vilsoncake.Flowt.entity.Role;
 
-import static project.vilsoncake.Flowt.entity.Role.*;
+import static project.vilsoncake.Flowt.entity.Role.ADMIN;
 
 @Configuration
 @EnableWebSecurity
