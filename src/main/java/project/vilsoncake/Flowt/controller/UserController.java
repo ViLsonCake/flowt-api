@@ -49,7 +49,7 @@ public class UserController {
         return ResponseEntity.ok(userService.getAuthenticatedUserDto(authHeader));
     }
 
-    @GetMapping("/subscribe/{username}")
+    @PostMapping("/subscribe/{username}")
     public ResponseEntity<Map<String, String>> subscribeToUser(
             @RequestHeader(value = "Authorization", required = false, defaultValue = "") String authHeader,
             @PathVariable("username") String username) {
