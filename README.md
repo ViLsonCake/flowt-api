@@ -32,7 +32,7 @@ Authenticated
 + GET /verify/password - send mail with code for restoring the password
 ___ 
 Only for admins
-+ PATCH /admin/user/:username - get user by username
++ GET /admin/user/:username - get user by username
 + PATCH /admin/user/:username - add to user moderator authority
 + PATCH /admin/active/:username - change user active
 + DELETE /admin/user/:username - delete user by username
