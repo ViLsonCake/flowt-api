@@ -28,8 +28,8 @@ public class UserDto {
         userDto.setDescription(user.getDescription());
         userDto.setLiked(user.getLiked());
         userDto.setPlaylists(user.getPlaylists());
-        userDto.setSubscribes(user.getFollowers());
-        userDto.setFollowers(user.getSubscribes());
+        userDto.setSubscribes(user.getSubscribes());
+        userDto.setFollowers(user.getFollowers());
         return userDto;
     }
 }

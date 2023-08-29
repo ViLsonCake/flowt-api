@@ -6,6 +6,7 @@ import project.vilsoncake.Flowt.dto.RestorePasswordDto;
 import project.vilsoncake.Flowt.dto.UserDto;
 import project.vilsoncake.Flowt.entity.UserEntity;
 
+import java.util.List;
 import java.util.Map;
 
 public interface UserService {
@@ -13,6 +14,8 @@ public interface UserService {
     UserDto getAuthenticatedUserDto(String authHeader);
     UserDto getUserDtoByUsername(String username);
     UserEntity getUserByUsername(String username);
+    Map<String, List<String>> getAllUserSubscribesUsernames(String authHeader);
+    Map<String, List<String>> getAllUserFollowersUsernames(String authHeader);
     Map<String, String> changeUserPasswordByUsername(String authHeader, ChangePasswordDto changePasswordDto);
     Map<String, String> restorePassword(RestorePasswordDto restorePasswordDto);
     Map<String, String> deleteUser(String username);

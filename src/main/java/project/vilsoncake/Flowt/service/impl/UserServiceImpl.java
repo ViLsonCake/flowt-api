@@ -10,6 +10,7 @@ import project.vilsoncake.Flowt.dto.ChangePasswordDto;
 import project.vilsoncake.Flowt.dto.RegistrationDto;
 import project.vilsoncake.Flowt.dto.RestorePasswordDto;
 import project.vilsoncake.Flowt.dto.UserDto;
+import project.vilsoncake.Flowt.entity.FollowerEntity;
 import project.vilsoncake.Flowt.entity.UserEntity;
 import project.vilsoncake.Flowt.exception.EmailAlreadyExistException;
 import project.vilsoncake.Flowt.exception.InvalidPasswordCodeException;
@@ -21,6 +22,7 @@ import project.vilsoncake.Flowt.service.UserService;
 import project.vilsoncake.Flowt.service.UserVerifyService;
 import project.vilsoncake.Flowt.utils.AuthUtils;
 
+import java.util.List;
 import java.util.Map;
 
 import static project.vilsoncake.Flowt.entity.Role.USER;
@@ -116,6 +118,30 @@ public class UserServiceImpl implements UserService {
         redisService.deleteByKey(user.getUsername());
 
         return Map.of("username", user.getUsername());
+    }
+
+    @Override
+    public Map<String, List<String>> getAllUserSubscribesUsernames(String authHeader) {
+        String username = authUtils.getUsernameFromAuthHeader(authHeader);
+        UserEntity user = userRepository.findByUsername(username).orElseThrow(() ->
+                new UsernameNotFoundException("User not found"));
+
+        List<FollowerEntity> subscribes = user.getSubscribes();
+        List<String> usernames = subscribes.stream().map(subscribe -> subscribe.getFollower().getUsername()).toList();
+
+        return Map.of("subscribes", usernames);
+    }
+
+    @Override
+    public Map<String, List<String>> getAllUserFollowersUsernames(String authHeader) {
+        String username = authUtils.getUsernameFromAuthHeader(authHeader);
+        UserEntity user = userRepository.findByUsername(username).orElseThrow(() ->
+                new UsernameNotFoundException("User not found"));
+
+        List<FollowerEntity> followers = user.getFollowers();
+        List<String> usernames = followers.stream().map(subscribe -> subscribe.getUser().getUsername()).toList();
+
+        return Map.of("followers", usernames);
     }
 
     @Override

@@ -11,6 +11,7 @@ import project.vilsoncake.Flowt.service.ChangeUserService;
 import project.vilsoncake.Flowt.service.UserManagementService;
 import project.vilsoncake.Flowt.service.UserService;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -53,6 +54,16 @@ public class UserController {
             @RequestHeader(value = "Authorization", required = false, defaultValue = "") String authHeader,
             @PathVariable("username") String username) {
         return ResponseEntity.ok(userManagementService.subscribeToUser(authHeader, username));
+    }
+
+    @GetMapping("/subscribes")
+    public ResponseEntity<Map<String, List<String>>> getUserSubscribes(@RequestHeader(value = "Authorization", required = false, defaultValue = "") String authHeader) {
+        return ResponseEntity.ok(userService.getAllUserSubscribesUsernames(authHeader));
+    }
+
+    @GetMapping("/followers")
+    public ResponseEntity<Map<String, List<String>>> getUserFollowers(@RequestHeader(value = "Authorization", required = false, defaultValue = "") String authHeader) {
+        return ResponseEntity.ok(userService.getAllUserFollowersUsernames(authHeader));
     }
 
     @PatchMapping("/username")

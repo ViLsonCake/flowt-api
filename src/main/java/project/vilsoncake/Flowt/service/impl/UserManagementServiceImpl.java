@@ -20,6 +20,8 @@ import project.vilsoncake.Flowt.service.UserManagementService;
 import project.vilsoncake.Flowt.utils.AuthUtils;
 import project.vilsoncake.Flowt.utils.FileUtils;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -96,11 +98,19 @@ public class UserManagementServiceImpl implements UserManagementService {
         UserEntity followedUser = userRepository.findByUsername(username).orElseThrow(() ->
                 new UsernameNotFoundException("User not found"));
 
-        // Add user to followed and add authenticated user to followers followed user
-        authenticatedUser.getFollowers().add(new FollowerEntity(followedUser, authenticatedUser));
+        Map<String, String> response = new HashMap<>();
+        List<String> users = authenticatedUser.getSubscribes().stream().map(user -> user.getFollower().getUsername()).toList();
+
+        // Add user to followed and add authenticated user to followers followed user or remove
+        if (!users.contains(followedUser.getUsername())) {
+            authenticatedUser.getFollowers().add(new FollowerEntity(followedUser, authenticatedUser));
+            response.put("message", String.format("Subscribe to user '%s'", followedUser.getUsername()));
+        } else {
+            response.put("message", "User already subscribed");
+        }
         userRepository.save(authenticatedUser);
 
-        return Map.of("username", username);
+        return response;
     }
 
     @Override
