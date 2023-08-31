@@ -6,21 +6,20 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+import project.vilsoncake.Flowt.config.MailConfig;
 import project.vilsoncake.Flowt.service.MailVerifyService;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class MailVerifyServiceImpl implements MailVerifyService {
-
-    @Value("${spring.mail.username}")
-    private String sender;
     private final JavaMailSender mailSender;
+    private final MailConfig mailConfig;
 
     @Override
     public boolean sendMessage(String recipient, String subject, String body) {
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom(sender);
+        message.setFrom(mailConfig.getUsername());
         message.setTo(recipient);
         message.setSubject(subject);
         message.setText(body);
