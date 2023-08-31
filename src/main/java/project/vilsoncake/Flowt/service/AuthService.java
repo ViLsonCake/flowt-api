@@ -8,5 +8,4 @@ import project.vilsoncake.Flowt.dto.JwtResponse;
 public interface AuthService {
     JwtResponse generateAuthTokensAndSave(JwtRequest authRequest, HttpServletResponse response);
     JwtResponse refreshTokens(String authRequest, HttpServletRequest request, HttpServletResponse response);
-//    String getUsernameFromAuthHeader(String authHeader);
 }
