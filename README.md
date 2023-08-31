@@ -21,6 +21,7 @@ Authenticated
 + POST /users/avatar - change user avatar
 + POST /users/change-password - change authenticated user password
 + POST /users/subscribe/:username - subscribe authenticated user to another user
++ POST /users/unsubscribe/:username - unsubscribe authenticated user to another user
 + PATCH /users/username - change user username
 + PATCH /users/email - change user email
 + PATCH /users/region - change user region
