@@ -41,13 +41,18 @@ public class UserVerifyServiceImpl implements UserVerifyService {
             verifyCodeRepository.save(verifyCodeEntity);
 
             // Send verify mail
+            Thread mailThread = new Thread(() -> {
             mailVerifyService.sendMessage(
                     user.getEmail(),
                     VERIFY_EMAIL_SUBJECT,
                     String.format(
                             VERIFY_EMAIL_TEXT,
                             user.getUsername(),
-                            (appConfig.getVerifyUrl() + userVerifyCode)));
+                            (appConfig.getVerifyUrl() + userVerifyCode)
+                    )
+            );
+            });
+            mailThread.start();
 
             return Map.of("username", user.getUsername());
         }
@@ -77,15 +82,18 @@ public class UserVerifyServiceImpl implements UserVerifyService {
         // Generate code and save in redis
         String code = redisService.saveNewPasswordCode(username);
 
-        mailVerifyService.sendMessage(
-                user.getEmail(),
-                RESTORE_PASSWORD_SUBJECT,
-                String.format(
-                        RESTORE_PASSWORD_TEXT,
-                        user.getUsername(),
-                        code
-                )
-        );
+        Thread mailThread = new Thread(() -> {
+            mailVerifyService.sendMessage(
+                    user.getEmail(),
+                    RESTORE_PASSWORD_SUBJECT,
+                    String.format(
+                            RESTORE_PASSWORD_TEXT,
+                            user.getUsername(),
+                            code
+                    )
+            );
+        });
+        mailThread.start();
 
         return Map.of("username", user.getUsername());
     }
@@ -98,15 +106,18 @@ public class UserVerifyServiceImpl implements UserVerifyService {
         // Generate code and save in redis
         String code = redisService.saveNewPasswordCode(user.getUsername());
 
-        mailVerifyService.sendMessage(
-                user.getEmail(),
-                RESTORE_PASSWORD_SUBJECT,
-                String.format(
-                        RESTORE_PASSWORD_TEXT,
-                        user.getUsername(),
-                        code
-                )
-        );
+        Thread mailThread = new Thread(() -> {
+            mailVerifyService.sendMessage(
+                    user.getEmail(),
+                    RESTORE_PASSWORD_SUBJECT,
+                    String.format(
+                            RESTORE_PASSWORD_TEXT,
+                            user.getUsername(),
+                            code
+                    )
+            );
+        });
+        mailThread.start();
 
         return new RestorePasswordResponse(email);
     }
