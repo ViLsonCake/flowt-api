@@ -1,12 +1,10 @@
 package project.vilsoncake.Flowt.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.repository.CrudRepository;
 import project.vilsoncake.Flowt.entity.TokenEntity;
 import project.vilsoncake.Flowt.entity.UserEntity;
 
-@Repository
-public interface TokenRepository extends JpaRepository<TokenEntity, Long> {
+public interface TokenRepository extends CrudRepository<TokenEntity, Long> {
     TokenEntity findByUser(UserEntity user);
     TokenEntity findByToken(String token);
     Boolean existsByToken(String token);

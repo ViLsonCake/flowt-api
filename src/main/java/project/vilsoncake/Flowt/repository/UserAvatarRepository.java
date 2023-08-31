@@ -1,12 +1,10 @@
 package project.vilsoncake.Flowt.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.repository.CrudRepository;
 import project.vilsoncake.Flowt.entity.UserAvatarEntity;
 import project.vilsoncake.Flowt.entity.UserEntity;
 
-@Repository
-public interface UserAvatarRepository extends JpaRepository<UserAvatarEntity, Long> {
+public interface UserAvatarRepository extends CrudRepository<UserAvatarEntity, Long> {
     UserAvatarEntity findByFilename(String filename);
     UserAvatarEntity findByUser(UserEntity user);
     Boolean existsByFilename(String filename);
