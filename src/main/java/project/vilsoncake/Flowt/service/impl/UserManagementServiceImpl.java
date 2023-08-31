@@ -13,6 +13,7 @@ import project.vilsoncake.Flowt.entity.UserAvatarEntity;
 import project.vilsoncake.Flowt.entity.UserEntity;
 import project.vilsoncake.Flowt.exception.InvalidExtensionException;
 import project.vilsoncake.Flowt.exception.MinioFileException;
+import project.vilsoncake.Flowt.repository.FollowerRepository;
 import project.vilsoncake.Flowt.repository.UserRepository;
 import project.vilsoncake.Flowt.service.AvatarService;
 import project.vilsoncake.Flowt.service.MinioFileService;
@@ -30,6 +31,7 @@ import java.util.Map;
 public class UserManagementServiceImpl implements UserManagementService {
 
     private final UserRepository userRepository;
+    private final FollowerRepository followerRepository;
     @Qualifier("userAvatarServiceImpl")
     private final AvatarService avatarService;
     private final MinioFileService minioFileService;
@@ -80,16 +82,6 @@ public class UserManagementServiceImpl implements UserManagementService {
     }
 
     @Override
-    public Boolean changeUserActiveByUsername(String username) {
-        UserEntity user = userRepository.findByUsername(username).orElseThrow(() ->
-                new UsernameNotFoundException("Username not found"));
-
-        user.setActive(!user.isActive());
-        userRepository.save(user);
-        return user.isActive();
-    }
-
-    @Override
     public Map<String, String> subscribeToUser(String authHeader, String username) {
         String usernameFromToken = authUtils.getUsernameFromAuthHeader(authHeader);
         UserEntity authenticatedUser = userRepository.findByUsername(usernameFromToken).orElseThrow(() ->
@@ -106,7 +98,7 @@ public class UserManagementServiceImpl implements UserManagementService {
             authenticatedUser.getFollowers().add(new FollowerEntity(followedUser, authenticatedUser));
             response.put("message", String.format("Subscribe to user '%s'", followedUser.getUsername()));
         } else {
-            response.put("message", "User already subscribed");
+            response.put("message", String.format("User already subscribed to '%s'", followedUser.getUsername()));
         }
         userRepository.save(authenticatedUser);
 
@@ -114,11 +106,25 @@ public class UserManagementServiceImpl implements UserManagementService {
     }
 
     @Override
-    public Map<String, String> deleteUserByUsername(String username) {
-        UserEntity user = userRepository.findByUsername(username).orElseThrow(() ->
-                new UsernameNotFoundException("Username not found"));
+    public Map<String, String> unsubscribeToUser(String authHeader, String username) {
+        String usernameFromToken = authUtils.getUsernameFromAuthHeader(authHeader);
+        UserEntity authenticatedUser = userRepository.findByUsername(usernameFromToken).orElseThrow(() ->
+                new UsernameNotFoundException("User not found"));
 
-        userRepository.delete(user);
-        return Map.of("username", user.getUsername());
+        UserEntity followedUser = userRepository.findByUsername(username).orElseThrow(() ->
+                new UsernameNotFoundException("User not found"));
+
+        Map<String, String> response = new HashMap<>();
+        List<String> users = authenticatedUser.getSubscribes().stream().map(user -> user.getFollower().getUsername()).toList();
+
+
+        if (users.contains(followedUser.getUsername())) {
+            followerRepository.deleteByUserAndFollowerId(authenticatedUser.getUserId(), followedUser.getUserId());
+            response.put("message", String.format("Unsubscribe to user '%s'", followedUser.getUsername()));
+        } else {
+            response.put("message", String.format("User not subscribed to '%s'", followedUser.getUsername()));
+        }
+
+        return response;
     }
 }

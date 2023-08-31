@@ -52,8 +52,17 @@ public class UserController {
     @PostMapping("/subscribe/{username}")
     public ResponseEntity<Map<String, String>> subscribeToUser(
             @RequestHeader(value = "Authorization", required = false, defaultValue = "") String authHeader,
-            @PathVariable("username") String username) {
+            @PathVariable("username") String username
+    ) {
         return ResponseEntity.ok(userManagementService.subscribeToUser(authHeader, username));
+    }
+
+    @PostMapping("/unsubscribe/{username}")
+    public ResponseEntity<Map<String, String>> unsubscribeToUser(
+            @RequestHeader(value = "Authorization", required = false, defaultValue = "") String authHeader,
+            @PathVariable("username") String username
+    ) {
+        return ResponseEntity.ok(userManagementService.unsubscribeToUser(authHeader, username));
     }
 
     @GetMapping("/subscribes")

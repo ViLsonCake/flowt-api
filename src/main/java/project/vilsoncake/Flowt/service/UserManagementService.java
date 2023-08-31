@@ -9,7 +9,6 @@ import java.util.Map;
 public interface UserManagementService {
     Map<String, String> addUserAvatarByUsername(String authHeader, MultipartFile avatar) throws MinioFileException, InvalidExtensionException;
     byte[] getUserAvatarByUsername(String username) throws MinioFileException;
-    Boolean changeUserActiveByUsername(String username);
     Map<String, String> subscribeToUser(String authHeader, String username);
-    Map<String, String> deleteUserByUsername(String username);
+    Map<String, String> unsubscribeToUser(String authHeader, String username);
 }
