@@ -12,4 +12,5 @@ public interface UserVerifyService {
     Map<String, String> verifyUser(String code) throws VerifyCodeNotFoundException, AccountAlreadyVerifiedException;
     Map<String, String> sendChangePasswordMessageByUsername(String username);
     RestorePasswordResponse sendChangePasswordMessageByEmail(String email);
+    Map<String, String> sendWarningMessage(String username);
 }

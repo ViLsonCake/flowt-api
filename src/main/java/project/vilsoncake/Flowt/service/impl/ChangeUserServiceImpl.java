@@ -10,6 +10,7 @@ import project.vilsoncake.Flowt.exception.EmailAlreadyExistException;
 import project.vilsoncake.Flowt.exception.UsernameAlreadyExistException;
 import project.vilsoncake.Flowt.repository.UserRepository;
 import project.vilsoncake.Flowt.service.ChangeUserService;
+import project.vilsoncake.Flowt.service.RedisService;
 import project.vilsoncake.Flowt.utils.AuthUtils;
 
 import java.util.Map;
@@ -23,6 +24,7 @@ public class ChangeUserServiceImpl implements ChangeUserService {
 
     private final UserRepository userRepository;
     private final AuthUtils authUtils;
+    private final RedisService redisService;
 
     @Override
     public Map<String, String> changeUserUsername(String authHeader, UsernameDto usernameDto) {
@@ -33,6 +35,9 @@ public class ChangeUserServiceImpl implements ChangeUserService {
         String username = authUtils.getUsernameFromAuthHeader(authHeader);
         UserEntity user = userRepository.findByUsername(username).orElseThrow(() ->
                 new UsernameNotFoundException("Username not found"));
+
+        // Check whether the user is obliged to change username due to violations
+        if (redisService.getValueFromWarning(username) != null) redisService.deleteByKeyFromWarning(username);
 
         user.setUsername(usernameDto.getNewUsername());
         userRepository.save(user);

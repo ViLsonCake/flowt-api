@@ -22,6 +22,7 @@ import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import static project.vilsoncake.Flowt.entity.Role.ADMIN;
+import static project.vilsoncake.Flowt.entity.Role.MODERATOR;
 
 @Configuration
 @EnableWebSecurity
@@ -53,6 +54,7 @@ public class SecurityConfig {
                         .requestMatchers("/users/restore-password").permitAll()
                         .requestMatchers("/users/**").fullyAuthenticated()
                         .requestMatchers("/admin/**").hasAuthority(ADMIN.getAuthority())
+                        .requestMatchers("/moderator/**").hasAnyAuthority(ADMIN.getAuthority(), MODERATOR.getAuthority())
                         .anyRequest().permitAll()
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);

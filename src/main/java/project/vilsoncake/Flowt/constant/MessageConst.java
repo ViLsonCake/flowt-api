@@ -11,4 +11,9 @@ public class MessageConst {
             "Hi %s, \n" +
             "Enter this code to restore your password: \n" +
             "%s";
+    public static final String WARNING_USERNAME_SUBJECT = "Flowt rules";
+    public static final String WARNING_USERNAME_TEXT =
+            "Hello %s, \n" +
+            "Your username contains insult, threat, or prohibited words," +
+            " you have 3 days to change it or your account will be automatically blocked.";
 }

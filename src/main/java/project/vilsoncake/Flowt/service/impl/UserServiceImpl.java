@@ -97,7 +97,7 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
 
         // Delete code from redis
-        redisService.deleteByKey(user.getUsername());
+        redisService.deleteByKeyFromCode(user.getUsername());
 
         return Map.of("username", username);
     }
@@ -115,7 +115,7 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
 
         // Delete code from redis
-        redisService.deleteByKey(user.getUsername());
+        redisService.deleteByKeyFromCode(user.getUsername());
 
         return Map.of("username", user.getUsername());
     }
@@ -150,6 +150,7 @@ public class UserServiceImpl implements UserService {
                 new UsernameNotFoundException("Username not found"));
 
         userRepository.delete(user);
+        redisService.deleteByKeyFromWarning(user.getUsername());
 
         return Map.of(
                 "username", username

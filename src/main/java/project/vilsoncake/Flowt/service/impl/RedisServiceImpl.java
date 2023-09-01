@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import project.vilsoncake.Flowt.service.RedisService;
 
 import java.util.Random;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -14,33 +15,59 @@ public class RedisServiceImpl implements RedisService {
     private final StringRedisTemplate redisTemplate;
 
     @Override
-    public void setValue(String key, String value) {
-        redisTemplate.opsForValue().set(key, value);
+    public void setValueToCode(String key, String value) {
+        redisTemplate.opsForValue().set("codes:" + key, value);
     }
 
     @Override
-    public String getValue(String key) {
-        return redisTemplate.opsForValue().get(key);
+    public String getValueFromCode(String key) {
+        return redisTemplate.opsForValue().get("codes:" + key);
     }
 
     @Override
-    public String deleteByKey(String key) {
-        redisTemplate.delete(key);
+    public void setValueToWarning(String key, String value) {
+        redisTemplate.opsForValue().set("warning:" + key, value);
+    }
+
+    @Override
+    public String getValueFromWarning(String key) {
+        return redisTemplate.opsForValue().get("warning:" + key);
+    }
+
+    @Override
+    public String deleteByKeyFromCode(String key) {
+        redisTemplate.delete("codes:" + key);
+        return key;
+    }
+
+    @Override
+    public String deleteByKeyFromWarning(String key) {
+        redisTemplate.delete("warning:" + key);
         return key;
     }
 
     @Override
     public boolean isValidUserCode(String username, Integer code) {
-        return getValue(username).equals(String.valueOf(code));
+        return getValueFromCode(username).equals(String.valueOf(code));
     }
 
     @Override
     public String saveNewPasswordCode(String username) {
         String randomCode = String.valueOf(new Random().nextInt(1000, 9999));
         // Delete previous code
-        if (getValue(username) != null) deleteByKey(username);
+        if (getValueFromCode(username) != null) deleteByKeyFromCode(username);
 
-        setValue(username, randomCode);
+        setValueToCode(username, randomCode);
         return randomCode;
+    }
+
+    @Override
+    public Set<String> getAllCodeKeys() {
+        return redisTemplate.keys("codes:" + "*");
+    }
+
+    @Override
+    public Set<String> getAllWarningKeys() {
+        return redisTemplate.keys("warning:" + "*");
     }
 }

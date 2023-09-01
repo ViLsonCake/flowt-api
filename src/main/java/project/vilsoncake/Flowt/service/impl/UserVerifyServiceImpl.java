@@ -122,6 +122,30 @@ public class UserVerifyServiceImpl implements UserVerifyService {
         return new RestorePasswordResponse(email);
     }
 
+    @Override
+    public Map<String, String> sendWarningMessage(String username) {
+        UserEntity user = userRepository.findByUsername(username).orElseThrow(() ->
+                new UsernameNotFoundException("User not found"));
+
+        // Sent mail
+        Thread mailThread = new Thread(() -> {
+            mailVerifyService.sendMessage(
+                    user.getEmail(),
+                    WARNING_USERNAME_SUBJECT,
+                    String.format(
+                            WARNING_USERNAME_TEXT,
+                            user.getUsername()
+                    )
+            );
+        });
+        mailThread.start();
+
+        // Add warning to redis
+        redisService.setValueToWarning(username, String.valueOf(System.currentTimeMillis()));
+
+        return Map.of("message", "Mail sent");
+    }
+
     private String generateCode() {
         String uuid;
         do {
