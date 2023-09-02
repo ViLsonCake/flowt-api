@@ -141,7 +141,7 @@ public class UserVerifyServiceImpl implements UserVerifyService {
         mailThread.start();
 
         // Add warning to redis
-        redisService.setValueToWarning(username, String.valueOf(System.currentTimeMillis()));
+        redisService.setValueToWarning(username, String.valueOf(System.currentTimeMillis() + daysToMillis(3)));
 
         return Map.of("message", "Mail sent");
     }
@@ -152,5 +152,9 @@ public class UserVerifyServiceImpl implements UserVerifyService {
             uuid = UUID.randomUUID().toString();
         } while (verifyCodeRepository.existsByCode(uuid));
         return uuid;
+    }
+
+    private Long daysToMillis(int days) {
+        return (long) days * 24 * 60 * 60 * 1000;
     }
 }
