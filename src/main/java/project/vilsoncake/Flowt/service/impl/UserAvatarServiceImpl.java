@@ -17,26 +17,24 @@ public class UserAvatarServiceImpl implements AvatarService {
     private final UserAvatarRepository userAvatarRepository;
 
     @Override
-    public boolean saveAvatar(MultipartFile avatar, String uuid, UserEntity user) {
-        UserAvatarEntity userAvatar = new UserAvatarEntity(
-                uuid, String.valueOf(avatar.getSize()), user
-        );
+    public boolean saveAvatar(MultipartFile avatar, String uuid, Object user) {
+        UserAvatarEntity userAvatar = new UserAvatarEntity(uuid, String.valueOf(avatar.getSize()), (UserEntity) user);
         userAvatarRepository.save(userAvatar);
         return true;
     }
 
     @Override
-    public UserAvatarEntity getByUser(UserEntity user) {
-        return userAvatarRepository.findByUser(user);
+    public boolean existsByEntity(Object entity) {
+        return userAvatarRepository.existsByUser((UserEntity) entity);
+    }
+
+    @Override
+    public UserAvatarEntity getByEntity(Object entity) {
+        return userAvatarRepository.findByUser((UserEntity) entity);
     }
 
     @Override
     public boolean existsByFilename(String filename) {
         return userAvatarRepository.existsByFilename(filename);
-    }
-
-    @Override
-    public boolean existsByUser(UserEntity user) {
-        return userAvatarRepository.existsByUser(user);
     }
 }

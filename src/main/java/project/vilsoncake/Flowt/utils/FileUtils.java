@@ -2,6 +2,7 @@ package project.vilsoncake.Flowt.utils;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import project.vilsoncake.Flowt.repository.SongAvatarRepository;
 import project.vilsoncake.Flowt.repository.UserAvatarRepository;
 
 import java.util.UUID;
@@ -11,12 +12,13 @@ import java.util.UUID;
 public class FileUtils {
 
     private final UserAvatarRepository userAvatarRepository;
+    private final SongAvatarRepository songAvatarRepository;
 
     public String generateRandomUUID() {
         String uuid;
         do {
             uuid = UUID.randomUUID().toString();
-        } while (userAvatarRepository.existsByFilename(uuid));
+        } while (userAvatarRepository.existsByFilename(uuid) || songAvatarRepository.existsByFilename(uuid));
         return uuid;
     }
 

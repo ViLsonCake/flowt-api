@@ -1,6 +1,5 @@
 package project.vilsoncake.Flowt.service.impl;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -27,17 +26,25 @@ import java.util.Map;
 
 @Service
 @Slf4j
-@RequiredArgsConstructor
 public class UserManagementServiceImpl implements UserManagementService {
 
     private final UserRepository userRepository;
     private final FollowerRepository followerRepository;
-    @Qualifier("userAvatarServiceImpl")
     private final AvatarService avatarService;
     private final MinioFileService minioFileService;
     private final MinioConfig minioConfig;
     private final FileUtils fileUtils;
     private final AuthUtils authUtils;
+
+    public UserManagementServiceImpl(UserRepository userRepository, FollowerRepository followerRepository, @Qualifier("userAvatarServiceImpl") AvatarService avatarService, MinioFileService minioFileService, MinioConfig minioConfig, FileUtils fileUtils, AuthUtils authUtils) {
+        this.userRepository = userRepository;
+        this.followerRepository = followerRepository;
+        this.avatarService = avatarService;
+        this.minioFileService = minioFileService;
+        this.minioConfig = minioConfig;
+        this.fileUtils = fileUtils;
+        this.authUtils = authUtils;
+    }
 
     @Transactional
     @Override
@@ -52,13 +59,13 @@ public class UserManagementServiceImpl implements UserManagementService {
 
         String filename;
 
-        if (!avatarService.existsByUser(user)) {
+        if (!avatarService.existsByEntity(user)) {
             // Generate filename
             filename = fileUtils.generateRandomUUID();
             // Save file info in sql
             avatarService.saveAvatar(avatar, filename, user);
         } else {
-            filename = avatarService.getByUser(user).getFilename();
+            filename = ((UserAvatarEntity) avatarService.getByEntity(user)).getFilename();
         }
 
         // Save file data in minio storage

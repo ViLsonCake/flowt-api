@@ -20,4 +20,9 @@ public class SongAvatarEntity {
     @JoinColumn(name = "song_id")
     private SongEntity song;
 
+    public SongAvatarEntity(String filename, String size, SongEntity song) {
+        this.filename = filename;
+        this.size = size;
+        this.song = song;
+    }
 }

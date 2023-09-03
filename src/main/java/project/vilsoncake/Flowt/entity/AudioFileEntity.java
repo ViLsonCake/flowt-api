@@ -19,4 +19,10 @@ public class AudioFileEntity {
     @OneToOne
     @JoinColumn(name = "song_id")
     private SongEntity song;
+
+    public AudioFileEntity(String filename, String size, SongEntity song) {
+        this.filename = filename;
+        this.size = size;
+        this.song = song;
+    }
 }
