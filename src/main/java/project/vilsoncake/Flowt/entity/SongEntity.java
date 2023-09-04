@@ -1,5 +1,6 @@
 package project.vilsoncake.Flowt.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,12 +24,16 @@ public class SongEntity {
     private String genre;
     @Column(name = "listens")
     private Long listens;
+    @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "song")
     private SongAvatarEntity songAvatar;
+    @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "song")
     private AudioFileEntity audioFile;
+    @JsonIgnore
     @ManyToMany(mappedBy = "songs")
     private List<PlaylistEntity> playlists;
+    @JsonIgnore
     @ManyToMany(mappedBy = "songs")
     private List<LikedEntity> liked;
     @ManyToOne

@@ -70,8 +70,7 @@ public class SongServiceImpl implements SongService {
     public Map<String, String> saveNewAudioFile(String authHeader, String name, MultipartFile file) {
         String username = authUtils.getUsernameFromAuthHeader(authHeader);
         UserEntity user = userService.getUserByUsername(username);
-        SongEntity song = songRepository.findByNameAndUser(name, user).orElseThrow(() ->
-                new SongNotFoundException("Song not found"));  // Get user song
+        SongEntity song = findByNameAndUser(name, user);
 
         String filename;
 
@@ -97,8 +96,7 @@ public class SongServiceImpl implements SongService {
 
         String username = authUtils.getUsernameFromAuthHeader(authHeader);
         UserEntity user = userService.getUserByUsername(username);
-        SongEntity song = songRepository.findByNameAndUser(name, user).orElseThrow(() ->
-                new SongNotFoundException("Song not found"));  // Get user song
+        SongEntity song = findByNameAndUser(name, user);
 
         String filename;
 
@@ -118,15 +116,34 @@ public class SongServiceImpl implements SongService {
     }
 
     @Override
+    public Map<String, String> getSongInfo(String username, String name) {
+        UserEntity user = userService.getUserByUsername(username);
+        SongEntity song = findByNameAndUser(name, user);
+
+        return Map.of(
+                "name", song.getName(),
+                "issueYear", song.getIssueYear(),
+                "genre", song.getGenre(),
+                "listens", String.valueOf(song.getListens()),
+                "author", username
+        );
+    }
+
+    @Override
     public byte[] getSongAvatarBySongName(String username, String name) throws MinioFileException {
         UserEntity user = userService.getUserByUsername(username);
-        SongEntity song = songRepository.findByNameAndUser(name, user).orElseThrow(() ->
-                new SongNotFoundException("Song not found")); // Get user song
+        SongEntity song = findByNameAndUser(name, user);
 
         SongAvatarEntity songAvatar = song.getSongAvatar();
 
         if (songAvatar == null) throw new MinioFileException("File not found");
 
         return minioFileService.getFileContent(minioConfig.getSongAvatarBucket(), songAvatar.getFilename());
+    }
+
+    @Override
+    public SongEntity findByNameAndUser(String name, UserEntity user) {
+        return songRepository.findByNameAndUser(name, user).orElseThrow(() ->
+                new SongNotFoundException("Song not found")); // Get user song
     }
 }

@@ -5,7 +5,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import project.vilsoncake.Flowt.dto.SongDto;
+import project.vilsoncake.Flowt.entity.LikedEntity;
 import project.vilsoncake.Flowt.exception.InvalidExtensionException;
+import project.vilsoncake.Flowt.service.LikedService;
 import project.vilsoncake.Flowt.service.SongService;
 
 import java.util.Map;
@@ -16,6 +18,15 @@ import java.util.Map;
 public class SongController {
 
     private final SongService songService;
+    private final LikedService likedService;
+
+    @GetMapping("/{username}/{songName}")
+    public ResponseEntity<Map<String, String>> getSongInfo(
+            @PathVariable("username") String username,
+            @PathVariable("songName") String songName
+    ) {
+        return ResponseEntity.ok(songService.getSongInfo(username, songName));
+    }
 
     @PostMapping
     public ResponseEntity<Map<String, String>> addNewSongEntity(
@@ -40,5 +51,13 @@ public class SongController {
             @RequestParam("file") MultipartFile avatar
     ) throws InvalidExtensionException {
         return ResponseEntity.ok(songService.addAvatarByUserSongName(authHeader, name, avatar));
+    }
+
+    @PostMapping("/liked/{username}/{songName}")
+    public ResponseEntity<Map<String, String>> addSongToLiked(
+            @PathVariable("username") String username,
+            @PathVariable("songName") String songName
+    ) {
+        return ResponseEntity.ok(likedService.addSongToLiked(username, songName));
     }
 }

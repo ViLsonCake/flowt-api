@@ -2,6 +2,8 @@ package project.vilsoncake.Flowt.service;
 
 import org.springframework.web.multipart.MultipartFile;
 import project.vilsoncake.Flowt.dto.SongDto;
+import project.vilsoncake.Flowt.entity.SongEntity;
+import project.vilsoncake.Flowt.entity.UserEntity;
 import project.vilsoncake.Flowt.exception.InvalidExtensionException;
 import project.vilsoncake.Flowt.exception.MinioFileException;
 
@@ -11,5 +13,7 @@ public interface SongService {
     Map<String, String> saveNewSongEntity(String authHeader, SongDto songDto);
     Map<String, String> addAvatarByUserSongName(String authHeader, String name, MultipartFile file) throws InvalidExtensionException;
     Map<String, String> saveNewAudioFile(String authHeader, String name, MultipartFile file);
+    Map<String, String> getSongInfo(String username, String name);
+    SongEntity findByNameAndUser(String name, UserEntity user);
     byte[] getSongAvatarBySongName(String username, String name) throws MinioFileException;
 }

@@ -9,6 +9,7 @@ import project.vilsoncake.Flowt.dto.*;
 import project.vilsoncake.Flowt.exception.InvalidExtensionException;
 import project.vilsoncake.Flowt.exception.MinioFileException;
 import project.vilsoncake.Flowt.service.ChangeUserService;
+import project.vilsoncake.Flowt.service.LikedService;
 import project.vilsoncake.Flowt.service.UserManagementService;
 import project.vilsoncake.Flowt.service.UserService;
 
@@ -23,6 +24,7 @@ public class UserController {
     private final UserManagementService userManagementService;
     private final ChangeUserService changeUserService;
     private final UserService userService;
+    private final LikedService likedService;
 
     @PostMapping("/avatar")
     public ResponseEntity<Map<String, String>> addAvatar(
@@ -74,6 +76,11 @@ public class UserController {
     @GetMapping("/followers")
     public ResponseEntity<Map<String, List<String>>> getUserFollowers(@RequestHeader(value = "Authorization", required = false, defaultValue = "") String authHeader) {
         return ResponseEntity.ok(userService.getAllUserFollowersUsernames(authHeader));
+    }
+
+    @GetMapping("/liked")
+    public ResponseEntity<Map<String, Map<String, String>>> getLikedSongs(@RequestHeader(value = "Authorization", required = false, defaultValue = "") String authHeader) {
+        return ResponseEntity.ok(likedService.getLikedSongs(authHeader));
     }
 
     @PatchMapping("/username")
