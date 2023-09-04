@@ -1,5 +1,6 @@
 package project.vilsoncake.Flowt.controller;
 
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -78,9 +79,10 @@ public class UserController {
     @PatchMapping("/username")
     public ResponseEntity<Map<String, String>> changeUsername(
             @RequestHeader(value = "Authorization", required = false, defaultValue = "") String authHeader,
-            @RequestBody UsernameDto usernameDto
+            @RequestBody UsernameDto usernameDto,
+            HttpServletResponse response
             ) {
-        return ResponseEntity.ok(changeUserService.changeUserUsername(authHeader, usernameDto));
+        return ResponseEntity.ok(changeUserService.changeUserUsername(authHeader, usernameDto, response));
     }
 
     @PatchMapping("/email")

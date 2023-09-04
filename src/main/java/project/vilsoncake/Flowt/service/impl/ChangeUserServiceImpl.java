@@ -1,7 +1,10 @@
 package project.vilsoncake.Flowt.service.impl;
 
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import project.vilsoncake.Flowt.dto.*;
@@ -11,7 +14,9 @@ import project.vilsoncake.Flowt.exception.UsernameAlreadyExistException;
 import project.vilsoncake.Flowt.repository.UserRepository;
 import project.vilsoncake.Flowt.service.ChangeUserService;
 import project.vilsoncake.Flowt.service.RedisService;
+import project.vilsoncake.Flowt.service.TokenService;
 import project.vilsoncake.Flowt.utils.AuthUtils;
+import project.vilsoncake.Flowt.utils.JwtUtils;
 
 import java.util.Map;
 
@@ -23,11 +28,14 @@ import static project.vilsoncake.Flowt.entity.Role.MODERATOR;
 public class ChangeUserServiceImpl implements ChangeUserService {
 
     private final UserRepository userRepository;
-    private final AuthUtils authUtils;
+    private final UserDetailsService userDetailsService;
     private final RedisService redisService;
+    private final TokenService tokenService;
+    private final JwtUtils jwtUtils;
+    private final AuthUtils authUtils;
 
     @Override
-    public Map<String, String> changeUserUsername(String authHeader, UsernameDto usernameDto) {
+    public Map<String, String> changeUserUsername(String authHeader, UsernameDto usernameDto, HttpServletResponse response) {
         // Validate new username
         if (userRepository.existsUserByUsername(usernameDto.getNewUsername()))
             throw new UsernameAlreadyExistException("Username already exits");
@@ -39,10 +47,16 @@ public class ChangeUserServiceImpl implements ChangeUserService {
         // Check whether the user is obliged to change username due to violations
         if (redisService.getValueFromWarning(username) != null) redisService.deleteByKeyFromWarning(username);
 
+        // Save new username
         user.setUsername(usernameDto.getNewUsername());
         userRepository.save(user);
 
-        return Map.of("username", usernameDto.getNewUsername());
+        // Create and save a new pair of tokens
+        UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUsername());
+        String[] tokens = jwtUtils.generateTokens(userDetails);
+        tokenService.saveNewToken(tokens[1], user.getUsername(), response);
+
+        return Map.of("token", tokens[0]);
     }
 
     @Override
@@ -55,6 +69,7 @@ public class ChangeUserServiceImpl implements ChangeUserService {
         UserEntity user = userRepository.findByUsername(username).orElseThrow(() ->
                 new UsernameNotFoundException("Username not found"));
 
+        // Save email
         user.setEmail(emailDto.getNewEmail());
         userRepository.save(user);
 
@@ -67,6 +82,7 @@ public class ChangeUserServiceImpl implements ChangeUserService {
         UserEntity user = userRepository.findByUsername(username).orElseThrow(() ->
                 new UsernameNotFoundException("Username not found"));
 
+        // Save new region
         user.setRegion(regionDto.getNewRegion());
         userRepository.save(user);
 
@@ -79,6 +95,7 @@ public class ChangeUserServiceImpl implements ChangeUserService {
         UserEntity user = userRepository.findByUsername(username).orElseThrow(() ->
                 new UsernameNotFoundException("Username not found"));
 
+        // Save new description
         user.setDescription(descriptionDto.getNewDescription());
         userRepository.save(user);
 
@@ -103,6 +120,7 @@ public class ChangeUserServiceImpl implements ChangeUserService {
         UserEntity user = userRepository.findByUsername(username).orElseThrow(() ->
                 new UsernameNotFoundException("Username not found"));
 
+        // Save active
         user.setActive(!user.isActive());
         userRepository.save(user);
 
