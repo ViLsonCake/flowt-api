@@ -45,7 +45,19 @@ public class LikedServiceImpl implements LikedService {
 
     @Override
     public Map<String, String> removeSongFromLiked(String username, String name) {
-        return null; //TODO create remove song from liked method
+        UserEntity user = userService.getUserByUsername(username);
+
+        LikedEntity liked = user.getLiked();
+        // Create new liked list without specified song
+        List<SongEntity> songsWithoutDeleted = new ArrayList<>();
+        liked.getSongs().forEach(likedSong -> {
+            if (!likedSong.getName().equalsIgnoreCase(name))
+                songsWithoutDeleted.add(likedSong);
+        });
+        liked.setSongs(songsWithoutDeleted);
+        likedRepository.save(liked);
+
+        return Map.of("message", String.format("Song '%s' removed from liked %s username", name, username));
     }
 
     @Override

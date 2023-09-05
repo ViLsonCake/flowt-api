@@ -60,4 +60,12 @@ public class SongController {
     ) {
         return ResponseEntity.ok(likedService.addSongToLiked(username, songName));
     }
+
+    @DeleteMapping("/liked/{username}/{songName}")
+    public ResponseEntity<Map<String, String>> removeSongFromLiked(
+            @PathVariable("username") String username,
+            @PathVariable("songName") String songName
+    ) {
+        return ResponseEntity.ok(likedService.removeSongFromLiked(username, songName));
+    }
 }
