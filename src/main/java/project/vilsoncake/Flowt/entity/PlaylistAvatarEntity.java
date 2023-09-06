@@ -20,4 +20,9 @@ public class PlaylistAvatarEntity {
     @JoinColumn(name = "playlist_id")
     private PlaylistEntity playlist;
 
+    public PlaylistAvatarEntity(String filename, String size, PlaylistEntity playlist) {
+        this.filename = filename;
+        this.size = size;
+        this.playlist = playlist;
+    }
 }

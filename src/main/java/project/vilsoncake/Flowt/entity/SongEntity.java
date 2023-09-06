@@ -36,6 +36,7 @@ public class SongEntity {
     @JsonIgnore
     @ManyToMany(mappedBy = "songs")
     private List<LikedEntity> liked;
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "user_id")
     private UserEntity user;
