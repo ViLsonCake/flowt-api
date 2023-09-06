@@ -29,9 +29,19 @@ Authenticated
 + GET /users/authenticated - get authenticated user dto
 + GET /users/subscribes - get authenticated user subscribe list
 + GET /users/followers - get authenticated user followers list
++ GET /users/liked - get authenticated user liked song list
 + GET /verify/email - verify user email
 + GET /verify/password - send mail with code for restoring the password
++ GET /songs/:username/:name - get song info by author and song name
++ POST /songs - add new song info
++ POST /songs/audio/:name - add to song audio file
++ POST /songs/avatar/:name - add avatar to song
++ POST /songs/liked/:username/:name - add song to authenticated user liked
++ DELETE /songs/liked/:username/:name - remove song from authenticated user liked
 ___ 
+For moderators
++ POST /warning-mail/:username - send to user warning mail
+___
 Only for admins
 + GET /admin/user/:username - get user by username
 + PATCH /admin/user/:username - add to user moderator authority
