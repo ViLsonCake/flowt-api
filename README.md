@@ -30,6 +30,7 @@ Authenticated
 + GET /users/subscribes - get authenticated user subscribe list
 + GET /users/followers - get authenticated user followers list
 + GET /users/liked - get authenticated user liked song list
++ GET /users/songs - get authenticated user song list
 + GET /verify/email - verify user email
 + GET /verify/password - send mail with code for restoring the password
 + GET /songs/:username/:name - get song info by author and song name
