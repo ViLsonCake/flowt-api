@@ -11,6 +11,7 @@ import project.vilsoncake.Flowt.dto.RegistrationDto;
 import project.vilsoncake.Flowt.dto.RestorePasswordDto;
 import project.vilsoncake.Flowt.dto.UserDto;
 import project.vilsoncake.Flowt.entity.FollowerEntity;
+import project.vilsoncake.Flowt.entity.SongEntity;
 import project.vilsoncake.Flowt.entity.UserEntity;
 import project.vilsoncake.Flowt.exception.EmailAlreadyExistException;
 import project.vilsoncake.Flowt.exception.InvalidPasswordCodeException;
@@ -65,8 +66,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto getAuthenticatedUserDto(String authHeader) {
         String username = authUtils.getUsernameFromAuthHeader(authHeader);
-        UserEntity user = userRepository.findByUsername(username).orElseThrow(() ->
-                new UsernameNotFoundException("User not found"));
+        UserEntity user = getUserByUsername(username);
         return UserDto.fromUser(user);
     }
 
@@ -86,8 +86,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Map<String, String> changeUserPasswordByUsername(String authHeader, ChangePasswordDto changePasswordDto) {
         String username = authUtils.getUsernameFromAuthHeader(authHeader);
-        UserEntity user = userRepository.findByUsername(username).orElseThrow(() ->
-                new UsernameNotFoundException("User not found"));
+        UserEntity user = getUserByUsername(username);
 
         // Validate password code
         if(!redisService.isValidUserCode(username, changePasswordDto.getCode()))
@@ -135,25 +134,28 @@ public class UserServiceImpl implements UserService {
     @Override
     public Map<String, List<String>> getAllUserFollowersUsernames(String authHeader) {
         String username = authUtils.getUsernameFromAuthHeader(authHeader);
-        UserEntity user = userRepository.findByUsername(username).orElseThrow(() ->
-                new UsernameNotFoundException("User not found"));
-
-        List<FollowerEntity> followers = user.getFollowers();
-        List<String> usernames = followers.stream().map(subscribe -> subscribe.getUser().getUsername()).toList();
+        UserEntity user = getUserByUsername(username);
+        List<String> usernames = user.getFollowers().stream().map(subscribe -> subscribe.getUser().getUsername()).toList();
 
         return Map.of("followers", usernames);
     }
 
     @Override
+    public Map<String, List<String>> getUserSongs(String authHeader) {
+        String username = authUtils.getUsernameFromAuthHeader(authHeader);
+        UserEntity user = getUserByUsername(username);
+        List<String> songNames = user.getSongs().stream().map(SongEntity::getName).toList();
+
+        return Map.of("songs", songNames);
+    }
+
+    @Override
     public Map<String, String> deleteUser(String username) {
-        UserEntity user = userRepository.findByUsername(username).orElseThrow(() ->
-                new UsernameNotFoundException("Username not found"));
+        UserEntity user = getUserByUsername(username);
 
         userRepository.delete(user);
         redisService.deleteByKeyFromWarning(user.getUsername());
 
-        return Map.of(
-                "username", username
-        );
+        return Map.of("username", username);
     }
 }

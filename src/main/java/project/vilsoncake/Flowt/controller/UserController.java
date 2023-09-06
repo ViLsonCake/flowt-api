@@ -83,6 +83,11 @@ public class UserController {
         return ResponseEntity.ok(likedService.getLikedSongs(authHeader));
     }
 
+    @GetMapping("/songs")
+    public ResponseEntity<Map<String, List<String>>> getUserSongs(@RequestHeader(value = "Authorization", required = false, defaultValue = "") String authHeader) {
+        return ResponseEntity.ok(userService.getUserSongs(authHeader));
+    }
+
     @PatchMapping("/username")
     public ResponseEntity<Map<String, String>> changeUsername(
             @RequestHeader(value = "Authorization", required = false, defaultValue = "") String authHeader,

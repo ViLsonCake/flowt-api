@@ -16,6 +16,7 @@ public interface UserService {
     UserEntity getUserByUsername(String username);
     Map<String, List<String>> getAllUserSubscribesUsernames(String authHeader);
     Map<String, List<String>> getAllUserFollowersUsernames(String authHeader);
+    Map<String, List<String>> getUserSongs(String authHeader);
     Map<String, String> changeUserPasswordByUsername(String authHeader, ChangePasswordDto changePasswordDto);
     Map<String, String> restorePassword(RestorePasswordDto restorePasswordDto);
     Map<String, String> deleteUser(String username);
