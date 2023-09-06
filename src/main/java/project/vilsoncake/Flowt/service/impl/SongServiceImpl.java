@@ -11,10 +11,7 @@ import project.vilsoncake.Flowt.entity.SongAvatarEntity;
 import project.vilsoncake.Flowt.entity.SongEntity;
 import project.vilsoncake.Flowt.entity.UserAvatarEntity;
 import project.vilsoncake.Flowt.entity.UserEntity;
-import project.vilsoncake.Flowt.exception.InvalidExtensionException;
-import project.vilsoncake.Flowt.exception.MinioFileException;
-import project.vilsoncake.Flowt.exception.SongAlreadyExistByUserException;
-import project.vilsoncake.Flowt.exception.SongNotFoundException;
+import project.vilsoncake.Flowt.exception.*;
 import project.vilsoncake.Flowt.repository.SongRepository;
 import project.vilsoncake.Flowt.service.*;
 import project.vilsoncake.Flowt.utils.AuthUtils;
@@ -50,6 +47,9 @@ public class SongServiceImpl implements SongService {
     public Map<String, String> saveNewSongEntity(String authHeader, SongDto songDto) {
         String username = authUtils.getUsernameFromAuthHeader(authHeader);
         UserEntity user = userService.getUserByUsername(username);
+
+        // If user email not verified, he can't add a song
+        if (!user.isEmailVerify()) throw new UserEmailNotVerifiedException("User email not verified");
 
         // If user have song with the same name
         if (songRepository.existsByNameAndUser(songDto.getName(), user)) throw new SongAlreadyExistByUserException("User have name with same name");
