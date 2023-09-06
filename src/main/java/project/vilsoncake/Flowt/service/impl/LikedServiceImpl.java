@@ -28,9 +28,11 @@ public class LikedServiceImpl implements LikedService {
     private final AuthUtils authUtils;
 
     @Override
-    public Map<String, String> addSongToLiked(String username, String name) {
+    public Map<String, String> addSongToLiked(String authHeader, String author, String name) {
+        String username = authUtils.getUsernameFromAuthHeader(authHeader);
         UserEntity user = userService.getUserByUsername(username);
-        SongEntity song = songService.findByNameAndUser(name, user);
+        UserEntity authorUser = userService.getUserByUsername(author);
+        SongEntity song = songService.findByNameAndUser(name, authorUser);
 
         // if user don't have liken entity, create
         if (user.getLiked() == null) createLikedEntityFromUser(user);
@@ -44,14 +46,15 @@ public class LikedServiceImpl implements LikedService {
     }
 
     @Override
-    public Map<String, String> removeSongFromLiked(String username, String name) {
+    public Map<String, String> removeSongFromLiked(String authHeader, String author, String name) {
+        String username = authUtils.getUsernameFromAuthHeader(authHeader);
         UserEntity user = userService.getUserByUsername(username);
 
         LikedEntity liked = user.getLiked();
         // Create new liked list without specified song
         List<SongEntity> songsWithoutDeleted = new ArrayList<>();
         liked.getSongs().forEach(likedSong -> {
-            if (!likedSong.getName().equalsIgnoreCase(name))
+            if (!likedSong.getName().equalsIgnoreCase(name) && !likedSong.getUser().getUsername().equals(author))
                 songsWithoutDeleted.add(likedSong);
         });
         liked.setSongs(songsWithoutDeleted);

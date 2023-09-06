@@ -5,7 +5,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import project.vilsoncake.Flowt.dto.SongDto;
-import project.vilsoncake.Flowt.entity.LikedEntity;
 import project.vilsoncake.Flowt.exception.InvalidExtensionException;
 import project.vilsoncake.Flowt.service.LikedService;
 import project.vilsoncake.Flowt.service.SongService;
@@ -55,17 +54,19 @@ public class SongController {
 
     @PostMapping("/liked/{username}/{songName}")
     public ResponseEntity<Map<String, String>> addSongToLiked(
+            @RequestHeader(value = "Authorization", required = false, defaultValue = "") String authHeader,
             @PathVariable("username") String username,
             @PathVariable("songName") String songName
     ) {
-        return ResponseEntity.ok(likedService.addSongToLiked(username, songName));
+        return ResponseEntity.ok(likedService.addSongToLiked(authHeader, username, songName));
     }
 
     @DeleteMapping("/liked/{username}/{songName}")
     public ResponseEntity<Map<String, String>> removeSongFromLiked(
+            @RequestHeader(value = "Authorization", required = false, defaultValue = "") String authHeader,
             @PathVariable("username") String username,
             @PathVariable("songName") String songName
     ) {
-        return ResponseEntity.ok(likedService.removeSongFromLiked(username, songName));
+        return ResponseEntity.ok(likedService.removeSongFromLiked(authHeader, username, songName));
     }
 }
