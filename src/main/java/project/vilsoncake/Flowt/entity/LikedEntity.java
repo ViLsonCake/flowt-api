@@ -16,7 +16,6 @@ public class LikedEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long likedId;
-    @JsonIgnore
     @ManyToMany
     private List<SongEntity> songs;
     @JsonIgnore

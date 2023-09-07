@@ -3,9 +3,7 @@ package project.vilsoncake.Flowt.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import project.vilsoncake.Flowt.entity.*;
-
-import java.util.List;
+import project.vilsoncake.Flowt.entity.UserEntity;
 
 @Data
 @AllArgsConstructor
@@ -15,10 +13,6 @@ public class UserDto {
     private String email;
     private String region;
     private String description;
-    private LikedEntity liked;
-    private List<PlaylistEntity> playlists;
-    private List<FollowerEntity> subscribes;
-    private List<FollowerEntity> followers;
 
     public static UserDto fromUser(UserEntity user) {
         UserDto userDto = new UserDto();
@@ -26,10 +20,6 @@ public class UserDto {
         userDto.setEmail(user.getEmail());
         userDto.setRegion(user.getRegion());
         userDto.setDescription(user.getDescription());
-        userDto.setLiked(user.getLiked());
-        userDto.setPlaylists(user.getPlaylists());
-        userDto.setSubscribes(user.getSubscribes());
-        userDto.setFollowers(user.getFollowers());
         return userDto;
     }
 }
