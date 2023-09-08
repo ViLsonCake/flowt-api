@@ -37,8 +37,12 @@ Authenticated
 + POST /songs - add new song info
 + POST /songs/audio/:name - add to song audio file
 + POST /songs/avatar/:name - add avatar to song
-+ POST /songs/liked/:username/:name - add song to authenticated user liked
-+ DELETE /songs/liked/:username/:name - remove song from authenticated user liked
++ POST /liked/:username/:name - add song to authenticated user liked
++ DELETE /liked/:username/:name - remove song from authenticated user liked
++ POST /playlists - create new playlist
++ POST /playlists/avatar/:playlistName - add avatar to playlist
++ POST /playlists/:playlistName/:author/:songName - add song to playlist
++ DELETE /playlists/:playlistName/:author/:songName - remove song from playlist
 ___ 
 For moderators
 + POST /warning-mail/:username - send to user warning mail

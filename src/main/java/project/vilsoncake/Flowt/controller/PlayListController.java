@@ -33,4 +33,24 @@ public class PlayListController {
     ) throws InvalidExtensionException {
         return ResponseEntity.ok(playListService.addAvatarToPlayList(authHeader, name, avatar));
     }
+
+    @PostMapping("/{playlistName}/{songAuthor}/{songName}")
+    public ResponseEntity<Map<String, String>> addSongToPlaylist(
+            @RequestHeader(value = "Authorization", required = false, defaultValue = "") String authHeader,
+            @PathVariable("playlistName") String playlistName,
+            @PathVariable("songAuthor") String songAuthor,
+            @PathVariable("songName") String songName
+    ) {
+        return ResponseEntity.ok(playListService.addSongToPlaylist(authHeader, playlistName, songAuthor, songName));
+    }
+
+    @DeleteMapping("/{playlistName}/{songAuthor}/{songName}")
+    public ResponseEntity<Map<String, String>> removeSongFromPlaylist(
+            @RequestHeader(value = "Authorization", required = false, defaultValue = "") String authHeader,
+            @PathVariable("playlistName") String playlistName,
+            @PathVariable("songAuthor") String songAuthor,
+            @PathVariable("songName") String songName
+    ) {
+        return ResponseEntity.ok(playListService.removeSongFromPlaylist(authHeader, playlistName, songAuthor, songName));
+    }
 }

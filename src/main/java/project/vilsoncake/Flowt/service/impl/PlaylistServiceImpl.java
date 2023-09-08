@@ -8,20 +8,19 @@ import project.vilsoncake.Flowt.config.MinioConfig;
 import project.vilsoncake.Flowt.dto.PlaylistDto;
 import project.vilsoncake.Flowt.entity.PlaylistAvatarEntity;
 import project.vilsoncake.Flowt.entity.PlaylistEntity;
+import project.vilsoncake.Flowt.entity.SongEntity;
 import project.vilsoncake.Flowt.entity.UserEntity;
 import project.vilsoncake.Flowt.exception.InvalidExtensionException;
 import project.vilsoncake.Flowt.exception.MinioFileException;
 import project.vilsoncake.Flowt.exception.PlaylistAlreadyExistException;
 import project.vilsoncake.Flowt.exception.PlaylistNotFoundException;
 import project.vilsoncake.Flowt.repository.PlaylistRepository;
-import project.vilsoncake.Flowt.service.AvatarService;
-import project.vilsoncake.Flowt.service.MinioFileService;
-import project.vilsoncake.Flowt.service.PlaylistService;
-import project.vilsoncake.Flowt.service.UserService;
+import project.vilsoncake.Flowt.service.*;
 import project.vilsoncake.Flowt.utils.AuthUtils;
 import project.vilsoncake.Flowt.utils.FileUtils;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -30,15 +29,17 @@ public class PlaylistServiceImpl implements PlaylistService {
 
     private final PlaylistRepository playListRepository;
     private final UserService userService;
+    private final SongService songService;
     private final AvatarService avatarService;
     private final AuthUtils authUtils;
     private final FileUtils fileUtils;
     private final MinioFileService minioFileService;
     private final MinioConfig minioConfig;
 
-    public PlaylistServiceImpl(PlaylistRepository playListRepository, UserService userService, @Qualifier("playlistAvatarServiceImpl") AvatarService avatarService, AuthUtils authUtils, FileUtils fileUtils, MinioFileService minioFileService, MinioConfig minioConfig) {
+    public PlaylistServiceImpl(PlaylistRepository playListRepository, UserService userService, SongService songService, @Qualifier("playlistAvatarServiceImpl") AvatarService avatarService, AuthUtils authUtils, FileUtils fileUtils, MinioFileService minioFileService, MinioConfig minioConfig) {
         this.playListRepository = playListRepository;
         this.userService = userService;
+        this.songService = songService;
         this.avatarService = avatarService;
         this.authUtils = authUtils;
         this.fileUtils = fileUtils;
@@ -93,6 +94,37 @@ public class PlaylistServiceImpl implements PlaylistService {
         minioFileService.saveFile(minioConfig.getPlaylistAvatarBucket(), filename, file);
 
         return Map.of("name", playlistName);
+    }
+
+    @Override
+    public Map<String, String> addSongToPlaylist(String authHeader, String playlistName, String songAuthor, String songName) {
+        String username = authUtils.getUsernameFromAuthHeader(authHeader);
+        UserEntity user = userService.getUserByUsername(username);
+        SongEntity song = songService.findByNameAndUser(songName, user);
+        PlaylistEntity playlist = getPlaylistByUserAndName(user, playlistName);
+        playlist.getSongs().add(song);
+        playListRepository.save(playlist);
+
+        return Map.of("message", String.format("Song '%s' added to playlist '%s'", songName, playlistName));
+    }
+
+    @Override
+    public Map<String, String> removeSongFromPlaylist(String authHeader, String playlistName, String songAuthor, String songName) {
+        String username = authUtils.getUsernameFromAuthHeader(authHeader);
+        UserEntity user = userService.getUserByUsername(username);
+        PlaylistEntity playlist = getPlaylistByUserAndName(user, playlistName);
+
+        List<SongEntity> songsWithoutDeleted = new ArrayList<>();
+        // Create new playlist songs list without specified song
+        playlist.getSongs().forEach(playlistSong -> {
+            if (!playlistSong.getName().equals(songName) && !playlistSong.getUser().getUsername().equals(songAuthor))
+                songsWithoutDeleted.add(playlistSong);
+        });
+
+        playlist.setSongs(songsWithoutDeleted);
+        playListRepository.save(playlist);
+
+        return Map.of("message", String.format("Song '%s' removed from playlist '%s'", songName, playlistName));
     }
 
     @Override

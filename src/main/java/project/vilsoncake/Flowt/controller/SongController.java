@@ -51,22 +51,4 @@ public class SongController {
     ) throws InvalidExtensionException {
         return ResponseEntity.ok(songService.addAvatarByUserSongName(authHeader, name, avatar));
     }
-
-    @PostMapping("/liked/{username}/{songName}")
-    public ResponseEntity<Map<String, String>> addSongToLiked(
-            @RequestHeader(value = "Authorization", required = false, defaultValue = "") String authHeader,
-            @PathVariable("username") String username,
-            @PathVariable("songName") String songName
-    ) {
-        return ResponseEntity.ok(likedService.addSongToLiked(authHeader, username, songName));
-    }
-
-    @DeleteMapping("/liked/{username}/{songName}")
-    public ResponseEntity<Map<String, String>> removeSongFromLiked(
-            @RequestHeader(value = "Authorization", required = false, defaultValue = "") String authHeader,
-            @PathVariable("username") String username,
-            @PathVariable("songName") String songName
-    ) {
-        return ResponseEntity.ok(likedService.removeSongFromLiked(authHeader, username, songName));
-    }
 }
