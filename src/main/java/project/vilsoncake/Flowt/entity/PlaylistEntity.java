@@ -19,6 +19,7 @@ public class PlaylistEntity {
     private String name;
     @ManyToMany
     private List<SongEntity> songs;
+    @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "playlist")
     private PlaylistAvatarEntity playlistAvatar;
     @JsonIgnore

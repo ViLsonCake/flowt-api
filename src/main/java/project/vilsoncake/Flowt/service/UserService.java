@@ -4,6 +4,7 @@ import project.vilsoncake.Flowt.dto.ChangePasswordDto;
 import project.vilsoncake.Flowt.dto.RegistrationDto;
 import project.vilsoncake.Flowt.dto.RestorePasswordDto;
 import project.vilsoncake.Flowt.dto.UserDto;
+import project.vilsoncake.Flowt.entity.PlaylistEntity;
 import project.vilsoncake.Flowt.entity.UserEntity;
 
 import java.util.List;
@@ -17,6 +18,7 @@ public interface UserService {
     Map<String, List<String>> getAllUserSubscribesUsernames(String authHeader);
     Map<String, List<String>> getAllUserFollowersUsernames(String authHeader);
     Map<String, List<String>> getUserSongs(String authHeader);
+    Map<String, List<PlaylistEntity>> getAllUserPlaylists(String authHeader);
     Map<String, String> changeUserPasswordByUsername(String authHeader, ChangePasswordDto changePasswordDto);
     Map<String, String> restorePassword(RestorePasswordDto restorePasswordDto);
     Map<String, String> deleteUser(String username);

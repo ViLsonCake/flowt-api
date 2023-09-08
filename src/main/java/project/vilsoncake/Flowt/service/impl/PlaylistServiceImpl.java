@@ -20,6 +20,7 @@ import project.vilsoncake.Flowt.utils.AuthUtils;
 import project.vilsoncake.Flowt.utils.FileUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -68,8 +69,7 @@ public class PlaylistServiceImpl implements PlaylistService {
     }
 
     @Override
-    public Map<String, String> addAvatarToPlayList(String authHeader, String playlistName, MultipartFile file) throws InvalidExtensionException {
-
+    public Map<String, String> addAvatarToPlaylist(String authHeader, String playlistName, MultipartFile file) throws InvalidExtensionException {
         if (!fileUtils.isValidExtension(file.getOriginalFilename())) {
             throw new InvalidExtensionException("Invalid file extension (must be png or jpg)");
         }
@@ -102,29 +102,44 @@ public class PlaylistServiceImpl implements PlaylistService {
         UserEntity user = userService.getUserByUsername(username);
         SongEntity song = songService.findByNameAndUser(songName, user);
         PlaylistEntity playlist = getPlaylistByUserAndName(user, playlistName);
-        playlist.getSongs().add(song);
-        playListRepository.save(playlist);
 
-        return Map.of("message", String.format("Song '%s' added to playlist '%s'", songName, playlistName));
+        Map<String, String> response = new HashMap<>();
+
+        if (!playlist.getSongs().contains(song)) {
+            playlist.getSongs().add(song);
+            playListRepository.save(playlist);
+            response.put("message", String.format("Song '%s' added to playlist '%s'", songName, playlistName));
+        } else {
+            response.put("message", String.format("Song '%s' already exist in playlist '%s'", songName, playlistName));
+        }
+
+        return response;
     }
 
     @Override
     public Map<String, String> removeSongFromPlaylist(String authHeader, String playlistName, String songAuthor, String songName) {
         String username = authUtils.getUsernameFromAuthHeader(authHeader);
         UserEntity user = userService.getUserByUsername(username);
+        SongEntity song = songService.findByNameAndUser(songName, user);
         PlaylistEntity playlist = getPlaylistByUserAndName(user, playlistName);
 
-        List<SongEntity> songsWithoutDeleted = new ArrayList<>();
-        // Create new playlist songs list without specified song
-        playlist.getSongs().forEach(playlistSong -> {
-            if (!playlistSong.getName().equals(songName) && !playlistSong.getUser().getUsername().equals(songAuthor))
-                songsWithoutDeleted.add(playlistSong);
-        });
+        Map<String, String> response = new HashMap<>();
 
-        playlist.setSongs(songsWithoutDeleted);
-        playListRepository.save(playlist);
+        if (playlist.getSongs().contains(song)) {
+            List<SongEntity> songsWithoutDeleted = new ArrayList<>();
+            // Create new playlist songs list without specified song
+            playlist.getSongs().forEach(playlistSong -> {
+                if (!playlistSong.getName().equals(songName) && !playlistSong.getUser().getUsername().equals(songAuthor))
+                    songsWithoutDeleted.add(playlistSong);
+            });
+            playlist.setSongs(songsWithoutDeleted);
+            playListRepository.save(playlist);
+            response.put("message", String.format("Song '%s' removed from playlist '%s'", songName, playlistName));
+        } else {
+            response.put("message", String.format("Song '%s' not in playlist '%s'", songName, playlistName));
+        }
 
-        return Map.of("message", String.format("Song '%s' removed from playlist '%s'", songName, playlistName));
+        return response;
     }
 
     @Override

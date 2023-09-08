@@ -31,7 +31,7 @@ public class PlayListController {
             @PathVariable("playlistName") String name,
             @RequestParam("file") MultipartFile avatar
     ) throws InvalidExtensionException {
-        return ResponseEntity.ok(playListService.addAvatarToPlayList(authHeader, name, avatar));
+        return ResponseEntity.ok(playListService.addAvatarToPlaylist(authHeader, name, avatar));
     }
 
     @PostMapping("/{playlistName}/{songAuthor}/{songName}")

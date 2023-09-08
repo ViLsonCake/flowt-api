@@ -37,30 +37,45 @@ public class LikedServiceImpl implements LikedService {
         // if user don't have liken entity, create
         if (user.getLiked() == null) createLikedEntityFromUser(user);
 
-        // Add song to user liked
-        LikedEntity liked = user.getLiked();
-        liked.getSongs().add(song);
-        likedRepository.save(liked);
+        Map<String, String> response = new HashMap<>();
 
-        return Map.of("message", String.format("Song '%s' added to liked %s username", name, username));
+        if (user.getLiked().getSongs().contains(song)) {
+            // Add song to user liked
+            LikedEntity liked = user.getLiked();
+            liked.getSongs().add(song);
+            likedRepository.save(liked);
+            response.put("message", String.format("Song '%s' added to liked %s username", name, username));
+        } else {
+            response.put("message", String.format("Song '%s' already in liked %s username", name, username));
+        }
+
+        return response;
     }
 
     @Override
     public Map<String, String> removeSongFromLiked(String authHeader, String author, String name) {
         String username = authUtils.getUsernameFromAuthHeader(authHeader);
         UserEntity user = userService.getUserByUsername(username);
+        SongEntity song = songService.findByNameAndUser(name, user);
 
         LikedEntity liked = user.getLiked();
-        // Create new liked list without specified song
-        List<SongEntity> songsWithoutDeleted = new ArrayList<>();
-        liked.getSongs().forEach(likedSong -> {
-            if (!likedSong.getName().equalsIgnoreCase(name) && !likedSong.getUser().getUsername().equals(author))
-                songsWithoutDeleted.add(likedSong);
-        });
-        liked.setSongs(songsWithoutDeleted);
-        likedRepository.save(liked);
+        Map<String, String> response = new HashMap<>();
 
-        return Map.of("message", String.format("Song '%s' removed from liked %s username", name, username));
+        if (liked.getSongs().contains(song)) {
+            // Create new liked list without specified song
+            List<SongEntity> songsWithoutDeleted = new ArrayList<>();
+            liked.getSongs().forEach(likedSong -> {
+                if (!likedSong.getName().equalsIgnoreCase(name) && !likedSong.getUser().getUsername().equals(author))
+                    songsWithoutDeleted.add(likedSong);
+            });
+            liked.setSongs(songsWithoutDeleted);
+            likedRepository.save(liked);
+            response.put("message", String.format("Song '%s' removed from liked %s username", name, username));
+        } else {
+            response.put("message", String.format("Song '%s' not in liked %s username", name, username));
+        }
+
+        return response;
     }
 
     @Override

@@ -11,7 +11,7 @@ import java.util.Map;
 
 public interface PlaylistService {
     Map<String, String> createNewPlaylist(String authHeader, PlaylistDto playListDto);
-    Map<String, String> addAvatarToPlayList(String authHeader, String playListName, MultipartFile file) throws InvalidExtensionException;
+    Map<String, String> addAvatarToPlaylist(String authHeader, String playListName, MultipartFile file) throws InvalidExtensionException;
     Map<String, String> addSongToPlaylist(String authHeader, String playlistName, String songAuthor, String songName);
     Map<String, String> removeSongFromPlaylist(String authHeader, String playlistName, String songAuthor, String songName);
     PlaylistEntity getPlaylistByUserAndName(UserEntity user, String name);

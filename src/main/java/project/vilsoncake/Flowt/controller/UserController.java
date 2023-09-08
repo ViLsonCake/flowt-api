@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import project.vilsoncake.Flowt.dto.*;
+import project.vilsoncake.Flowt.entity.PlaylistEntity;
 import project.vilsoncake.Flowt.exception.InvalidExtensionException;
 import project.vilsoncake.Flowt.exception.MinioFileException;
 import project.vilsoncake.Flowt.service.ChangeUserService;
@@ -86,6 +87,11 @@ public class UserController {
     @GetMapping("/songs")
     public ResponseEntity<Map<String, List<String>>> getUserSongs(@RequestHeader(value = "Authorization", required = false, defaultValue = "") String authHeader) {
         return ResponseEntity.ok(userService.getUserSongs(authHeader));
+    }
+
+    @GetMapping("playlists")
+    public ResponseEntity<Map<String, List<PlaylistEntity>>> getUserPlaylists(@RequestHeader(value = "Authorization", required = false, defaultValue = "") String authHeader) {
+        return ResponseEntity.ok(userService.getAllUserPlaylists(authHeader));
     }
 
     @PatchMapping("/username")

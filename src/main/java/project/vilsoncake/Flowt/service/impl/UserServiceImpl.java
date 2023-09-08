@@ -11,6 +11,7 @@ import project.vilsoncake.Flowt.dto.RegistrationDto;
 import project.vilsoncake.Flowt.dto.RestorePasswordDto;
 import project.vilsoncake.Flowt.dto.UserDto;
 import project.vilsoncake.Flowt.entity.FollowerEntity;
+import project.vilsoncake.Flowt.entity.PlaylistEntity;
 import project.vilsoncake.Flowt.entity.SongEntity;
 import project.vilsoncake.Flowt.entity.UserEntity;
 import project.vilsoncake.Flowt.exception.EmailAlreadyExistException;
@@ -147,6 +148,14 @@ public class UserServiceImpl implements UserService {
         List<String> songNames = user.getSongs().stream().map(SongEntity::getName).toList();
 
         return Map.of("songs", songNames);
+    }
+
+    @Override
+    public Map<String, List<PlaylistEntity>> getAllUserPlaylists(String authHeader) {
+        String username = authUtils.getUsernameFromAuthHeader(authHeader);
+        UserEntity user = getUserByUsername(username);
+
+        return Map.of("playlists", user.getPlaylists());
     }
 
     @Override
