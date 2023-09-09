@@ -47,9 +47,9 @@ Authenticated
 ___ 
 For moderators
 + POST /warning-mail/:username - send to user warning mail
++ PATCH /admin/active/:username - change user active
 ___
 Only for admins
 + GET /admin/user/:username - get user by username
 + PATCH /admin/user/:username - add to user moderator authority
-+ PATCH /admin/active/:username - change user active
 + DELETE /admin/user/:username - delete user by username
