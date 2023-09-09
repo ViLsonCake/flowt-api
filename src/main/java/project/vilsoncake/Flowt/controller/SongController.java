@@ -1,6 +1,9 @@
 package project.vilsoncake.Flowt.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,13 +31,14 @@ public class SongController {
     }
 
     @GetMapping("/audio/{author}/{songName}")
-    public ResponseEntity<byte[]> getSongAudioFile(
+    public ResponseEntity<Resource> getSongAudioFile(
             @PathVariable("author") String author,
             @PathVariable("songName") String songName
     ) throws MinioFileException {
         return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=your-file.mp3")
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                .body(songService.getSongAudioFile(author, songName));
+                .body(new ByteArrayResource(songService.getSongAudioFile(author, songName)));
     }
 
     @PostMapping
