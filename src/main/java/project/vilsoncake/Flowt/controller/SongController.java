@@ -49,7 +49,7 @@ public class SongController {
     public ResponseEntity<Map<String, String>> addNewSongFile(
             @RequestHeader(value = "Authorization", required = false, defaultValue = "") String authHeader,
             @PathVariable("name") String name,
-            @RequestParam("file") MultipartFile file) {
+            @RequestParam("file") MultipartFile file) throws InvalidExtensionException {
         return ResponseEntity.ok(songService.saveNewAudioFile(authHeader, name, file));
     }
 
