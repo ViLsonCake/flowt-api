@@ -1,12 +1,13 @@
 package project.vilsoncake.Flowt.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import project.vilsoncake.Flowt.dto.SongDto;
 import project.vilsoncake.Flowt.exception.InvalidExtensionException;
-import project.vilsoncake.Flowt.service.LikedService;
+import project.vilsoncake.Flowt.exception.MinioFileException;
 import project.vilsoncake.Flowt.service.SongService;
 
 import java.util.Map;
@@ -17,7 +18,6 @@ import java.util.Map;
 public class SongController {
 
     private final SongService songService;
-    private final LikedService likedService;
 
     @GetMapping("/{username}/{songName}")
     public ResponseEntity<Map<String, String>> getSongInfo(
@@ -25,6 +25,16 @@ public class SongController {
             @PathVariable("songName") String songName
     ) {
         return ResponseEntity.ok(songService.getSongInfo(username, songName));
+    }
+
+    @GetMapping("/audio/{author}/{songName}")
+    public ResponseEntity<byte[]> getSongAudioFile(
+            @PathVariable("author") String author,
+            @PathVariable("songName") String songName
+    ) throws MinioFileException {
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(songService.getSongAudioFile(author, songName));
     }
 
     @PostMapping

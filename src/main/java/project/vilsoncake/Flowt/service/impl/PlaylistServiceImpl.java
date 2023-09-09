@@ -70,7 +70,7 @@ public class PlaylistServiceImpl implements PlaylistService {
 
     @Override
     public Map<String, String> addAvatarToPlaylist(String authHeader, String playlistName, MultipartFile file) throws InvalidExtensionException {
-        if (!fileUtils.isValidExtension(file.getOriginalFilename())) {
+        if (!fileUtils.isValidAvatarExtension(file.getOriginalFilename())) {
             throw new InvalidExtensionException("Invalid file extension (must be png or jpg)");
         }
 

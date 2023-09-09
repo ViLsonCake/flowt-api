@@ -50,7 +50,7 @@ public class UserManagementServiceImpl implements UserManagementService {
     @Override
     public Map<String, String> addUserAvatarByUsername(String authHeader, MultipartFile avatar) throws InvalidExtensionException {
         // Validate file
-        if (!fileUtils.isValidExtension(avatar.getOriginalFilename()))
+        if (!fileUtils.isValidAvatarExtension(avatar.getOriginalFilename()))
             throw new InvalidExtensionException("Invalid file extension (must be png or jpg)");
 
         String username = authUtils.getUsernameFromAuthHeader(authHeader);

@@ -12,8 +12,9 @@ import java.util.Map;
 public interface SongService {
     Map<String, String> saveNewSongEntity(String authHeader, SongDto songDto);
     Map<String, String> addAvatarByUserSongName(String authHeader, String name, MultipartFile file) throws InvalidExtensionException;
-    Map<String, String> saveNewAudioFile(String authHeader, String name, MultipartFile file);
+    Map<String, String> saveNewAudioFile(String authHeader, String name, MultipartFile file) throws InvalidExtensionException;
     Map<String, String> getSongInfo(String username, String name);
+    byte[] getSongAudioFile(String username, String name) throws MinioFileException;
     SongEntity findByNameAndUser(String name, UserEntity user);
     byte[] getSongAvatarBySongName(String username, String name) throws MinioFileException;
 }

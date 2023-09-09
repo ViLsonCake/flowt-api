@@ -7,10 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import project.vilsoncake.Flowt.config.MinioConfig;
 import project.vilsoncake.Flowt.dto.SongDto;
-import project.vilsoncake.Flowt.entity.SongAvatarEntity;
-import project.vilsoncake.Flowt.entity.SongEntity;
-import project.vilsoncake.Flowt.entity.UserAvatarEntity;
-import project.vilsoncake.Flowt.entity.UserEntity;
+import project.vilsoncake.Flowt.entity.*;
 import project.vilsoncake.Flowt.exception.*;
 import project.vilsoncake.Flowt.repository.SongRepository;
 import project.vilsoncake.Flowt.service.*;
@@ -67,7 +64,11 @@ public class SongServiceImpl implements SongService {
     }
 
     @Override
-    public Map<String, String> saveNewAudioFile(String authHeader, String name, MultipartFile file) {
+    public Map<String, String> saveNewAudioFile(String authHeader, String name, MultipartFile file) throws InvalidExtensionException {
+        if (!fileUtils.isValidAudioFileExtension(file.getOriginalFilename())) {
+            throw new InvalidExtensionException("Invalid file extension (must be mp3)");
+        }
+
         String username = authUtils.getUsernameFromAuthHeader(authHeader);
         UserEntity user = userService.getUserByUsername(username);
         SongEntity song = findByNameAndUser(name, user);
@@ -91,7 +92,7 @@ public class SongServiceImpl implements SongService {
     @Transactional
     @Override
     public Map<String, String> addAvatarByUserSongName(String authHeader, String name, MultipartFile file) throws InvalidExtensionException {
-        if (!fileUtils.isValidExtension(file.getOriginalFilename()))
+        if (!fileUtils.isValidAvatarExtension(file.getOriginalFilename()))
             throw new InvalidExtensionException("Invalid file extension (must be png or jpg)");
 
         String username = authUtils.getUsernameFromAuthHeader(authHeader);
@@ -127,6 +128,18 @@ public class SongServiceImpl implements SongService {
                 "listens", String.valueOf(song.getListens()),
                 "author", username
         );
+    }
+
+    @Override
+    public byte[] getSongAudioFile(String username, String name) throws MinioFileException {
+        UserEntity user = userService.getUserByUsername(username);
+        SongEntity song = findByNameAndUser(name, user);
+
+        AudioFileEntity audioFile = song.getAudioFile();
+
+        if (audioFile == null) throw new MinioFileException("File not found");
+
+        return minioFileService.getFileContent(minioConfig.getAudioBucket(), audioFile.getFilename());
     }
 
     @Override
