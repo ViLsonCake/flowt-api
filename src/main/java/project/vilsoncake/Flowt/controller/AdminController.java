@@ -28,11 +28,6 @@ public class AdminController {
         return ResponseEntity.ok(changeUserService.changeUserAuthority(username));
     }
 
-    @PatchMapping("/active/{username}")
-    public ResponseEntity<Map<String, Boolean>> changeActive(@PathVariable("username") String username) {
-        return ResponseEntity.ok(changeUserService.changeUserActive(username));
-    }
-
     @DeleteMapping("/user/{username}")
     public ResponseEntity<Map<String, String>> deleteUser(@PathVariable("username") String username) {
         return ResponseEntity.ok(userService.deleteUser(username));
