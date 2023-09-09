@@ -34,6 +34,7 @@ Authenticated
 + GET /verify/email - verify user email
 + GET /verify/password - send mail with code for restoring the password
 + GET /songs/:username/:name - get song info by author and song name
++ GET /songs/audio/:username/:name - get song audio file by author and song name
 + POST /songs - add new song info
 + POST /songs/audio/:name - add to song audio file
 + POST /songs/avatar/:name - add avatar to song
