@@ -38,6 +38,7 @@ Authenticated
 + POST /songs - add new song info
 + POST /songs/audio/:name - add to song audio file
 + POST /songs/avatar/:name - add avatar to song
++ DELETE /songs/:name - remove song by song name
 + POST /liked/:username/:name - add song to authenticated user liked
 + DELETE /liked/:username/:name - remove song from authenticated user liked
 + POST /playlists - create new playlist
