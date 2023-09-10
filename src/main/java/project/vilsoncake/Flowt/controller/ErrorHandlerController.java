@@ -5,9 +5,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import project.vilsoncake.Flowt.dto.EmailVerifyDto;
 import project.vilsoncake.Flowt.dto.RegistrationValidationDto;
 import project.vilsoncake.Flowt.exception.*;
+
+import java.util.Map;
 
 @RestControllerAdvice
 @Slf4j
@@ -43,8 +44,8 @@ public class ErrorHandlerController {
     }
 
     @ExceptionHandler
-    public ResponseEntity<EmailVerifyDto> accountVerifiedError(AccountAlreadyVerifiedException exception) {
+    public ResponseEntity<Map<String, String>> accountVerifiedError(AccountAlreadyVerifiedException exception) {
         log.warn(exception.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new EmailVerifyDto(exception.getMessage()));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", exception.getMessage()));
     }
 }

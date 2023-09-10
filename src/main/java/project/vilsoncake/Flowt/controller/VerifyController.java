@@ -29,7 +29,7 @@ public class VerifyController {
     }
 
     @PostMapping("/restore-password")
-    public ResponseEntity<RestorePasswordResponse> restorePassword(@RequestBody PasswordCodeDto restorePasswordDto) {
+    public ResponseEntity<Map<String, String>> restorePassword(@RequestBody PasswordCodeDto restorePasswordDto) {
         return ResponseEntity.ok(userVerifyService.sendChangePasswordMessageByEmail(restorePasswordDto.getEmail()));
     }
 }

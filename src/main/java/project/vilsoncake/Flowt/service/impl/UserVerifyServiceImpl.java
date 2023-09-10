@@ -99,7 +99,7 @@ public class UserVerifyServiceImpl implements UserVerifyService {
     }
 
     @Override
-    public RestorePasswordResponse sendChangePasswordMessageByEmail(String email) {
+    public Map<String, String> sendChangePasswordMessageByEmail(String email) {
         UserEntity user = userRepository.findByEmail(email).orElseThrow(() ->
                 new UsernameNotFoundException("User not found"));
 
@@ -119,7 +119,7 @@ public class UserVerifyServiceImpl implements UserVerifyService {
         });
         mailThread.start();
 
-        return new RestorePasswordResponse(email);
+        return Map.of("email", email);
     }
 
     @Override
