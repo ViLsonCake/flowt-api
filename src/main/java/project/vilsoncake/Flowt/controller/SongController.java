@@ -31,14 +31,18 @@ public class SongController {
     }
 
     @GetMapping("/audio/{author}/{songName}")
-    public ResponseEntity<Resource> getSongAudioFile(
+    public ResponseEntity<byte[]> getSongAudioFile(
             @PathVariable("author") String author,
             @PathVariable("songName") String songName
     ) throws MinioFileException {
+        byte[] bytes = songService.getSongAudioFile(author, songName);
+
         return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=your-file.mp3")
-                .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                .body(new ByteArrayResource(songService.getSongAudioFile(author, songName)));
+                .contentType(MediaType.valueOf("audio/mpeg"))
+                .contentLength(bytes.length)
+                .header(HttpHeaders.ACCEPT_RANGES, "bytes")
+                .header(HttpHeaders.CONTENT_RANGE, String.format("bytes 0-%s/%s", bytes.length - 1, bytes.length))
+                .body(bytes);
     }
 
     @PostMapping
