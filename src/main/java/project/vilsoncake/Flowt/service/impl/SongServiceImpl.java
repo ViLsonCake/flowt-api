@@ -64,7 +64,7 @@ public class SongServiceImpl implements SongService {
     }
 
     @Override
-    public Map<String, String> saveNewAudioFile(String authHeader, String name, MultipartFile file) throws InvalidExtensionException {
+    public Map<String, String> saveNewAudioFile(String authHeader, String name, MultipartFile file) throws InvalidExtensionException, MinioFileException {
         if (!fileUtils.isValidAudioFileExtension(file.getOriginalFilename())) {
             throw new InvalidExtensionException("Invalid file extension (must be mp3)");
         }
@@ -73,16 +73,14 @@ public class SongServiceImpl implements SongService {
         UserEntity user = userService.getUserByUsername(username);
         SongEntity song = findByNameAndUser(name, user);
 
-        String filename;
-
-        if (!audioFileService.existsBySong(song)) {
-            // Generate filename
-            filename = fileUtils.generateRandomUUID();
-            // Save file info in sql
-            audioFileService.saveFile(filename, file, song);
-        } else {
-            filename = audioFileService.getBySong(song).getFilename();
+        if (audioFileService.existsBySong(song)) {
+            throw new MinioFileException("Song already have a file");
         }
+        // Generate filename
+        String filename = fileUtils.generateRandomUUID();
+        // Save file info in sql
+        audioFileService.saveFile(filename, file, song);
+
         // Save file data in minio storage
         minioFileService.saveFile(minioConfig.getAudioBucket(), filename, file);
 

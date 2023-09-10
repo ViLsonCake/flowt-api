@@ -57,7 +57,7 @@ public class SongController {
     public ResponseEntity<Map<String, String>> addNewSongFile(
             @RequestHeader(value = "Authorization", required = false, defaultValue = "") String authHeader,
             @PathVariable("name") String name,
-            @RequestParam("file") MultipartFile file) throws InvalidExtensionException {
+            @RequestParam("file") MultipartFile file) throws InvalidExtensionException, MinioFileException {
         return ResponseEntity.ok(songService.saveNewAudioFile(authHeader, name, file));
     }
 
