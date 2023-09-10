@@ -1,7 +1,9 @@
 package project.vilsoncake.Flowt.service.impl;
 
+import jakarta.persistence.LockModeType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -128,10 +130,14 @@ public class SongServiceImpl implements SongService {
         );
     }
 
+    @Transactional
     @Override
     public byte[] getSongAudioFile(String username, String name) throws MinioFileException {
         UserEntity user = userService.getUserByUsername(username);
         SongEntity song = findByNameAndUser(name, user);
+
+        // Increment song listens
+        incrementSongListens(song);
 
         AudioFileEntity audioFile = song.getAudioFile();
 
@@ -150,6 +156,12 @@ public class SongServiceImpl implements SongService {
         if (songAvatar == null) throw new MinioFileException("File not found");
 
         return minioFileService.getFileContent(minioConfig.getSongAvatarBucket(), songAvatar.getFilename());
+    }
+
+    @Override
+    public void incrementSongListens(SongEntity song) {
+        song.setListens(song.getListens() + 1);
+        songRepository.save(song);
     }
 
     @Override

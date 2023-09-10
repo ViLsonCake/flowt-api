@@ -1,6 +1,5 @@
 package project.vilsoncake.Flowt.service;
 
-import project.vilsoncake.Flowt.dto.RestorePasswordResponse;
 import project.vilsoncake.Flowt.entity.UserEntity;
 import project.vilsoncake.Flowt.exception.AccountAlreadyVerifiedException;
 import project.vilsoncake.Flowt.exception.VerifyCodeNotFoundException;

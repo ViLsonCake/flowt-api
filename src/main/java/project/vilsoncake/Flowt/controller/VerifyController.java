@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import project.vilsoncake.Flowt.dto.PasswordCodeDto;
-import project.vilsoncake.Flowt.dto.RestorePasswordResponse;
 import project.vilsoncake.Flowt.exception.AccountAlreadyVerifiedException;
 import project.vilsoncake.Flowt.exception.VerifyCodeNotFoundException;
 import project.vilsoncake.Flowt.service.UserVerifyService;
