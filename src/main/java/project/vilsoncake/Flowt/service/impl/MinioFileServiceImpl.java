@@ -42,6 +42,22 @@ public class MinioFileServiceImpl implements MinioFileService {
     }
 
     @Override
+    public boolean removeFile(String bucket, String filename) {
+        try {
+            minioClient.removeObject(
+                    RemoveObjectArgs.builder()
+                            .bucket(bucket)
+                            .object(filename)
+                            .build()
+            );
+
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    @Override
     public byte[] getFileContent(String bucket, String filename) throws MinioFileException {
         try {
             InputStream inputStream = minioClient.getObject(

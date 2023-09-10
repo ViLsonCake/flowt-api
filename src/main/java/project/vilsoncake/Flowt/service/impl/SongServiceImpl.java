@@ -16,6 +16,7 @@ import project.vilsoncake.Flowt.service.*;
 import project.vilsoncake.Flowt.utils.AuthUtils;
 import project.vilsoncake.Flowt.utils.FileUtils;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @Service
@@ -128,6 +129,20 @@ public class SongServiceImpl implements SongService {
                 "listens", String.valueOf(song.getListens()),
                 "author", username
         );
+    }
+
+    @Override
+    public Map<String, String> removeUserSong(String authHeader, String name) {
+        String username = authUtils.getUsernameFromAuthHeader(authHeader);
+        UserEntity user = userService.getUserByUsername(username);
+        SongEntity song = findByNameAndUser(name, user);
+
+        // Remove audio file from MinIO
+        minioFileService.removeFile(minioConfig.getAudioBucket(), song.getAudioFile().getFilename());
+        // Remove song with avatar and audio from postgres
+        songRepository.delete(song);
+
+        return Map.of("message", String.format("Song '%s' removed", name));
     }
 
     @Transactional

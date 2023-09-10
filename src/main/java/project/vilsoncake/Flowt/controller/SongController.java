@@ -1,8 +1,6 @@
 package project.vilsoncake.Flowt.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -68,5 +66,13 @@ public class SongController {
             @RequestParam("file") MultipartFile avatar
     ) throws InvalidExtensionException {
         return ResponseEntity.ok(songService.addAvatarByUserSongName(authHeader, name, avatar));
+    }
+
+    @DeleteMapping("/{name}")
+    public ResponseEntity<Map<String, String>> removeUserSong(
+            @RequestHeader(value = "Authorization", required = false, defaultValue = "") String authHeader,
+            @PathVariable("name") String name
+    ) {
+        return ResponseEntity.ok(songService.removeUserSong(authHeader, name));
     }
 }
