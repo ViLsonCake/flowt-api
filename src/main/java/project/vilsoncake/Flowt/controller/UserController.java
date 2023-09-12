@@ -9,10 +9,7 @@ import project.vilsoncake.Flowt.dto.*;
 import project.vilsoncake.Flowt.entity.PlaylistEntity;
 import project.vilsoncake.Flowt.exception.InvalidExtensionException;
 import project.vilsoncake.Flowt.exception.MinioFileException;
-import project.vilsoncake.Flowt.service.ChangeUserService;
-import project.vilsoncake.Flowt.service.LikedService;
-import project.vilsoncake.Flowt.service.UserManagementService;
-import project.vilsoncake.Flowt.service.UserService;
+import project.vilsoncake.Flowt.service.*;
 
 import java.util.List;
 import java.util.Map;
@@ -26,6 +23,8 @@ public class UserController {
     private final ChangeUserService changeUserService;
     private final UserService userService;
     private final LikedService likedService;
+    private final SongService songService;
+    private final FollowerService followerService;
 
     @PostMapping("/avatar")
     public ResponseEntity<Map<String, String>> addAvatar(
@@ -70,28 +69,44 @@ public class UserController {
     }
 
     @GetMapping("/subscribes")
-    public ResponseEntity<Map<String, List<String>>> getUserSubscribes(@RequestHeader(value = "Authorization", required = false, defaultValue = "") String authHeader) {
-        return ResponseEntity.ok(userService.getAllUserSubscribesUsernames(authHeader));
+    public ResponseEntity<SubscribesDto> getUserSubscribes(
+            @RequestHeader(value = "Authorization", required = false, defaultValue = "") String authHeader,
+            @RequestParam(required = false, defaultValue = "0") int page,
+            @RequestParam(required = false, defaultValue = "10") int size
+    ) {
+        return ResponseEntity.ok(followerService.getUserSubscribes(authHeader, page, size));
     }
 
     @GetMapping("/followers")
-    public ResponseEntity<Map<String, List<String>>> getUserFollowers(@RequestHeader(value = "Authorization", required = false, defaultValue = "") String authHeader) {
-        return ResponseEntity.ok(userService.getAllUserFollowersUsernames(authHeader));
+    public ResponseEntity<FollowersDto> getUserFollowers(
+            @RequestHeader(value = "Authorization", required = false, defaultValue = "") String authHeader,
+            @RequestParam(required = false, defaultValue = "0") int page,
+            @RequestParam(required = false, defaultValue = "10") int size
+    ) {
+        return ResponseEntity.ok(followerService.getUserFollowers(authHeader, page, size));
     }
 
     @GetMapping("/liked")
-    public ResponseEntity<Map<String, Map<String, String>>> getLikedSongs(@RequestHeader(value = "Authorization", required = false, defaultValue = "") String authHeader) {
-        return ResponseEntity.ok(likedService.getLikedSongs(authHeader));
+    public ResponseEntity<LikedSongsDto> getLikedSongs(
+            @RequestHeader(value = "Authorization", required = false, defaultValue = "") String authHeader,
+            @RequestParam(required = false, defaultValue = "0") int page,
+            @RequestParam(required = false, defaultValue = "10") int size
+    ) {
+        return ResponseEntity.ok(likedService.getLikedSongs(authHeader, page, size));
     }
 
     @GetMapping("/songs")
-    public ResponseEntity<Map<String, List<String>>> getUserSongs(@RequestHeader(value = "Authorization", required = false, defaultValue = "") String authHeader) {
-        return ResponseEntity.ok(userService.getUserSongs(authHeader));
+    public ResponseEntity<UserSongsDto> getUserSongs(
+            @RequestHeader(value = "Authorization", required = false, defaultValue = "") String authHeader,
+            @RequestParam(required = false, defaultValue = "0") int page,
+            @RequestParam(required = false, defaultValue = "10") int size
+    ) {
+        return ResponseEntity.ok(songService.getSongsByUser(authHeader, page, size));
     }
 
     @GetMapping("playlists")
     public ResponseEntity<Map<String, List<PlaylistEntity>>> getUserPlaylists(@RequestHeader(value = "Authorization", required = false, defaultValue = "") String authHeader) {
-        return ResponseEntity.ok(userService.getAllUserPlaylists(authHeader));
+        return ResponseEntity.ok(userService.getUserPlaylists(authHeader));
     }
 
     @PatchMapping("/username")

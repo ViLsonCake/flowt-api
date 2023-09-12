@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import project.vilsoncake.Flowt.dto.SongDto;
+import project.vilsoncake.Flowt.entity.SongEntity;
 import project.vilsoncake.Flowt.exception.InvalidExtensionException;
 import project.vilsoncake.Flowt.exception.MinioFileException;
 import project.vilsoncake.Flowt.service.SongService;
@@ -21,7 +22,7 @@ public class SongController {
     private final SongService songService;
 
     @GetMapping("/{username}/{songName}")
-    public ResponseEntity<Map<String, String>> getSongInfo(
+    public ResponseEntity<SongEntity> getSongInfo(
             @PathVariable("username") String username,
             @PathVariable("songName") String songName
     ) {

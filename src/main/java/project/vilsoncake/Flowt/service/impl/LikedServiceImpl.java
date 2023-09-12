@@ -2,7 +2,10 @@ package project.vilsoncake.Flowt.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import project.vilsoncake.Flowt.dto.LikedSongsDto;
 import project.vilsoncake.Flowt.entity.LikedEntity;
 import project.vilsoncake.Flowt.entity.SongEntity;
 import project.vilsoncake.Flowt.entity.UserEntity;
@@ -11,6 +14,7 @@ import project.vilsoncake.Flowt.service.LikedService;
 import project.vilsoncake.Flowt.service.SongService;
 import project.vilsoncake.Flowt.service.UserService;
 import project.vilsoncake.Flowt.utils.AuthUtils;
+import project.vilsoncake.Flowt.utils.PageUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,6 +30,7 @@ public class LikedServiceImpl implements LikedService {
     private final SongService songService;
     private final UserService userService;
     private final AuthUtils authUtils;
+    private final PageUtils pageUtils;
 
     @Override
     public Map<String, String> addSongToLiked(String authHeader, String author, String name) {
@@ -86,17 +91,21 @@ public class LikedServiceImpl implements LikedService {
     }
 
     @Override
-    public Map<String, Map<String, String>> getLikedSongs(String authHeader) {
+    public LikedSongsDto getLikedSongs(String authHeader, int page, int size) {
+        if (page < 0 || size < 1) return null;
+
         String username = authUtils.getUsernameFromAuthHeader(authHeader);
         UserEntity user = userService.getUserByUsername(username);
+        List<SongEntity> songs = user.getLiked().getSongs();
+        Page<SongEntity> songPages = pageUtils.convertToPage(songs, PageRequest.of(page, size));
 
-        LikedEntity liked = user.getLiked();
         Map<String, String> authorWithSong = new HashMap<>();
+
         // Convert to map<Author, SongName>
-        liked.getSongs().forEach(likedSong -> {
+        songPages.getContent().forEach(likedSong -> {
             authorWithSong.put(likedSong.getUser().getUsername(), likedSong.getName());
         });
 
-        return Map.of("songs", authorWithSong);
+        return new LikedSongsDto(songPages.getTotalPages(), authorWithSong);
     }
 }

@@ -121,7 +121,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Map<String, List<String>> getAllUserSubscribesUsernames(String authHeader) {
+    public Map<String, List<String>> getUserSubscribesUsernames(String authHeader) {
         String username = authUtils.getUsernameFromAuthHeader(authHeader);
         UserEntity user = userRepository.findByUsername(username).orElseThrow(() ->
                 new UsernameNotFoundException("User not found"));
@@ -133,10 +133,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Map<String, List<String>> getAllUserFollowersUsernames(String authHeader) {
+    public Map<String, List<String>> getUserFollowersUsernames(String authHeader) {
         String username = authUtils.getUsernameFromAuthHeader(authHeader);
         UserEntity user = getUserByUsername(username);
-        List<String> usernames = user.getFollowers().stream().map(subscribe -> subscribe.getUser().getUsername()).toList();
+        List<String> usernames = user.getFollowers().stream().map(follower -> follower.getUser().getUsername()).toList();
 
         return Map.of("followers", usernames);
     }
@@ -151,7 +151,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Map<String, List<PlaylistEntity>> getAllUserPlaylists(String authHeader) {
+    public Map<String, List<PlaylistEntity>> getUserPlaylists(String authHeader) {
         String username = authUtils.getUsernameFromAuthHeader(authHeader);
         UserEntity user = getUserByUsername(username);
 

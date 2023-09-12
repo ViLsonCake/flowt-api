@@ -1,14 +1,15 @@
 package project.vilsoncake.Flowt.service.impl;
 
-import jakarta.persistence.LockModeType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.jpa.repository.Lock;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import project.vilsoncake.Flowt.config.MinioConfig;
 import project.vilsoncake.Flowt.dto.SongDto;
+import project.vilsoncake.Flowt.dto.UserSongsDto;
 import project.vilsoncake.Flowt.entity.*;
 import project.vilsoncake.Flowt.exception.*;
 import project.vilsoncake.Flowt.repository.SongRepository;
@@ -16,7 +17,7 @@ import project.vilsoncake.Flowt.service.*;
 import project.vilsoncake.Flowt.utils.AuthUtils;
 import project.vilsoncake.Flowt.utils.FileUtils;
 
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -118,17 +119,20 @@ public class SongServiceImpl implements SongService {
     }
 
     @Override
-    public Map<String, String> getSongInfo(String username, String name) {
-        UserEntity user = userService.getUserByUsername(username);
-        SongEntity song = findByNameAndUser(name, user);
+    public UserSongsDto getSongsByUser(String authHeader, int page, int size) {
+        if (page < 1 || size < 1) return null;
 
-        return Map.of(
-                "name", song.getName(),
-                "issueYear", song.getIssueYear(),
-                "genre", song.getGenre(),
-                "listens", String.valueOf(song.getListens()),
-                "author", username
-        );
+        String username = authUtils.getUsernameFromAuthHeader(authHeader);
+        UserEntity user = userService.getUserByUsername(username);
+        Page<SongEntity> pageSongs = songRepository.findAllByUser(user, PageRequest.of(page, size));
+
+        return new UserSongsDto(pageSongs.getTotalPages(), pageSongs.toList());
+    }
+
+    @Override
+    public SongEntity getSongInfo(String username, String name) {
+        UserEntity user = userService.getUserByUsername(username);
+        return findByNameAndUser(name, user);
     }
 
     @Override

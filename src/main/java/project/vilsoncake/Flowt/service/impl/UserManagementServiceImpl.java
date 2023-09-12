@@ -15,6 +15,7 @@ import project.vilsoncake.Flowt.exception.MinioFileException;
 import project.vilsoncake.Flowt.repository.FollowerRepository;
 import project.vilsoncake.Flowt.repository.UserRepository;
 import project.vilsoncake.Flowt.service.AvatarService;
+import project.vilsoncake.Flowt.service.FollowerService;
 import project.vilsoncake.Flowt.service.MinioFileService;
 import project.vilsoncake.Flowt.service.UserManagementService;
 import project.vilsoncake.Flowt.utils.AuthUtils;
@@ -29,16 +30,16 @@ import java.util.Map;
 public class UserManagementServiceImpl implements UserManagementService {
 
     private final UserRepository userRepository;
-    private final FollowerRepository followerRepository;
+    private final FollowerService followerService;
     private final AvatarService avatarService;
     private final MinioFileService minioFileService;
     private final MinioConfig minioConfig;
     private final FileUtils fileUtils;
     private final AuthUtils authUtils;
 
-    public UserManagementServiceImpl(UserRepository userRepository, FollowerRepository followerRepository, @Qualifier("userAvatarServiceImpl") AvatarService avatarService, MinioFileService minioFileService, MinioConfig minioConfig, FileUtils fileUtils, AuthUtils authUtils) {
+    public UserManagementServiceImpl(UserRepository userRepository, FollowerService followerService, @Qualifier("userAvatarServiceImpl") AvatarService avatarService, MinioFileService minioFileService, MinioConfig minioConfig, FileUtils fileUtils, AuthUtils authUtils) {
         this.userRepository = userRepository;
-        this.followerRepository = followerRepository;
+        this.followerService = followerService;
         this.avatarService = avatarService;
         this.minioFileService = minioFileService;
         this.minioConfig = minioConfig;
@@ -126,7 +127,7 @@ public class UserManagementServiceImpl implements UserManagementService {
 
 
         if (users.contains(followedUser.getUsername())) {
-            followerRepository.deleteByUserAndFollowerId(authenticatedUser.getUserId(), followedUser.getUserId());
+            followerService.unsubscribeUser(authenticatedUser.getUserId(), followedUser.getUserId());
             response.put("message", String.format("Unsubscribe to user '%s'", followedUser.getUsername()));
         } else {
             response.put("message", String.format("User not subscribed to '%s'", followedUser.getUsername()));

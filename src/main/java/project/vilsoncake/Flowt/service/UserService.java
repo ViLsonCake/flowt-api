@@ -15,10 +15,10 @@ public interface UserService {
     UserDto getAuthenticatedUserDto(String authHeader);
     UserDto getUserDtoByUsername(String username);
     UserEntity getUserByUsername(String username);
-    Map<String, List<String>> getAllUserSubscribesUsernames(String authHeader);
-    Map<String, List<String>> getAllUserFollowersUsernames(String authHeader);
+    Map<String, List<String>> getUserSubscribesUsernames(String authHeader);
+    Map<String, List<String>> getUserFollowersUsernames(String authHeader);
     Map<String, List<String>> getUserSongs(String authHeader);
-    Map<String, List<PlaylistEntity>> getAllUserPlaylists(String authHeader);
+    Map<String, List<PlaylistEntity>> getUserPlaylists(String authHeader);
     Map<String, String> changeUserPasswordByUsername(String authHeader, ChangePasswordDto changePasswordDto);
     Map<String, String> restorePassword(RestorePasswordDto restorePasswordDto);
     Map<String, String> deleteUser(String username);
