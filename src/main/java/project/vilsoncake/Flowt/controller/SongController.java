@@ -44,6 +44,15 @@ public class SongController {
                 .body(bytes);
     }
 
+    @GetMapping("/random/{genre}/{author}/{name}")
+    public ResponseEntity<SongEntity> getRandomSongByGenre(
+            @PathVariable("genre") String genre,
+            @PathVariable("author") String author,
+            @PathVariable("name") String name
+    ) {
+        return ResponseEntity.ok(songService.getRandomSongIntoByGenreExceptByCurrent(genre, author, name));
+    }
+
     @PostMapping
     public ResponseEntity<Map<String, String>> addNewSongEntity(
             @RequestHeader(value = "Authorization", required = false, defaultValue = "") String authHeader,

@@ -8,7 +8,6 @@ import project.vilsoncake.Flowt.entity.UserEntity;
 import project.vilsoncake.Flowt.exception.InvalidExtensionException;
 import project.vilsoncake.Flowt.exception.MinioFileException;
 
-import java.util.List;
 import java.util.Map;
 
 public interface SongService {
@@ -16,6 +15,7 @@ public interface SongService {
     Map<String, String> addAvatarByUserSongName(String authHeader, String name, MultipartFile file) throws InvalidExtensionException;
     Map<String, String> saveNewAudioFile(String authHeader, String name, MultipartFile file) throws InvalidExtensionException, MinioFileException;
     SongEntity getSongInfo(String username, String name);
+    SongEntity getRandomSongIntoByGenreExceptByCurrent(String genre, String author, String name);
     Map<String, String> removeUserSong(String authHeader, String name);
     UserSongsDto getSongsByUser(String authHeader, int page, int size);
     byte[] getSongAudioFile(String username, String name) throws MinioFileException;

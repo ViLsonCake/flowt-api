@@ -19,6 +19,7 @@ import project.vilsoncake.Flowt.utils.FileUtils;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 @Service
 @Slf4j
@@ -133,6 +134,22 @@ public class SongServiceImpl implements SongService {
     public SongEntity getSongInfo(String username, String name) {
         UserEntity user = userService.getUserByUsername(username);
         return findByNameAndUser(name, user);
+    }
+
+    @Override
+    public SongEntity getRandomSongIntoByGenreExceptByCurrent(String genre, String author, String name) {
+        List<SongEntity> songs = songRepository.findAllByGenre(genre);
+        if (songs.size() == 1) return songs.get(0);
+        if (songs.isEmpty()) return null;
+
+        int randomSongIndex;
+
+        // Rerun random index if you come across the same song
+        do {
+            randomSongIndex = new Random().nextInt(0, songs.size() - 1);
+        } while (songs.get(randomSongIndex).getName().equals(name) && songs.get(randomSongIndex).getUser().getUsername().equals(author));
+
+        return songs.get(randomSongIndex);
     }
 
     @Override
