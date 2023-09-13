@@ -10,7 +10,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserSongsDto {
+public class SongsResponse {
     private int count;
     private List<SongEntity> songs;
 }

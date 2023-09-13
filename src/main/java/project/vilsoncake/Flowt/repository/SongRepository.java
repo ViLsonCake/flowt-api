@@ -15,6 +15,7 @@ public interface SongRepository extends CrudRepository<SongEntity, Long> {
     @Lock(value = LockModeType.PESSIMISTIC_WRITE)
     Optional<SongEntity> findByNameAndUser(String name, UserEntity user);
     Page<SongEntity> findAllByUser(UserEntity user, Pageable pageable);
+    Page<SongEntity> findAllByGenre(String genre, Pageable pageable);
     List<SongEntity> findAllByGenre(String genre);
     Boolean existsByNameAndUser(String name, UserEntity user);
 }

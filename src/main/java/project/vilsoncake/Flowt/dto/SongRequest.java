@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class SongDto {
+public class SongRequest {
     private String name;
     private String issueYear;
     private String genre;

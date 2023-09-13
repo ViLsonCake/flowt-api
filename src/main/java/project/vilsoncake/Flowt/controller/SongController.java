@@ -6,7 +6,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import project.vilsoncake.Flowt.dto.SongDto;
+import project.vilsoncake.Flowt.dto.SongRequest;
+import project.vilsoncake.Flowt.dto.SongsResponse;
 import project.vilsoncake.Flowt.entity.SongEntity;
 import project.vilsoncake.Flowt.exception.InvalidExtensionException;
 import project.vilsoncake.Flowt.exception.MinioFileException;
@@ -44,6 +45,15 @@ public class SongController {
                 .body(bytes);
     }
 
+    @GetMapping("/{genre}")
+    public ResponseEntity<SongsResponse> getSongsByGenre(
+            @PathVariable("genre") String genre,
+            @RequestParam(required = false, defaultValue = "0") int page,
+            @RequestParam(required = false, defaultValue = "10") int size
+    ) {
+        return ResponseEntity.ok(songService.getSongsByGenre(genre, page, size));
+    }
+
     @GetMapping("/random/{genre}")
     public ResponseEntity<SongEntity> getRandomSongByGenre(
             @PathVariable("genre") String genre
@@ -54,9 +64,9 @@ public class SongController {
     @PostMapping
     public ResponseEntity<Map<String, String>> addNewSongEntity(
             @RequestHeader(value = "Authorization", required = false, defaultValue = "") String authHeader,
-            @RequestBody SongDto songDto
+            @RequestBody SongRequest songRequest
     ) {
-        return ResponseEntity.ok(songService.saveNewSongEntity(authHeader, songDto));
+        return ResponseEntity.ok(songService.saveNewSongEntity(authHeader, songRequest));
     }
 
     @PostMapping("/audio/{name}")

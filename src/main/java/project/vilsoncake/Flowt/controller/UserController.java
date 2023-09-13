@@ -96,7 +96,7 @@ public class UserController {
     }
 
     @GetMapping("/songs")
-    public ResponseEntity<UserSongsDto> getUserSongs(
+    public ResponseEntity<SongsResponse> getUserSongs(
             @RequestHeader(value = "Authorization", required = false, defaultValue = "") String authHeader,
             @RequestParam(required = false, defaultValue = "0") int page,
             @RequestParam(required = false, defaultValue = "10") int size

@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import project.vilsoncake.Flowt.config.MinioConfig;
-import project.vilsoncake.Flowt.dto.SongDto;
-import project.vilsoncake.Flowt.dto.UserSongsDto;
+import project.vilsoncake.Flowt.dto.SongRequest;
+import project.vilsoncake.Flowt.dto.SongsResponse;
 import project.vilsoncake.Flowt.entity.*;
 import project.vilsoncake.Flowt.exception.*;
 import project.vilsoncake.Flowt.repository.SongRepository;
@@ -46,7 +46,7 @@ public class SongServiceImpl implements SongService {
     }
 
     @Override
-    public Map<String, String> saveNewSongEntity(String authHeader, SongDto songDto) {
+    public Map<String, String> saveNewSongEntity(String authHeader, SongRequest songRequest) {
         String username = authUtils.getUsernameFromAuthHeader(authHeader);
         UserEntity user = userService.getUserByUsername(username);
 
@@ -54,23 +54,23 @@ public class SongServiceImpl implements SongService {
         if (!user.isEmailVerify()) throw new UserEmailNotVerifiedException("User email not verified");
 
         // If user have song with the same name
-        if (songRepository.existsByNameAndUser(songDto.getName(), user)) throw new SongAlreadyExistByUserException("User have name with same name");
+        if (songRepository.existsByNameAndUser(songRequest.getName(), user)) throw new SongAlreadyExistByUserException("User have name with same name");
 
         // Save new song
         SongEntity song = new SongEntity();
-        song.setName(songDto.getName());
-        song.setIssueYear(songDto.getIssueYear());
-        song.setGenre(songDto.getGenre());
+        song.setName(songRequest.getName());
+        song.setIssueYear(songRequest.getIssueYear());
+        song.setGenre(songRequest.getGenre());
         song.setUser(user);
         song.setListens(0L);
         songRepository.save(song);
 
-        return Map.of("name", songDto.getName());
+        return Map.of("name", songRequest.getName());
     }
 
     @Override
     public Map<String, String> saveNewAudioFile(String authHeader, String name, MultipartFile file) throws InvalidExtensionException, MinioFileException {
-        if (!fileUtils.isValidAudioFileExtension(file.getOriginalFilename())) {
+        if (file.getOriginalFilename() != null && !fileUtils.isValidAudioFileExtension(file.getOriginalFilename())) {
             throw new InvalidExtensionException("Invalid file extension (must be mp3)");
         }
 
@@ -95,7 +95,7 @@ public class SongServiceImpl implements SongService {
     @Transactional
     @Override
     public Map<String, String> addAvatarByUserSongName(String authHeader, String name, MultipartFile file) throws InvalidExtensionException {
-        if (!fileUtils.isValidAvatarExtension(file.getOriginalFilename()))
+        if (file.getOriginalFilename() != null && !fileUtils.isValidAvatarExtension(file.getOriginalFilename()))
             throw new InvalidExtensionException("Invalid file extension (must be png or jpg)");
 
         String username = authUtils.getUsernameFromAuthHeader(authHeader);
@@ -120,14 +120,23 @@ public class SongServiceImpl implements SongService {
     }
 
     @Override
-    public UserSongsDto getSongsByUser(String authHeader, int page, int size) {
-        if (page < 1 || size < 1) return null;
+    public SongsResponse getSongsByUser(String authHeader, int page, int size) {
+        if (page < 0 || size < 1) return null;
 
         String username = authUtils.getUsernameFromAuthHeader(authHeader);
         UserEntity user = userService.getUserByUsername(username);
         Page<SongEntity> pageSongs = songRepository.findAllByUser(user, PageRequest.of(page, size));
 
-        return new UserSongsDto(pageSongs.getTotalPages(), pageSongs.toList());
+        return new SongsResponse(pageSongs.getTotalPages(), pageSongs.toList());
+    }
+
+    @Override
+    public SongsResponse getSongsByGenre(String genre, int page, int size) {
+        if (page < 0 || size < 1) return null;
+
+        Page<SongEntity> songsOnPage = songRepository.findAllByGenre(genre, PageRequest.of(page, size));
+
+        return new SongsResponse(songsOnPage.getTotalPages(), songsOnPage.getContent());
     }
 
     @Override
