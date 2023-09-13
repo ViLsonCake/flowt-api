@@ -14,6 +14,8 @@ Permit all
 + POST /auth/login - create access and refresh jwt tokens
 + GET /auth/refresh - refresh access and refresh tokens
 + GET /images/user/:username - get user avatar by username
++ GET /images/song/:username/:name - get song avatar by author and name
++ GET /images/playlist/:username/:name - get playlist avatar by username and name
 + POST /verify/restore-password - send mail with code for restoring the password by email from request
 + POST /users/restore-password - change user password 
 ___
