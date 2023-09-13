@@ -137,18 +137,14 @@ public class SongServiceImpl implements SongService {
     }
 
     @Override
-    public SongEntity getRandomSongIntoByGenreExceptByCurrent(String genre, String author, String name) {
+    public SongEntity getRandomSongInfoByGenre(String genre) {
         List<SongEntity> songs = songRepository.findAllByGenre(genre);
         if (songs.size() == 1) return songs.get(0);
         if (songs.isEmpty()) return null;
 
-        int randomSongIndex;
+        int randomSongIndex = new Random().nextInt(0, songs.size() - 1);
 
-        // Rerun random index if you come across the same song
-        do {
-            randomSongIndex = new Random().nextInt(0, songs.size() - 1);
-        } while (songs.get(randomSongIndex).getName().equals(name) && songs.get(randomSongIndex).getUser().getUsername().equals(author));
-
+        // Get random song
         return songs.get(randomSongIndex);
     }
 

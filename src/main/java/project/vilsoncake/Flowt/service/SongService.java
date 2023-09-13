@@ -15,7 +15,7 @@ public interface SongService {
     Map<String, String> addAvatarByUserSongName(String authHeader, String name, MultipartFile file) throws InvalidExtensionException;
     Map<String, String> saveNewAudioFile(String authHeader, String name, MultipartFile file) throws InvalidExtensionException, MinioFileException;
     SongEntity getSongInfo(String username, String name);
-    SongEntity getRandomSongIntoByGenreExceptByCurrent(String genre, String author, String name);
+    SongEntity getRandomSongInfoByGenre(String genre);
     Map<String, String> removeUserSong(String authHeader, String name);
     UserSongsDto getSongsByUser(String authHeader, int page, int size);
     byte[] getSongAudioFile(String username, String name) throws MinioFileException;

@@ -44,13 +44,11 @@ public class SongController {
                 .body(bytes);
     }
 
-    @GetMapping("/random/{genre}/{author}/{name}")
+    @GetMapping("/random/{genre}")
     public ResponseEntity<SongEntity> getRandomSongByGenre(
-            @PathVariable("genre") String genre,
-            @PathVariable("author") String author,
-            @PathVariable("name") String name
+            @PathVariable("genre") String genre
     ) {
-        return ResponseEntity.ok(songService.getRandomSongIntoByGenreExceptByCurrent(genre, author, name));
+        return ResponseEntity.ok(songService.getRandomSongInfoByGenre(genre));
     }
 
     @PostMapping
