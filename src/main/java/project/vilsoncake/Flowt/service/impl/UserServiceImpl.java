@@ -76,7 +76,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UsersPageDto getUsersDtoBySubstring(SubstringDto substringDto, int page, int size) {
-        Page<UserEntity> users = userRepository.findByUsernameContaining(substringDto.getSubstring(), PageRequest.of(page, size));
+        Page<UserEntity> users = userRepository.findByUsernameContainingIgnoreCase(substringDto.getSubstring(), PageRequest.of(page, size));
 
         return new UsersPageDto(
                 users.getTotalPages(),

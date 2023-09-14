@@ -6,11 +6,10 @@ import org.springframework.data.repository.CrudRepository;
 import project.vilsoncake.Flowt.entity.PlaylistEntity;
 import project.vilsoncake.Flowt.entity.UserEntity;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface PlaylistRepository extends CrudRepository<PlaylistEntity, Long> {
     Optional<PlaylistEntity> findByUserAndName(UserEntity user, String name);
     Boolean existsByUserAndName(UserEntity user, String name);
-    Page<PlaylistEntity> findByNameContaining(String substring, Pageable pageable);
+    Page<PlaylistEntity> findByNameContainingIgnoreCase(String substring, Pageable pageable);
 }
