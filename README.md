@@ -18,6 +18,9 @@ Permit all
 + GET /images/playlist/:username/:name - get playlist avatar by username and name
 + POST /verify/restore-password - send mail with code for restoring the password by email from request
 + POST /users/restore-password - change user password 
++ GET /search/songs - search songs by substring
++ GET /search/playlist - search playlists by substring
++ GET /search/users - search users by substring
 ___
 Authenticated
 + POST /users/avatar - change user avatar
@@ -48,6 +51,8 @@ Authenticated
 + POST /playlists - create new playlist
 + POST /playlists/avatar/:playlistName - add avatar to playlist
 + POST /playlists/:playlistName/:author/:songName - add song to playlist
++ PATCH /playlists - change playlist name
++ PATCH /playlists/:playlistName - change playlist access modifier
 + DELETE /playlists/:playlistName/:author/:songName - remove song from playlist
 ___ 
 For moderators
