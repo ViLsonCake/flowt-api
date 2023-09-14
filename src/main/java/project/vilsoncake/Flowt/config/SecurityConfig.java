@@ -55,7 +55,6 @@ public class SecurityConfig {
                         .requestMatchers("/users/**").fullyAuthenticated()
                         .requestMatchers("/search/**").fullyAuthenticated()
                         .requestMatchers("/songs/audio/**").permitAll()
-                        .requestMatchers("/songs/**").fullyAuthenticated()
                         .requestMatchers("/admin/**").hasAuthority(ADMIN.getAuthority())
                         .requestMatchers("/moderator/**").hasAnyAuthority(ADMIN.getAuthority(), MODERATOR.getAuthority())
                         .anyRequest().permitAll()
