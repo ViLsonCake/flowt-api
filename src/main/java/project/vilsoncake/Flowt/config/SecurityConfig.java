@@ -53,6 +53,7 @@ public class SecurityConfig {
                         .requestMatchers("/verify/**").fullyAuthenticated()
                         .requestMatchers("/users/restore-password").permitAll()
                         .requestMatchers("/users/**").fullyAuthenticated()
+                        .requestMatchers("/search/**").fullyAuthenticated()
                         .requestMatchers("/songs/audio/**").permitAll()
                         .requestMatchers("/songs/**").fullyAuthenticated()
                         .requestMatchers("/admin/**").hasAuthority(ADMIN.getAuthority())

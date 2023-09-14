@@ -22,6 +22,8 @@ public class PlaylistEntity {
     @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "playlist")
     private PlaylistAvatarEntity playlistAvatar;
+
+    //TODO add access modifier
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "user_id")

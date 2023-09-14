@@ -2,10 +2,14 @@ package project.vilsoncake.Flowt.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import project.vilsoncake.Flowt.config.MinioConfig;
 import project.vilsoncake.Flowt.dto.PlaylistDto;
+import project.vilsoncake.Flowt.dto.PlaylistsPageDto;
+import project.vilsoncake.Flowt.dto.SubstringDto;
 import project.vilsoncake.Flowt.entity.PlaylistAvatarEntity;
 import project.vilsoncake.Flowt.entity.PlaylistEntity;
 import project.vilsoncake.Flowt.entity.SongEntity;
@@ -158,5 +162,15 @@ public class PlaylistServiceImpl implements PlaylistService {
     public PlaylistEntity getPlaylistByUserAndName(UserEntity user, String name) {
         return playListRepository.findByUserAndName(user, name).orElseThrow(() ->
                 new PlaylistNotFoundException("Playlist not found"));
+    }
+
+    @Override
+    public PlaylistsPageDto getPublicPlaylistsBySubstring(SubstringDto substringDto, int page, int size) {
+        Page<PlaylistEntity> playlists = playListRepository.findByNameContaining(substringDto.getSubstring(), PageRequest.of(page, size));
+
+        return new PlaylistsPageDto(
+                playlists.getTotalPages(),
+                playlists.getContent().stream().map(PlaylistDto::fromPlaylist).toList()
+        );
     }
 }

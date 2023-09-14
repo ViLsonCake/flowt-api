@@ -1,9 +1,6 @@
 package project.vilsoncake.Flowt.service;
 
-import project.vilsoncake.Flowt.dto.ChangePasswordDto;
-import project.vilsoncake.Flowt.dto.RegistrationDto;
-import project.vilsoncake.Flowt.dto.RestorePasswordDto;
-import project.vilsoncake.Flowt.dto.UserDto;
+import project.vilsoncake.Flowt.dto.*;
 import project.vilsoncake.Flowt.entity.PlaylistEntity;
 import project.vilsoncake.Flowt.entity.UserEntity;
 
@@ -14,6 +11,7 @@ public interface UserService {
     Map<String, String> addUser(RegistrationDto registrationDto);
     UserDto getAuthenticatedUserDto(String authHeader);
     UserDto getUserDtoByUsername(String username);
+    UsersPageDto getUsersDtoBySubstring(SubstringDto substring, int page, int size);
     UserEntity getUserByUsername(String username);
     Map<String, List<String>> getUserSubscribesUsernames(String authHeader);
     Map<String, List<String>> getUserFollowersUsernames(String authHeader);

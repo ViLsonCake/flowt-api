@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.repository.CrudRepository;
+import project.vilsoncake.Flowt.entity.PlaylistEntity;
 import project.vilsoncake.Flowt.entity.SongEntity;
 import project.vilsoncake.Flowt.entity.UserEntity;
 
@@ -18,4 +19,5 @@ public interface SongRepository extends CrudRepository<SongEntity, Long> {
     Page<SongEntity> findAllByGenre(String genre, Pageable pageable);
     List<SongEntity> findAllByGenre(String genre);
     Boolean existsByNameAndUser(String name, UserEntity user);
+    Page<SongEntity> findByNameContaining(String substring, Pageable pageable);
 }

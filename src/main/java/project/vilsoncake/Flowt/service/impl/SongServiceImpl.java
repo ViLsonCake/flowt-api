@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 import project.vilsoncake.Flowt.config.MinioConfig;
 import project.vilsoncake.Flowt.dto.SongRequest;
 import project.vilsoncake.Flowt.dto.SongsResponse;
+import project.vilsoncake.Flowt.dto.SubstringDto;
 import project.vilsoncake.Flowt.entity.*;
 import project.vilsoncake.Flowt.exception.*;
 import project.vilsoncake.Flowt.repository.SongRepository;
@@ -138,6 +139,16 @@ public class SongServiceImpl implements SongService {
         Page<SongEntity> songsOnPage = songRepository.findAllByGenre(genre, PageRequest.of(page, size));
 
         return new SongsResponse(songsOnPage.getTotalPages(), songsOnPage.getContent());
+    }
+
+    @Override
+    public SongsResponse getSongsBySubstring(SubstringDto substringDto, int page, int size) {
+        Page<SongEntity> songs = songRepository.findByNameContaining(substringDto.getSubstring(), PageRequest.of(page, size));
+
+        return new SongsResponse(
+                songs.getTotalPages(),
+                songs.getContent()
+        );
     }
 
     @Override

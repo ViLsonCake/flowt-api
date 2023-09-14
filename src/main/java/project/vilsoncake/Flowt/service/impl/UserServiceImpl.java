@@ -2,14 +2,13 @@ package project.vilsoncake.Flowt.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import project.vilsoncake.Flowt.dto.ChangePasswordDto;
-import project.vilsoncake.Flowt.dto.RegistrationDto;
-import project.vilsoncake.Flowt.dto.RestorePasswordDto;
-import project.vilsoncake.Flowt.dto.UserDto;
+import project.vilsoncake.Flowt.dto.*;
 import project.vilsoncake.Flowt.entity.FollowerEntity;
 import project.vilsoncake.Flowt.entity.PlaylistEntity;
 import project.vilsoncake.Flowt.entity.SongEntity;
@@ -67,15 +66,22 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto getAuthenticatedUserDto(String authHeader) {
         String username = authUtils.getUsernameFromAuthHeader(authHeader);
-        UserEntity user = getUserByUsername(username);
-        return UserDto.fromUser(user);
+        return UserDto.fromUser(getUserByUsername(username));
     }
 
     @Override
     public UserDto getUserDtoByUsername(String username) {
-        UserEntity user = userRepository.findByUsername(username).orElseThrow(() ->
-                new UsernameNotFoundException("User not found"));
-        return UserDto.fromUser(user);
+        return UserDto.fromUser(getUserByUsername(username));
+    }
+
+    @Override
+    public UsersPageDto getUsersDtoBySubstring(SubstringDto substringDto, int page, int size) {
+        Page<UserEntity> users = userRepository.findByUsernameContaining(substringDto.getSubstring(), PageRequest.of(page, size));
+
+        return new UsersPageDto(
+                users.getTotalPages(),
+                users.getContent().stream().map(UserDto::fromUser).toList()
+        );
     }
 
     @Override
