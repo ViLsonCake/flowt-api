@@ -10,8 +10,9 @@ import project.vilsoncake.Flowt.entity.PlaylistEntity;
 @NoArgsConstructor
 public class PlaylistDto {
     private String name;
+    private Boolean isPrivate;
 
     public static PlaylistDto fromPlaylist(PlaylistEntity playlist) {
-        return new PlaylistDto(playlist.getName());
+        return new PlaylistDto(playlist.getName(), playlist.isPrivate());
     }
 }
