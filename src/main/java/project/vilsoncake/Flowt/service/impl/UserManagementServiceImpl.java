@@ -12,7 +12,6 @@ import project.vilsoncake.Flowt.entity.UserAvatarEntity;
 import project.vilsoncake.Flowt.entity.UserEntity;
 import project.vilsoncake.Flowt.exception.InvalidExtensionException;
 import project.vilsoncake.Flowt.exception.MinioFileException;
-import project.vilsoncake.Flowt.repository.FollowerRepository;
 import project.vilsoncake.Flowt.repository.UserRepository;
 import project.vilsoncake.Flowt.service.AvatarService;
 import project.vilsoncake.Flowt.service.FollowerService;
@@ -51,7 +50,7 @@ public class UserManagementServiceImpl implements UserManagementService {
     @Override
     public Map<String, String> addUserAvatarByUsername(String authHeader, MultipartFile avatar) throws InvalidExtensionException {
         // Validate file
-        if (!fileUtils.isValidAvatarExtension(avatar.getOriginalFilename()))
+        if (avatar.getOriginalFilename() != null && !fileUtils.isValidAvatarExtension(avatar.getOriginalFilename()))
             throw new InvalidExtensionException("Invalid file extension (must be png or jpg)");
 
         String username = authUtils.getUsernameFromAuthHeader(authHeader);

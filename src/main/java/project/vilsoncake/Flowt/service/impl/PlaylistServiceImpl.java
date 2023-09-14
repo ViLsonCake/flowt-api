@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import project.vilsoncake.Flowt.config.MinioConfig;
 import project.vilsoncake.Flowt.dto.PlaylistDto;
+import project.vilsoncake.Flowt.dto.PlaylistNameDto;
 import project.vilsoncake.Flowt.dto.PlaylistsPageDto;
 import project.vilsoncake.Flowt.dto.SubstringDto;
 import project.vilsoncake.Flowt.entity.PlaylistAvatarEntity;
@@ -32,7 +33,7 @@ import java.util.Map;
 @Slf4j
 public class PlaylistServiceImpl implements PlaylistService {
 
-    private final PlaylistRepository playListRepository;
+    private final PlaylistRepository playlistRepository;
     private final UserService userService;
     private final SongService songService;
     private final AvatarService avatarService;
@@ -41,8 +42,8 @@ public class PlaylistServiceImpl implements PlaylistService {
     private final MinioFileService minioFileService;
     private final MinioConfig minioConfig;
 
-    public PlaylistServiceImpl(PlaylistRepository playListRepository, UserService userService, SongService songService, @Qualifier("playlistAvatarServiceImpl") AvatarService avatarService, AuthUtils authUtils, FileUtils fileUtils, MinioFileService minioFileService, MinioConfig minioConfig) {
-        this.playListRepository = playListRepository;
+    public PlaylistServiceImpl(PlaylistRepository playlistRepository, UserService userService, SongService songService, @Qualifier("playlistAvatarServiceImpl") AvatarService avatarService, AuthUtils authUtils, FileUtils fileUtils, MinioFileService minioFileService, MinioConfig minioConfig) {
+        this.playlistRepository = playlistRepository;
         this.userService = userService;
         this.songService = songService;
         this.avatarService = avatarService;
@@ -58,7 +59,7 @@ public class PlaylistServiceImpl implements PlaylistService {
         UserEntity user = userService.getUserByUsername(username);
 
         // Check if user have playlist with the same name
-        if (playListRepository.existsByUserAndName(user, playlistDto.getName()))
+        if (playlistRepository.existsByUserAndName(user, playlistDto.getName()))
             throw new PlaylistAlreadyExistException("User already have playlist with same name");
 
         // Create new playlist and save
@@ -67,14 +68,14 @@ public class PlaylistServiceImpl implements PlaylistService {
                 new ArrayList<>(),
                 user
         );
-        playListRepository.save(playlist);
+        playlistRepository.save(playlist);
 
         return Map.of("message", String.format("PlayList '%s' saved", playlistDto.getName()));
     }
 
     @Override
     public Map<String, String> addAvatarToPlaylist(String authHeader, String playlistName, MultipartFile file) throws InvalidExtensionException {
-        if (!fileUtils.isValidAvatarExtension(file.getOriginalFilename())) {
+        if (file.getOriginalFilename() != null && !fileUtils.isValidAvatarExtension(file.getOriginalFilename())) {
             throw new InvalidExtensionException("Invalid file extension (must be png or jpg)");
         }
 
@@ -111,7 +112,7 @@ public class PlaylistServiceImpl implements PlaylistService {
 
         if (!playlist.getSongs().contains(song)) {
             playlist.getSongs().add(song);
-            playListRepository.save(playlist);
+            playlistRepository.save(playlist);
             response.put("message", String.format("Song '%s' added to playlist '%s'", songName, playlistName));
         } else {
             response.put("message", String.format("Song '%s' already exist in playlist '%s'", songName, playlistName));
@@ -137,13 +138,39 @@ public class PlaylistServiceImpl implements PlaylistService {
                     songsWithoutDeleted.add(playlistSong);
             });
             playlist.setSongs(songsWithoutDeleted);
-            playListRepository.save(playlist);
+            playlistRepository.save(playlist);
             response.put("message", String.format("Song '%s' removed from playlist '%s'", songName, playlistName));
         } else {
             response.put("message", String.format("Song '%s' not in playlist '%s'", songName, playlistName));
         }
 
         return response;
+    }
+
+    @Override
+    public Map<String, String> changePlaylistName(String authHeader, PlaylistNameDto playlistNameDto) {
+        String username = authUtils.getUsernameFromAuthHeader(authHeader);
+        UserEntity user = userService.getUserByUsername(username);
+        PlaylistEntity playlist = getPlaylistByUserAndName(user, playlistNameDto.getPlaylistName());
+
+        // Change name
+        playlist.setName(playlistNameDto.getNewPlaylistName());
+        playlistRepository.save(playlist);
+
+        return Map.of("name", playlist.getName());
+    }
+
+    @Override
+    public Map<String, Boolean> changePlaylistAccessModifier(String authHeader, String playlistName) {
+        String username = authUtils.getUsernameFromAuthHeader(authHeader);
+        UserEntity user = userService.getUserByUsername(username);
+        PlaylistEntity playlist = getPlaylistByUserAndName(user, playlistName);
+
+        // Change access modifier
+        playlist.setPrivate(!playlist.isPrivate());
+        playlistRepository.save(playlist);
+
+        return Map.of("accessModifier", playlist.isPrivate());
     }
 
     @Override
@@ -160,13 +187,13 @@ public class PlaylistServiceImpl implements PlaylistService {
 
     @Override
     public PlaylistEntity getPlaylistByUserAndName(UserEntity user, String name) {
-        return playListRepository.findByUserAndName(user, name).orElseThrow(() ->
+        return playlistRepository.findByUserAndName(user, name).orElseThrow(() ->
                 new PlaylistNotFoundException("Playlist not found"));
     }
 
     @Override
     public PlaylistsPageDto getPublicPlaylistsBySubstring(SubstringDto substringDto, int page, int size) {
-        Page<PlaylistEntity> playlists = playListRepository.findByNameContainingIgnoreCase(substringDto.getSubstring(), PageRequest.of(page, size));
+        Page<PlaylistEntity> playlists = playlistRepository.findByIsPrivateFalseAndNameContainingIgnoreCase(substringDto.getSubstring(), PageRequest.of(page, size));
 
         return new PlaylistsPageDto(
                 playlists.getTotalPages(),
