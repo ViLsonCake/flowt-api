@@ -68,6 +68,7 @@ public class SongServiceImpl implements SongService {
         return Map.of("name", songRequest.getName());
     }
 
+    @Transactional
     @Override
     public Map<String, String> saveNewAudioFile(String authHeader, String name, MultipartFile file) throws InvalidExtensionException, MinioFileException {
         if (file.getOriginalFilename() != null && !fileUtils.isValidAudioFileExtension(file.getOriginalFilename())) {
@@ -177,16 +178,18 @@ public class SongServiceImpl implements SongService {
         UserEntity user = userService.getUserByUsername(username);
         SongEntity song = findByNameAndUser(name, user);
 
-        // Increment song listens
-        incrementSongListens(song);
+        if (song != null && song.getAudioFile() != null) {
+            // Increment song listens
+            incrementSongListens(song);
+            AudioFileEntity audioFile = song.getAudioFile();
 
-        AudioFileEntity audioFile = song.getAudioFile();
+            return minioFileService.getFileContent(minioConfig.getAudioBucket(), audioFile.getFilename());
+        }
 
-        if (audioFile == null) throw new MinioFileException("File not found");
-
-        return minioFileService.getFileContent(minioConfig.getAudioBucket(), audioFile.getFilename());
+        throw new MinioFileException("File not found");
     }
 
+    @Transactional
     @Override
     public byte[] getSongAvatarBySongName(String username, String name) throws MinioFileException {
         UserEntity user = userService.getUserByUsername(username);
