@@ -16,7 +16,7 @@ public class AuthUtils {
 
     public String getUsernameFromAuthHeader(String authHeader) {
         String jwt;
-        String username = null;
+        String username = "";
 
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             jwt = authHeader.substring(7);
@@ -24,6 +24,7 @@ public class AuthUtils {
                 username = jwtUtils.getUsernameFromAccess(jwt);
             } catch (ExpiredJwtException e) {
                 log.info("Token time is expired :(");
+                username = e.getClaims().getSubject();
             } catch (SignatureException | MalformedJwtException e) {
                 log.info("Invalid token signature");
             }

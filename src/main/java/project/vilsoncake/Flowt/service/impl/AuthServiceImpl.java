@@ -21,6 +21,7 @@ import project.vilsoncake.Flowt.exception.IncorrectCredentialsException;
 import project.vilsoncake.Flowt.exception.TokenNotFoundException;
 import project.vilsoncake.Flowt.service.AuthService;
 import project.vilsoncake.Flowt.service.TokenService;
+import project.vilsoncake.Flowt.utils.AuthUtils;
 import project.vilsoncake.Flowt.utils.JwtUtils;
 
 @Service
@@ -32,6 +33,7 @@ public class AuthServiceImpl implements AuthService {
     private final UserDetailsService userDetailsService;
     private final TokenService tokenService;
     private final JwtUtils jwtUtils;
+    private final AuthUtils authUtils;
 
     @Override
     public JwtResponse generateAuthTokensAndSave(JwtRequest authRequest, HttpServletResponse response) {
@@ -51,6 +53,9 @@ public class AuthServiceImpl implements AuthService {
     public JwtResponse refreshTokens(String authRequest, HttpServletRequest request, HttpServletResponse response) {
         String refreshToken = getRefreshFromCookie(request.getCookies());
         String usernameFromRefresh = getUsernameFromRefresh(refreshToken);
+        String usernameFromAccess = authUtils.getUsernameFromAuthHeader(authRequest);
+
+        if (!usernameFromAccess.equals(usernameFromRefresh)) throw new TokenNotFoundException("Token not valid");
 
         UserDetails user = userDetailsService.loadUserByUsername(usernameFromRefresh);
         String[] tokens = jwtUtils.generateTokens(user);
