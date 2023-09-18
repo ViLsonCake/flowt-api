@@ -2,6 +2,7 @@ package project.vilsoncake.Flowt.controller;
 
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,7 +29,7 @@ public class UserController {
 
     @PostMapping("/avatar")
     public ResponseEntity<Map<String, String>> addAvatar(
-            @RequestHeader(value = "Authorization", required = false, defaultValue = "") String authHeader,
+            @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authHeader,
             @RequestParam("file") MultipartFile avatar
     ) throws MinioFileException, InvalidExtensionException {
         return ResponseEntity.ok(userManagementService.addUserAvatarByUsername(authHeader, avatar));
@@ -36,7 +37,7 @@ public class UserController {
 
     @PostMapping("/change-password")
     public ResponseEntity<Map<String, String>> changePassword(
-            @RequestHeader(value = "Authorization", required = false, defaultValue = "") String authHeader,
+            @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authHeader,
             @RequestBody ChangePasswordDto changePasswordDto
             ) {
         return ResponseEntity.ok(userService.changeUserPasswordByUsername(authHeader, changePasswordDto));
@@ -48,13 +49,13 @@ public class UserController {
     }
 
     @GetMapping("/authenticated")
-    public ResponseEntity<UserDto> getAuthenticatedUserDto(@RequestHeader(value = "Authorization", required = false, defaultValue = "") String authHeader) {
+    public ResponseEntity<UserDto> getAuthenticatedUserDto(@RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authHeader) {
         return ResponseEntity.ok(userService.getAuthenticatedUserDto(authHeader));
     }
 
     @PostMapping("/subscribe/{username}")
     public ResponseEntity<Map<String, String>> subscribeToUser(
-            @RequestHeader(value = "Authorization", required = false, defaultValue = "") String authHeader,
+            @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authHeader,
             @PathVariable("username") String username
     ) {
         return ResponseEntity.ok(userManagementService.subscribeToUser(authHeader, username));
@@ -62,7 +63,7 @@ public class UserController {
 
     @PostMapping("/unsubscribe/{username}")
     public ResponseEntity<Map<String, String>> unsubscribeToUser(
-            @RequestHeader(value = "Authorization", required = false, defaultValue = "") String authHeader,
+            @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authHeader,
             @PathVariable("username") String username
     ) {
         return ResponseEntity.ok(userManagementService.unsubscribeToUser(authHeader, username));
@@ -70,7 +71,7 @@ public class UserController {
 
     @GetMapping("/subscribes")
     public ResponseEntity<SubscribesDto> getUserSubscribes(
-            @RequestHeader(value = "Authorization", required = false, defaultValue = "") String authHeader,
+            @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authHeader,
             @RequestParam(required = false, defaultValue = "0") int page,
             @RequestParam(required = false, defaultValue = "10") int size
     ) {
@@ -79,7 +80,7 @@ public class UserController {
 
     @GetMapping("/followers")
     public ResponseEntity<FollowersDto> getUserFollowers(
-            @RequestHeader(value = "Authorization", required = false, defaultValue = "") String authHeader,
+            @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authHeader,
             @RequestParam(required = false, defaultValue = "0") int page,
             @RequestParam(required = false, defaultValue = "10") int size
     ) {
@@ -88,7 +89,7 @@ public class UserController {
 
     @GetMapping("/liked")
     public ResponseEntity<LikedSongsDto> getLikedSongs(
-            @RequestHeader(value = "Authorization", required = false, defaultValue = "") String authHeader,
+            @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authHeader,
             @RequestParam(required = false, defaultValue = "0") int page,
             @RequestParam(required = false, defaultValue = "10") int size
     ) {
@@ -97,21 +98,21 @@ public class UserController {
 
     @GetMapping("/songs")
     public ResponseEntity<SongsResponse> getUserSongs(
-            @RequestHeader(value = "Authorization", required = false, defaultValue = "") String authHeader,
+            @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authHeader,
             @RequestParam(required = false, defaultValue = "0") int page,
             @RequestParam(required = false, defaultValue = "10") int size
     ) {
         return ResponseEntity.ok(songService.getSongsByUser(authHeader, page, size));
     }
 
-    @GetMapping("playlists")
-    public ResponseEntity<Map<String, List<PlaylistEntity>>> getUserPlaylists(@RequestHeader(value = "Authorization", required = false, defaultValue = "") String authHeader) {
+    @GetMapping("/playlists")
+    public ResponseEntity<Map<String, List<PlaylistEntity>>> getUserPlaylists(@RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authHeader) {
         return ResponseEntity.ok(userService.getUserPlaylists(authHeader));
     }
 
     @PatchMapping("/username")
     public ResponseEntity<Map<String, String>> changeUsername(
-            @RequestHeader(value = "Authorization", required = false, defaultValue = "") String authHeader,
+            @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authHeader,
             @RequestBody UsernameDto usernameDto,
             HttpServletResponse response
             ) {
@@ -120,7 +121,7 @@ public class UserController {
 
     @PatchMapping("/email")
     public ResponseEntity<Map<String, String>> changeEmail(
-            @RequestHeader(value = "Authorization", required = false, defaultValue = "") String authHeader,
+            @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authHeader,
             @RequestBody EmailDto emailDto
     ) {
         return ResponseEntity.ok(changeUserService.changeUserEmail(authHeader, emailDto));
@@ -128,7 +129,7 @@ public class UserController {
 
     @PatchMapping("/region")
     public ResponseEntity<Map<String, String>> changeRegion(
-            @RequestHeader(value = "Authorization", required = false, defaultValue = "") String authHeader,
+            @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authHeader,
             @RequestBody RegionDto regionDto
     ) {
         return ResponseEntity.ok(changeUserService.changeUserRegion(authHeader, regionDto));
@@ -136,7 +137,7 @@ public class UserController {
 
     @PatchMapping("/description")
     public ResponseEntity<Map<String, String>> changeDescription(
-            @RequestHeader(value = "Authorization", required = false, defaultValue = "") String authHeader,
+            @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authHeader,
             @RequestBody DescriptionDto descriptionDto
     ) {
         return ResponseEntity.ok(changeUserService.changeUserDescription(authHeader, descriptionDto));

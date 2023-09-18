@@ -63,7 +63,7 @@ public class SongController {
 
     @PostMapping
     public ResponseEntity<Map<String, String>> addNewSongEntity(
-            @RequestHeader(value = "Authorization", required = false, defaultValue = "") String authHeader,
+            @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authHeader,
             @RequestBody SongRequest songRequest
     ) {
         return ResponseEntity.ok(songService.saveNewSongEntity(authHeader, songRequest));
@@ -71,7 +71,7 @@ public class SongController {
 
     @PostMapping("/audio/{name}")
     public ResponseEntity<Map<String, String>> addNewSongFile(
-            @RequestHeader(value = "Authorization", required = false, defaultValue = "") String authHeader,
+            @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authHeader,
             @PathVariable("name") String name,
             @RequestParam("file") MultipartFile file) throws InvalidExtensionException, MinioFileException {
         return ResponseEntity.ok(songService.saveNewAudioFile(authHeader, name, file));
@@ -79,7 +79,7 @@ public class SongController {
 
     @PostMapping("/avatar/{name}")
     public ResponseEntity<Map<String, String>> changeSongAvatar(
-            @RequestHeader(value = "Authorization", required = false, defaultValue = "") String authHeader,
+            @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authHeader,
             @PathVariable("name") String name,
             @RequestParam("file") MultipartFile avatar
     ) throws InvalidExtensionException {
@@ -88,7 +88,7 @@ public class SongController {
 
     @DeleteMapping("/{name}")
     public ResponseEntity<Map<String, String>> removeUserSong(
-            @RequestHeader(value = "Authorization", required = false, defaultValue = "") String authHeader,
+            @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authHeader,
             @PathVariable("name") String name
     ) {
         return ResponseEntity.ok(songService.removeUserSong(authHeader, name));

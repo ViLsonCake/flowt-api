@@ -1,6 +1,7 @@
 package project.vilsoncake.Flowt.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,7 +21,7 @@ public class PlaylistController {
 
     @PostMapping
     public ResponseEntity<Map<String, String>> createNewPlaylist(
-            @RequestHeader(value = "Authorization", required = false, defaultValue = "") String authHeader,
+            @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false, defaultValue = "") String authHeader,
             @RequestBody PlaylistDto playlistDto
     ) {
         return ResponseEntity.ok(playListService.createNewPlaylist(authHeader, playlistDto));
@@ -28,7 +29,7 @@ public class PlaylistController {
 
     @PostMapping("/avatar/{playlistName}")
     public ResponseEntity<Map<String, String>> addAvatarToPlaylist(
-            @RequestHeader(value = "Authorization", required = false, defaultValue = "") String authHeader,
+            @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authHeader,
             @PathVariable("playlistName") String name,
             @RequestParam("file") MultipartFile avatar
     ) throws InvalidExtensionException {
@@ -37,7 +38,7 @@ public class PlaylistController {
 
     @PostMapping("/{playlistName}/{songAuthor}/{songName}")
     public ResponseEntity<Map<String, String>> addSongToPlaylist(
-            @RequestHeader(value = "Authorization", required = false, defaultValue = "") String authHeader,
+            @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authHeader,
             @PathVariable("playlistName") String playlistName,
             @PathVariable("songAuthor") String songAuthor,
             @PathVariable("songName") String songName
@@ -47,7 +48,7 @@ public class PlaylistController {
 
     @PatchMapping
     public ResponseEntity<Map<String, String>> changePlaylistName(
-            @RequestHeader(value = "Authorization", required = false, defaultValue = "") String authHeader,
+            @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authHeader,
             @RequestBody PlaylistNameDto playlistNameDto
             ) {
         return ResponseEntity.ok(playListService.changePlaylistName(authHeader, playlistNameDto));
@@ -55,7 +56,7 @@ public class PlaylistController {
 
     @PatchMapping("/{playlistName}")
     public ResponseEntity<Map<String, Boolean>> changeAccessModifier(
-            @RequestHeader(value = "Authorization", required = false, defaultValue = "") String authHeader,
+            @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authHeader,
             @PathVariable("playlistName") String playlistName
     ) {
         return ResponseEntity.ok(playListService.changePlaylistAccessModifier(authHeader, playlistName));
@@ -63,7 +64,7 @@ public class PlaylistController {
 
     @DeleteMapping("/{playlistName}/{songAuthor}/{songName}")
     public ResponseEntity<Map<String, String>> removeSongFromPlaylist(
-            @RequestHeader(value = "Authorization", required = false, defaultValue = "") String authHeader,
+            @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authHeader,
             @PathVariable("playlistName") String playlistName,
             @PathVariable("songAuthor") String songAuthor,
             @PathVariable("songName") String songName

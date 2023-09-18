@@ -1,6 +1,7 @@
 package project.vilsoncake.Flowt.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import project.vilsoncake.Flowt.dto.PasswordCodeDto;
@@ -23,7 +24,7 @@ public class VerifyController {
     }
 
     @GetMapping("/password")
-    public ResponseEntity<Map<String, String>> changePassword(@RequestHeader(value = "Authorization", required = false, defaultValue = "") String authHeader) {
+    public ResponseEntity<Map<String, String>> changePassword(@RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authHeader) {
         return ResponseEntity.ok(userVerifyService.sendChangePasswordMessageByUsername(authHeader));
     }
 

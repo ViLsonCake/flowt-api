@@ -3,6 +3,7 @@ package project.vilsoncake.Flowt.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import project.vilsoncake.Flowt.dto.JwtRequest;
@@ -32,7 +33,7 @@ public class AuthController {
     }
 
     @GetMapping("/refresh")
-    public ResponseEntity<JwtResponse> refreshUserToken(@RequestHeader(value = "Authorization", required = false, defaultValue = "") String authRequest, HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<JwtResponse> refreshUserToken(@RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authRequest, HttpServletRequest request, HttpServletResponse response) {
         return ResponseEntity.ok(authService.refreshTokens(authRequest, request, response));
     }
 }

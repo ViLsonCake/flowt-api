@@ -1,6 +1,7 @@
 package project.vilsoncake.Flowt.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import project.vilsoncake.Flowt.service.LikedService;
@@ -16,7 +17,7 @@ public class LikedController {
 
     @PostMapping("/{username}/{songName}")
     public ResponseEntity<Map<String, String>> addSongToLiked(
-            @RequestHeader(value = "Authorization", required = false, defaultValue = "") String authHeader,
+            @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authHeader,
             @PathVariable("username") String username,
             @PathVariable("songName") String songName
     ) {
@@ -25,7 +26,7 @@ public class LikedController {
 
     @DeleteMapping("/{username}/{songName}")
     public ResponseEntity<Map<String, String>> removeSongFromLiked(
-            @RequestHeader(value = "Authorization", required = false, defaultValue = "") String authHeader,
+            @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authHeader,
             @PathVariable("username") String username,
             @PathVariable("songName") String songName
     ) {
