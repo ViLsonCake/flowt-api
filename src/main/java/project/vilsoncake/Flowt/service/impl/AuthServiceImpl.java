@@ -43,6 +43,9 @@ public class AuthServiceImpl implements AuthService {
             throw new IncorrectCredentialsException("Incorrect login or password");
         }
         UserDetails userDetails = userDetailsService.loadUserByUsername(authRequest.getUsername());
+
+        if (!userDetails.isEnabled()) throw new IncorrectCredentialsException("Your account has been blocked");
+
         String[] tokens = jwtUtils.generateTokens(userDetails);
         tokenService.saveNewToken(tokens[1], authRequest.getUsername(), response);
         return new JwtResponse(tokens[0]);
