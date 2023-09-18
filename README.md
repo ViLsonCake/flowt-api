@@ -56,8 +56,8 @@ Authenticated
 + DELETE /playlists/:playlistName/:author/:songName - remove song from playlist
 ___ 
 For moderators
-+ POST /warning-mail/:username - send to user warning mail
-+ PATCH /admin/active/:username - change user active
++ POST /moderator/warning-mail/:username - send to user warning mail
++ PATCH /moderator/active/:username - change user active
 ___
 Only for admins
 + GET /admin/user/:username - get user by username
