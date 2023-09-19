@@ -50,4 +50,6 @@ public class UserEntity {
     private List<PlaylistEntity> playlists;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private List<SongEntity> songs;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    private List<NotificationEntity> notifications;
 }
