@@ -2,18 +2,19 @@ package project.vilsoncake.Flowt.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.vilsoncake.Flowt.config.AppConfig;
 import project.vilsoncake.Flowt.entity.UserEntity;
 import project.vilsoncake.Flowt.entity.VerifyCodeEntity;
+import project.vilsoncake.Flowt.entity.enumerated.NotificationType;
 import project.vilsoncake.Flowt.exception.AccountAlreadyVerifiedException;
 import project.vilsoncake.Flowt.exception.VerifyCodeNotFoundException;
+import project.vilsoncake.Flowt.repository.UserRepository;
 import project.vilsoncake.Flowt.repository.VerifyCodeRepository;
-import project.vilsoncake.Flowt.service.MailVerifyService;
-import project.vilsoncake.Flowt.service.RedisService;
-import project.vilsoncake.Flowt.service.UserService;
-import project.vilsoncake.Flowt.service.UserVerifyService;
+import project.vilsoncake.Flowt.service.*;
+import project.vilsoncake.Flowt.utils.MailUtils;
 
 import java.util.Map;
 import java.util.UUID;
@@ -26,10 +27,12 @@ import static project.vilsoncake.Flowt.constant.MessageConst.*;
 public class UserVerifyServiceImpl implements UserVerifyService {
 
     private final VerifyCodeRepository verifyCodeRepository;
-    private final UserService userService;
+    private final UserRepository userRepository;
+    private final NotificationService notificationService;
     private final MailVerifyService mailVerifyService;
     private final RedisService redisService;
     private final AppConfig appConfig;
+    private final MailUtils mailUtils;
 
     @Override
     public Map<String, String> saveAndSendNewCode(UserEntity user) {
@@ -66,16 +69,31 @@ public class UserVerifyServiceImpl implements UserVerifyService {
 
         UserEntity user = verifyCodeEntity.getUser();
 
-        if (user.isEmailVerify()) throw new AccountAlreadyVerifiedException("Account already verified");
+        if (user.isEmailVerify()) {
+            notificationService.addNotification(
+                    NotificationType.WARNING,
+                    mailUtils.generateAlreadyVerifiedEmailMessage(user.getEmail()),
+                    user
+            );
+            return Map.of("message", String.format("Email %s is already verified", user.getEmail()));
+        }
 
         user.setEmailVerify(true);
+        // Add notification about verifying email and remove notification with the requirement to confirm email
+        notificationService.addNotification(
+                NotificationType.INFO,
+                mailUtils.generateSuccessVerifyEmailMessage(user.getEmail()),
+                user
+        );
+        notificationService.removeNotificationByType(NotificationType.MANDATORY);
 
-        return Map.of("username", user.getUsername());
+        return Map.of("message", String.format("Email %s is successfully verified", user.getEmail()));
     }
 
     @Override
     public Map<String, String> sendChangePasswordMessageByUsername(String username) {
-        UserEntity user = userService.getUserByUsername(username);
+        UserEntity user = userRepository.findByUsername(username).orElseThrow(() ->
+                new UsernameNotFoundException("User not found"));
 
         // Generate code and save in redis
         String code = redisService.saveNewPasswordCode(username);
@@ -98,7 +116,8 @@ public class UserVerifyServiceImpl implements UserVerifyService {
 
     @Override
     public Map<String, String> sendChangePasswordMessageByEmail(String email) {
-        UserEntity user = userService.getUserByEmail(email);
+        UserEntity user = userRepository.findByEmail(email).orElseThrow(() ->
+                new UsernameNotFoundException("User not found"));
 
         // Generate code and save in redis
         String code = redisService.saveNewPasswordCode(user.getUsername());
@@ -121,7 +140,8 @@ public class UserVerifyServiceImpl implements UserVerifyService {
 
     @Override
     public Map<String, String> sendWarningMessage(String username) {
-        UserEntity user = userService.getUserByUsername(username);
+        UserEntity user = userRepository.findByUsername(username).orElseThrow(() ->
+                new UsernameNotFoundException("User not found"));
 
         // Sent mail
         Thread mailThread = new Thread(() -> {

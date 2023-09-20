@@ -18,5 +18,7 @@ public class MessageConst {
             " you have 3 days to change it or your account will be automatically blocked.";
     public static final String FOLLOW_MESSAGE = "User %s has followed you";
     public static final String VERIFY_NOTIFICATION_MESSAGE = "Verify your email %s";
+    public static final String SUCCESS_VERIFY_NOTIFICATION_MESSAGE = "Email %s successfully verified";
+    public static final String ALREADY_VERIFIED_NOTIFICATION_MESSAGE = "Email %s is already verified";
     public static final char BLUR_SYMBOL = '*';
 }

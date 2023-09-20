@@ -2,14 +2,21 @@ package project.vilsoncake.Flowt.utils;
 
 import org.springframework.stereotype.Component;
 
-import static project.vilsoncake.Flowt.constant.MessageConst.BLUR_SYMBOL;
-import static project.vilsoncake.Flowt.constant.MessageConst.VERIFY_NOTIFICATION_MESSAGE;
+import static project.vilsoncake.Flowt.constant.MessageConst.*;
 
 @Component
 public class MailUtils {
 
     public String generateVerifyNotificationMessage(String mailAddress) {
         return String.format(VERIFY_NOTIFICATION_MESSAGE, blurMail(mailAddress));
+    }
+
+    public String generateSuccessVerifyEmailMessage(String mailAddress) {
+        return String.format(SUCCESS_VERIFY_NOTIFICATION_MESSAGE, blurMail(mailAddress));
+    }
+
+    public String generateAlreadyVerifiedEmailMessage(String mailAddress) {
+        return String.format(ALREADY_VERIFIED_NOTIFICATION_MESSAGE, blurMail(mailAddress));
     }
 
     public String blurMail(String mailAddress) {

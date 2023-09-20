@@ -11,4 +11,5 @@ public interface NotificationService {
     boolean addNotification(NotificationType type, String message, UserEntity user);
     List<NotificationEntity> getNotificationsByUser(UserEntity user);
     Map<String, String> removeNotificationById(Long id);
+    boolean removeNotificationByType(NotificationType type);
 }
