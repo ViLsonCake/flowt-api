@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import project.vilsoncake.Flowt.entity.enumerated.NotificationType;
 
 @Entity
 @Table(name = "notification")

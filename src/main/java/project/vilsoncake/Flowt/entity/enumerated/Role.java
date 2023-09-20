@@ -1,4 +1,4 @@
-package project.vilsoncake.Flowt.entity;
+package project.vilsoncake.Flowt.entity.enumerated;
 
 import org.springframework.security.core.GrantedAuthority;
 

@@ -8,7 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import project.vilsoncake.Flowt.entity.Role;
+import project.vilsoncake.Flowt.entity.enumerated.Role;
 import project.vilsoncake.Flowt.entity.UserEntity;
 import project.vilsoncake.Flowt.repository.UserRepository;
 

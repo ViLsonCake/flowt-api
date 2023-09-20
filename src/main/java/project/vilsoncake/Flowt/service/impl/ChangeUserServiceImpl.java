@@ -20,7 +20,7 @@ import project.vilsoncake.Flowt.utils.JwtUtils;
 
 import java.util.Map;
 
-import static project.vilsoncake.Flowt.entity.Role.MODERATOR;
+import static project.vilsoncake.Flowt.entity.enumerated.Role.MODERATOR;
 
 @Service
 @Slf4j

@@ -16,4 +16,7 @@ public class MessageConst {
             "Hello %s, \n" +
             "Your username contains insult, threat, or prohibited words," +
             " you have 3 days to change it or your account will be automatically blocked.";
+    public static final String FOLLOW_MESSAGE = "User %s has followed you";
+    public static final String VERIFY_NOTIFICATION_MESSAGE = "Verify your email %s";
+    public static final char BLUR_SYMBOL = '*';
 }

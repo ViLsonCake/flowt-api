@@ -3,6 +3,7 @@ package project.vilsoncake.Flowt.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import project.vilsoncake.Flowt.entity.enumerated.Role;
 
 import java.util.HashSet;
 import java.util.List;

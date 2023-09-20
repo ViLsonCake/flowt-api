@@ -9,24 +9,26 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.vilsoncake.Flowt.dto.*;
-import project.vilsoncake.Flowt.entity.FollowerEntity;
+import project.vilsoncake.Flowt.entity.NotificationEntity;
 import project.vilsoncake.Flowt.entity.PlaylistEntity;
-import project.vilsoncake.Flowt.entity.SongEntity;
 import project.vilsoncake.Flowt.entity.UserEntity;
+import project.vilsoncake.Flowt.entity.enumerated.NotificationType;
 import project.vilsoncake.Flowt.exception.EmailAlreadyExistException;
 import project.vilsoncake.Flowt.exception.InvalidPasswordCodeException;
 import project.vilsoncake.Flowt.exception.PasswordsNotMatchException;
 import project.vilsoncake.Flowt.exception.UsernameAlreadyExistException;
 import project.vilsoncake.Flowt.repository.UserRepository;
+import project.vilsoncake.Flowt.service.NotificationService;
 import project.vilsoncake.Flowt.service.RedisService;
 import project.vilsoncake.Flowt.service.UserService;
 import project.vilsoncake.Flowt.service.UserVerifyService;
 import project.vilsoncake.Flowt.utils.AuthUtils;
+import project.vilsoncake.Flowt.utils.MailUtils;
 
 import java.util.List;
 import java.util.Map;
 
-import static project.vilsoncake.Flowt.entity.Role.USER;
+import static project.vilsoncake.Flowt.entity.enumerated.Role.USER;
 
 @Service
 @Slf4j
@@ -36,8 +38,10 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserVerifyService userVerifyService;
+    private final NotificationService notificationService;
     private final RedisService redisService;
     private final AuthUtils authUtils;
+    private final MailUtils mailUtils;
 
     @Override
     public Map<String, String> addUser(RegistrationDto registrationDto) {
@@ -56,9 +60,14 @@ public class UserServiceImpl implements UserService {
 
         // Generate verify code and save
         userVerifyService.saveAndSendNewCode(user);
+        // Add verify notification
+        notificationService.addNotification(
+                NotificationType.MANDATORY,
+                mailUtils.generateVerifyNotificationMessage(user.getEmail()),
+                user
+        );
 
         log.info("User '{}' saved", user.getUsername());
-
         return Map.of("message", String.format("User '%s' saved", user.getUsername()));
     }
 
@@ -127,33 +136,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Map<String, List<String>> getUserSubscribesUsernames(String authHeader) {
-        String username = authUtils.getUsernameFromAuthHeader(authHeader);
-        UserEntity user = userRepository.findByUsername(username).orElseThrow(() ->
-                new UsernameNotFoundException("User not found"));
-
-        List<FollowerEntity> subscribes = user.getSubscribes();
-        List<String> usernames = subscribes.stream().map(subscribe -> subscribe.getFollower().getUsername()).toList();
-
-        return Map.of("subscribes", usernames);
-    }
-
-    @Override
-    public Map<String, List<String>> getUserFollowersUsernames(String authHeader) {
+    public Map<String, List<NotificationEntity>> getUserNotifications(String authHeader) {
         String username = authUtils.getUsernameFromAuthHeader(authHeader);
         UserEntity user = getUserByUsername(username);
-        List<String> usernames = user.getFollowers().stream().map(follower -> follower.getUser().getUsername()).toList();
-
-        return Map.of("followers", usernames);
-    }
-
-    @Override
-    public Map<String, List<String>> getUserSongs(String authHeader) {
-        String username = authUtils.getUsernameFromAuthHeader(authHeader);
-        UserEntity user = getUserByUsername(username);
-        List<String> songNames = user.getSongs().stream().map(SongEntity::getName).toList();
-
-        return Map.of("songs", songNames);
+        return Map.of("notifications", notificationService.getNotificationsByUser(user));
     }
 
     @Override
