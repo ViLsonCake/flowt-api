@@ -32,10 +32,12 @@ Authenticated
 + PATCH /users/region - change user region
 + PATCH /users/description - change user description
 + GET /users/authenticated - get authenticated user dto
-+ GET /users/subscribes - get authenticated user subscribe list
++ GET /users/subscribes - get authenticated user subscribes list
 + GET /users/followers - get authenticated user followers list
-+ GET /users/liked - get authenticated user liked song list
-+ GET /users/songs - get authenticated user song list
++ GET /users/liked - get authenticated user liked songs list
++ GET /users/songs - get authenticated user songs list
++ GET /users/playlists - get authenticated user playlists list
++ GET /users/notifications - get authenticated user notifications list
 + GET /verify/email - verify user email
 + GET /verify/password - send mail with code for restoring the password
 + GET /songs/:username/:name - get song info by author and song name
@@ -54,6 +56,7 @@ Authenticated
 + PATCH /playlists - change playlist name
 + PATCH /playlists/:playlistName - change playlist access modifier
 + DELETE /playlists/:playlistName/:author/:songName - remove song from playlist
++ DELETE /notifications/:id - remove user notification by id
 ___ 
 For moderators
 + POST /moderator/warning-mail/:username - send to user warning mail
