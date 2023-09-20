@@ -19,8 +19,8 @@ public class VerifyController {
     private final UserVerifyService userVerifyService;
 
     @GetMapping("/email")
-    public ResponseEntity<Map<String, String>> verifyEmail(@RequestParam("code") String code) throws AccountAlreadyVerifiedException, VerifyCodeNotFoundException {
-        return ResponseEntity.ok(userVerifyService.verifyUser(code));
+    public ResponseEntity<Map<String, String>> verifyUserEmail(@RequestParam("code") String code) throws AccountAlreadyVerifiedException, VerifyCodeNotFoundException {
+        return ResponseEntity.ok(userVerifyService.verifyUserEmail(code));
     }
 
     @GetMapping("/password")

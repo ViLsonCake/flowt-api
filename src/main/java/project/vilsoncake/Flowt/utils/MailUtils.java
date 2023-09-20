@@ -1,7 +1,6 @@
 package project.vilsoncake.Flowt.utils;
 
 import org.springframework.stereotype.Component;
-import project.vilsoncake.Flowt.constant.MessageConst;
 
 import static project.vilsoncake.Flowt.constant.MessageConst.BLUR_SYMBOL;
 import static project.vilsoncake.Flowt.constant.MessageConst.VERIFY_NOTIFICATION_MESSAGE;

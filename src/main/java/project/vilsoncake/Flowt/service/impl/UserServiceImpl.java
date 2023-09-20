@@ -100,6 +100,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserEntity getUserByEmail(String email) {
+        return userRepository.findByEmail(email).orElseThrow(() ->
+                new UsernameNotFoundException("User not found"));
+    }
+
+    @Override
     public Map<String, String> changeUserPasswordByUsername(String authHeader, ChangePasswordDto changePasswordDto) {
         String username = authUtils.getUsernameFromAuthHeader(authHeader);
         UserEntity user = getUserByUsername(username);
@@ -119,8 +125,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Map<String, String> restorePassword(RestorePasswordDto restorePasswordDto) {
-        UserEntity user = userRepository.findByEmail(restorePasswordDto.getEmail()).orElseThrow(() ->
-                new UsernameNotFoundException("User not found"));
+        UserEntity user = getUserByEmail(restorePasswordDto.getEmail());
 
         // Validate password code
         if(!redisService.isValidUserCode(user.getUsername(), restorePasswordDto.getCode()))

@@ -2,17 +2,17 @@ package project.vilsoncake.Flowt.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import project.vilsoncake.Flowt.config.AppConfig;
 import project.vilsoncake.Flowt.entity.UserEntity;
 import project.vilsoncake.Flowt.entity.VerifyCodeEntity;
 import project.vilsoncake.Flowt.exception.AccountAlreadyVerifiedException;
 import project.vilsoncake.Flowt.exception.VerifyCodeNotFoundException;
-import project.vilsoncake.Flowt.repository.UserRepository;
 import project.vilsoncake.Flowt.repository.VerifyCodeRepository;
 import project.vilsoncake.Flowt.service.MailVerifyService;
 import project.vilsoncake.Flowt.service.RedisService;
+import project.vilsoncake.Flowt.service.UserService;
 import project.vilsoncake.Flowt.service.UserVerifyService;
 
 import java.util.Map;
@@ -26,7 +26,7 @@ import static project.vilsoncake.Flowt.constant.MessageConst.*;
 public class UserVerifyServiceImpl implements UserVerifyService {
 
     private final VerifyCodeRepository verifyCodeRepository;
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final MailVerifyService mailVerifyService;
     private final RedisService redisService;
     private final AppConfig appConfig;
@@ -58,8 +58,9 @@ public class UserVerifyServiceImpl implements UserVerifyService {
         return Map.of("error", "Token not found");
     }
 
+    @Transactional
     @Override
-    public Map<String, String> verifyUser(String code) throws VerifyCodeNotFoundException, AccountAlreadyVerifiedException {
+    public Map<String, String> verifyUserEmail(String code) throws VerifyCodeNotFoundException, AccountAlreadyVerifiedException {
         VerifyCodeEntity verifyCodeEntity = verifyCodeRepository.findByCode(code).orElseThrow(() ->
                 new VerifyCodeNotFoundException("Verify code don't exist"));
 
@@ -68,15 +69,13 @@ public class UserVerifyServiceImpl implements UserVerifyService {
         if (user.isEmailVerify()) throw new AccountAlreadyVerifiedException("Account already verified");
 
         user.setEmailVerify(true);
-        userRepository.save(user);
 
         return Map.of("username", user.getUsername());
     }
 
     @Override
     public Map<String, String> sendChangePasswordMessageByUsername(String username) {
-        UserEntity user = userRepository.findByUsername(username).orElseThrow(() ->
-                new UsernameNotFoundException("User not found"));
+        UserEntity user = userService.getUserByUsername(username);
 
         // Generate code and save in redis
         String code = redisService.saveNewPasswordCode(username);
@@ -99,8 +98,7 @@ public class UserVerifyServiceImpl implements UserVerifyService {
 
     @Override
     public Map<String, String> sendChangePasswordMessageByEmail(String email) {
-        UserEntity user = userRepository.findByEmail(email).orElseThrow(() ->
-                new UsernameNotFoundException("User not found"));
+        UserEntity user = userService.getUserByEmail(email);
 
         // Generate code and save in redis
         String code = redisService.saveNewPasswordCode(user.getUsername());
@@ -123,8 +121,7 @@ public class UserVerifyServiceImpl implements UserVerifyService {
 
     @Override
     public Map<String, String> sendWarningMessage(String username) {
-        UserEntity user = userRepository.findByUsername(username).orElseThrow(() ->
-                new UsernameNotFoundException("User not found"));
+        UserEntity user = userService.getUserByUsername(username);
 
         // Sent mail
         Thread mailThread = new Thread(() -> {
