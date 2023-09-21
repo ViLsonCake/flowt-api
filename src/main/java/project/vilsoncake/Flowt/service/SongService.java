@@ -24,5 +24,5 @@ public interface SongService {
     byte[] getSongAudioFile(String username, String name) throws MinioFileException;
     SongEntity findByNameAndUser(String name, UserEntity user);
     byte[] getSongAvatarBySongName(String username, String name) throws MinioFileException;
-    void incrementSongListens(SongEntity song);
+    void incrementSongListens(SongEntity song, UserEntity user);
 }

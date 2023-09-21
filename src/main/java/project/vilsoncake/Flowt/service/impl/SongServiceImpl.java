@@ -17,6 +17,7 @@ import project.vilsoncake.Flowt.repository.SongRepository;
 import project.vilsoncake.Flowt.service.*;
 import project.vilsoncake.Flowt.utils.AuthUtils;
 import project.vilsoncake.Flowt.utils.FileUtils;
+import project.vilsoncake.Flowt.utils.MailUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -30,16 +31,18 @@ public class SongServiceImpl implements SongService {
     private final UserService userService;
     private final AuthUtils authUtils;
     private final FileUtils fileUtils;
+    private final MailUtils mailUtils;
     private final AvatarService avatarService;
     private final AudioFileService audioFileService;
     private final MinioFileService minioFileService;
     private final MinioConfig minioConfig;
 
-    public SongServiceImpl(SongRepository songRepository, UserService userService, AuthUtils authUtils, FileUtils fileUtils, @Qualifier("songAvatarServiceImpl") AvatarService avatarService, AudioFileService audioFileService, MinioFileService minioFileService, MinioConfig minioConfig) {
+    public SongServiceImpl(SongRepository songRepository, UserService userService, AuthUtils authUtils, FileUtils fileUtils, MailUtils mailUtils, @Qualifier("songAvatarServiceImpl") AvatarService avatarService, AudioFileService audioFileService, MinioFileService minioFileService, MinioConfig minioConfig) {
         this.songRepository = songRepository;
         this.userService = userService;
         this.authUtils = authUtils;
         this.fileUtils = fileUtils;
+        this.mailUtils = mailUtils;
         this.avatarService = avatarService;
         this.audioFileService = audioFileService;
         this.minioFileService = minioFileService;
@@ -191,7 +194,7 @@ public class SongServiceImpl implements SongService {
 
         if (song != null && song.getAudioFile() != null) {
             // Increment song listens
-            incrementSongListens(song);
+            incrementSongListens(song, user);
             AudioFileEntity audioFile = song.getAudioFile();
 
             return minioFileService.getFileContent(minioConfig.getAudioBucket(), audioFile.getFilename());
@@ -213,10 +216,11 @@ public class SongServiceImpl implements SongService {
         return minioFileService.getFileContent(minioConfig.getSongAvatarBucket(), songAvatar.getFilename());
     }
 
+    @Transactional
     @Override
-    public void incrementSongListens(SongEntity song) {
+    public void incrementSongListens(SongEntity song, UserEntity user) {
         song.setListens(song.getListens() + 1);
-        songRepository.save(song);
+        mailUtils.sendCongratulationsMessagesIfNeed(song, user);
     }
 
     @Override
