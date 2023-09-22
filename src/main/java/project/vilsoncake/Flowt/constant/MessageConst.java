@@ -21,6 +21,6 @@ public class MessageConst {
     public static final String SUCCESS_VERIFY_NOTIFICATION_MESSAGE = "Email %s successfully verified";
     public static final String ALREADY_VERIFIED_NOTIFICATION_MESSAGE = "Email %s is already verified";
     public static final String SONG_CONGRATULATIONS_SUBJECT = "Congratulations!";
-    public static final String SONG_CONGRATULATIONS_MESSAGE = "Congratulations %s! Your song has already gotten over %s listens.";
+    public static final String SONG_CONGRATULATIONS_MESSAGE = "Congratulations %s! Your song \"%s\" has already gotten over %s listens.";
     public static final char BLUR_SYMBOL = '*';
 }

@@ -23,7 +23,7 @@ public class MailUtils {
         // If listens divisible by 10,000. Example 30,000, 50,000, 120,000, send mail and add notification with congratulations
         notificationService.addNotification(
                 NotificationType.INFO,
-                String.format(SONG_CONGRATULATIONS_MESSAGE, user.getUsername(), song.getListens()),
+                String.format(SONG_CONGRATULATIONS_MESSAGE, user.getUsername(), song.getName(), song.getListens()),
                 user
         );
         Thread mailThread = new Thread(() -> mailVerifyService.sendMessage(
