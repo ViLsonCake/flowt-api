@@ -1,5 +1,7 @@
 package project.vilsoncake.Flowt.controller;
 
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -8,6 +10,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import project.vilsoncake.Flowt.dto.RegistrationValidationDto;
 import project.vilsoncake.Flowt.exception.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestControllerAdvice
@@ -47,5 +50,15 @@ public class ErrorHandlerController {
     public ResponseEntity<Map<String, String>> accountVerifiedError(AccountAlreadyVerifiedException exception) {
         log.warn(exception.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", exception.getMessage()));
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<Map<String, String>> hibernateValidationError(ConstraintViolationException exception) {
+        String convertErrorMessages = exception.getConstraintViolations().stream()
+                .map(ConstraintViolation::getMessage)
+                .toString();
+
+        log.warn(convertErrorMessages.substring(1, convertErrorMessages.length() - 1));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", convertErrorMessages.substring(1, convertErrorMessages.length() - 1)));
     }
 }

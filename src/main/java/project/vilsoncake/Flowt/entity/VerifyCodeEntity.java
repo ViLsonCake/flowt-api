@@ -1,6 +1,7 @@
 package project.vilsoncake.Flowt.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,6 +14,7 @@ public class VerifyCodeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotNull(message = "Code cannot be null")
     @Column(name = "code", unique = true)
     private String code;
     @OneToOne

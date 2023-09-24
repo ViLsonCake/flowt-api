@@ -2,6 +2,9 @@ package project.vilsoncake.Flowt.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import project.vilsoncake.Flowt.entity.enumerated.NotificationType;
@@ -18,6 +21,8 @@ public class NotificationEntity {
     @Enumerated(value = EnumType.STRING)
     @Column(name = "type")
     private NotificationType type;
+    @NotBlank(message = "Message cannot be empty")
+    @Size(min = 3, max = 255, message = "Message size must be between 3 and 255 characters")
     @Column(name = "message")
     private String message;
     @JsonIgnore

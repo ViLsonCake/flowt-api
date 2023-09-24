@@ -1,6 +1,7 @@
 package project.vilsoncake.Flowt.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import project.vilsoncake.Flowt.entity.enumerated.Role;
@@ -8,6 +9,9 @@ import project.vilsoncake.Flowt.entity.enumerated.Role;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import static project.vilsoncake.Flowt.constant.PatternConst.REGEX_REGION_PATTERN;
+import static project.vilsoncake.Flowt.constant.PatternConst.REGEX_USERNAME_PATTERN;
 
 @Entity
 @Table(name = "user_")
@@ -18,18 +22,32 @@ public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
+    @NotBlank(message = "Username cannot be empty")
+    @Size(min = 3, max = 32, message = "Username size must be between 3 and 32 characters")
+    @Pattern(regexp = REGEX_USERNAME_PATTERN, message = "Username not valid")
     @Column(name = "username", unique = true)
     private String username;
+    @NotBlank(message = "Email cannot be empty")
+    @Email(message = "Email is not valid")
     @Column(name = "email", unique = true)
     private String email;
+    @NotBlank(message = "Password cannot be empty")
+    @Size(min = 8, max = 16, message = "Password size must be between 8 and 16 characters")
     @Column(name = "password")
     private String password;
+    @NotNull
+    @Max(value = 255, message = "Description size must be less than 255 characters")
     @Column(name = "description")
     private String description = "";
+    @NotNull
+    @Pattern(regexp = REGEX_REGION_PATTERN, message = "Region is not valid")
     @Column(name = "region")
     private String region = "Earth";
+    @Column(name = "email_verify")
     private boolean emailVerify = false;
+    @Column(name = "artist_verify")
     private boolean artistVerify = false;
+    @Column(name = "active")
     private boolean active = true;
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))

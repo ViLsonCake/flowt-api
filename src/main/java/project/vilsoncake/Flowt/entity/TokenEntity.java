@@ -1,6 +1,7 @@
 package project.vilsoncake.Flowt.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,6 +14,7 @@ public class TokenEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long tokenId;
+    @NotNull(message = "Token cannot be null")
     @Column(name = "token")
     private String token;
     @ManyToOne
