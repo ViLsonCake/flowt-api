@@ -9,10 +9,12 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import project.vilsoncake.Flowt.dto.*;
 import project.vilsoncake.Flowt.entity.UserEntity;
+import project.vilsoncake.Flowt.entity.enumerated.NotificationType;
 import project.vilsoncake.Flowt.exception.EmailAlreadyExistException;
 import project.vilsoncake.Flowt.exception.UsernameAlreadyExistException;
 import project.vilsoncake.Flowt.repository.UserRepository;
 import project.vilsoncake.Flowt.service.ChangeUserService;
+import project.vilsoncake.Flowt.service.NotificationService;
 import project.vilsoncake.Flowt.service.RedisService;
 import project.vilsoncake.Flowt.service.TokenService;
 import project.vilsoncake.Flowt.utils.AuthUtils;
@@ -31,6 +33,7 @@ public class ChangeUserServiceImpl implements ChangeUserService {
     private final UserDetailsService userDetailsService;
     private final RedisService redisService;
     private final TokenService tokenService;
+    private final NotificationService notificationService;
     private final JwtUtils jwtUtils;
     private final AuthUtils authUtils;
 
@@ -45,7 +48,10 @@ public class ChangeUserServiceImpl implements ChangeUserService {
                 new UsernameNotFoundException("Username not found"));
 
         // Check whether the user is obliged to change username due to violations
-        if (redisService.getValueFromWarning(username) != null) redisService.deleteByKeyFromWarning(username);
+        if (redisService.getValueFromWarning(username) != null) {
+            redisService.deleteByKeyFromWarning(username);
+            notificationService.removeNotificationByType(NotificationType.WARNING);
+        }
 
         // Save new username
         user.setUsername(usernameDto.getNewUsername());

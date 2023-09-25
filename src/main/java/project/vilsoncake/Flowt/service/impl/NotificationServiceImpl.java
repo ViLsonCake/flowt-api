@@ -38,7 +38,7 @@ public class NotificationServiceImpl implements NotificationService {
 
         NotificationEntity notification = notificationRepository.findById(id).get();
 
-        if (notification.getType().equals(NotificationType.MANDATORY)) throw new RemoveNotificationException("You can't remove notification with type 'mandatory'");
+        if (!notification.getType().equals(NotificationType.INFO)) throw new RemoveNotificationException("You can't remove notification with type non-info type");
 
         notificationRepository.delete(notification);
         return Map.of("message", "Notification deleted");

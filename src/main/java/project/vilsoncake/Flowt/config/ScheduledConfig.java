@@ -6,7 +6,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
+import project.vilsoncake.Flowt.entity.enumerated.NotificationType;
 import project.vilsoncake.Flowt.service.ChangeUserService;
+import project.vilsoncake.Flowt.service.NotificationService;
 import project.vilsoncake.Flowt.service.RedisService;
 
 import java.util.Date;
@@ -21,6 +23,7 @@ public class ScheduledConfig {
 
     private final RedisService redisService;
     private final ChangeUserService changeUserService;
+    private final NotificationService notificationService;
 
     @PostConstruct
     @Scheduled(fixedDelay = 12, timeUnit = TimeUnit.HOURS)
@@ -36,6 +39,8 @@ public class ScheduledConfig {
                 changeUserService.changeUserActive(username);
                 // Remove from warning list
                 redisService.deleteByKeyFromWarning(username);
+                // Remove warning notification
+                notificationService.removeNotificationByType(NotificationType.WARNING);
             }
         });
     }

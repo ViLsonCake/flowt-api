@@ -71,7 +71,7 @@ public class UserVerifyServiceImpl implements UserVerifyService {
 
         if (user.isEmailVerify()) {
             notificationService.addNotification(
-                    NotificationType.WARNING,
+                    NotificationType.INFO,
                     mailUtils.generateAlreadyVerifiedEmailMessage(user.getEmail()),
                     user
             );
@@ -158,6 +158,12 @@ public class UserVerifyServiceImpl implements UserVerifyService {
 
         // Add warning to redis
         redisService.setValueToWarning(username, String.valueOf(System.currentTimeMillis() + daysToMillis(3)));
+        // Add warning notifications
+        notificationService.addNotification(
+                NotificationType.WARNING,
+                String.format(WARNING_USERNAME_TEXT, user.getUsername()),
+                user
+        );
 
         return Map.of("message", "Mail sent");
     }
