@@ -7,7 +7,10 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CurrentTimestamp;
 import project.vilsoncake.Flowt.entity.enumerated.NotificationType;
+
+import java.util.Date;
 
 @Entity
 @Table(name = "notification")
@@ -25,6 +28,10 @@ public class NotificationEntity {
     @Size(min = 3, max = 255, message = "Message size must be between 3 and 255 characters")
     @Column(name = "message")
     private String message;
+    @CurrentTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "created_at", updatable = false)
+    private Date createdAt;
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "user_id")

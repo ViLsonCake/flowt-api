@@ -32,7 +32,6 @@ public class UserEntity {
     @Column(name = "email", unique = true)
     private String email;
     @NotBlank(message = "Password cannot be empty")
-    @Size(min = 8, max = 16, message = "Password size must be between 8 and 16 characters")
     @Column(name = "password")
     private String password;
     @NotNull

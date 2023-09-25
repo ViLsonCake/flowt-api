@@ -26,11 +26,11 @@ public class SongEntity {
     @Column(name = "name")
     private String name;
     @NotBlank(message = "Issue date cannot be empty")
-    @Pattern(regexp = REGEX_ISSUE_DATE_PATTERN, message = "Issue date must be in format \"DD/MM/YY\"")
+//    @Pattern(regexp = REGEX_ISSUE_DATE_PATTERN, message = "Issue date must be in format \"DD/MM/YY\"")
     @Column(name = "issue_year")
     private String issueYear;
     @NotBlank(message = "Genre cannot be empty")
-    @Pattern(regexp = REGEX_GENRE_PATTERN, message = "Genre is not valid")
+//    @Pattern(regexp = REGEX_GENRE_PATTERN, message = "Genre is not valid")
     @Column(name = "genre")
     private String genre;
     @Min(value = 0, message = "Listens must be greater than zero")

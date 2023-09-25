@@ -29,7 +29,7 @@ public class MailUtils {
         Thread mailThread = new Thread(() -> mailVerifyService.sendMessage(
                 user.getEmail(),
                 SONG_CONGRATULATIONS_SUBJECT,
-                String.format(SONG_CONGRATULATIONS_MESSAGE, user.getUsername(), song.getListens())
+                String.format(SONG_CONGRATULATIONS_MESSAGE, user.getUsername(), song.getName(), song.getListens())
         ));
         mailThread.start();
 
