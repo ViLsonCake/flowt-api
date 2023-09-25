@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import project.vilsoncake.Flowt.dto.RegistrationValidationDto;
 import project.vilsoncake.Flowt.exception.*;
 
-import java.util.List;
 import java.util.Map;
 
 @RestControllerAdvice

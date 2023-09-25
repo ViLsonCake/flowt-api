@@ -1,7 +1,7 @@
 package project.vilsoncake.Flowt.dto;
 
-import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class DescriptionDto {
     @NotNull
-    @Max(value = 255, message = "Description size must be less than 255 characters")
+    @Size(max = 255, message = "Description size must be less than 255 characters")
     private String newDescription;
 }

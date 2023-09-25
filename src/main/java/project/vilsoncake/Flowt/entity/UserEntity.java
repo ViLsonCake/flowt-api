@@ -36,7 +36,7 @@ public class UserEntity {
     @Column(name = "password")
     private String password;
     @NotNull
-    @Max(value = 255, message = "Description size must be less than 255 characters")
+    @Size(max = 255, message = "Description size must be less than 255 characters")
     @Column(name = "description")
     private String description = "";
     @NotNull
