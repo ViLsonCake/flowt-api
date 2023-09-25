@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 public class FollowerEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", updatable = false)
     private Long id;
     @JsonIgnore
     @ManyToOne

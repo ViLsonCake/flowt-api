@@ -20,6 +20,7 @@ public class NotificationEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", updatable = false)
     private Long id;
     @Enumerated(value = EnumType.STRING)
     @Column(name = "type")

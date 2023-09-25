@@ -21,6 +21,7 @@ public class UserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id", updatable = false)
     private Long userId;
     @NotBlank(message = "Username cannot be empty")
     @Size(min = 3, max = 32, message = "Username size must be between 3 and 32 characters")

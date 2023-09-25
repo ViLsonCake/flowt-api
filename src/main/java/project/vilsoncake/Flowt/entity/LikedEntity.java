@@ -15,6 +15,7 @@ public class LikedEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "liked_id", updatable = false)
     private Long likedId;
     @ManyToMany
     private List<SongEntity> songs;

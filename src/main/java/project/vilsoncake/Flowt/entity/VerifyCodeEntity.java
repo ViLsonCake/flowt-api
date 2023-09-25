@@ -13,6 +13,7 @@ public class VerifyCodeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", updatable = false)
     private Long id;
     @NotNull(message = "Code cannot be null")
     @Column(name = "code", unique = true)

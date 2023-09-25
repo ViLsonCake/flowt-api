@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 public class PlaylistAvatarEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "avatar_id", updatable = false)
     private Long avatarId;
     @Column(name = "filename")
     private String filename;

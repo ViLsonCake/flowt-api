@@ -13,6 +13,7 @@ public class TokenEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "token_id", updatable = false)
     private Long tokenId;
     @NotNull(message = "Token cannot be null")
     @Column(name = "token")

@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 public class AudioFileEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "file_id", updatable = false)
     private Long fileId;
     @Column(name = "filename")
     private String filename;

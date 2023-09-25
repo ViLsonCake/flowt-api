@@ -20,17 +20,18 @@ public class SongEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "song_id", updatable = false)
     private Long songId;
     @NotBlank(message = "Song name cannot be empty")
     @Pattern(regexp = REGEX_SONG_NAME_PATTERN, message = "Song name is not valid")
     @Column(name = "name")
     private String name;
     @NotBlank(message = "Issue date cannot be empty")
-//    @Pattern(regexp = REGEX_ISSUE_DATE_PATTERN, message = "Issue date must be in format \"DD/MM/YY\"")
+    @Pattern(regexp = REGEX_ISSUE_DATE_PATTERN, message = "Issue date must be in format \"DD/MM/YY\"")
     @Column(name = "issue_year")
     private String issueYear;
     @NotBlank(message = "Genre cannot be empty")
-//    @Pattern(regexp = REGEX_GENRE_PATTERN, message = "Genre is not valid")
+    @Pattern(regexp = REGEX_GENRE_PATTERN, message = "Genre is not valid")
     @Column(name = "genre")
     private String genre;
     @Min(value = 0, message = "Listens must be greater than zero")

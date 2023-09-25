@@ -18,6 +18,7 @@ import static project.vilsoncake.Flowt.constant.PatternConst.REGEX_PLAYLIST_NAME
 public class PlaylistEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "playlist_id", updatable = false)
     private Long playlistId;
     @NotBlank(message = "Playlist name cannot be empty")
     @Pattern(regexp = REGEX_PLAYLIST_NAME_PATTERN, message = "Playlist name is not valid")
