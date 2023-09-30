@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.transaction.annotation.Transactional;
 import project.vilsoncake.Flowt.entity.enumerated.NotificationType;
 import project.vilsoncake.Flowt.service.ChangeUserService;
 import project.vilsoncake.Flowt.service.NotificationService;
@@ -25,6 +26,7 @@ public class ScheduledConfig {
     private final ChangeUserService changeUserService;
     private final NotificationService notificationService;
 
+    @Transactional
     @PostConstruct
     @Scheduled(fixedDelay = 12, timeUnit = TimeUnit.HOURS)
     public void autoBlockUsers() {
