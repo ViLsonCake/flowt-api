@@ -71,4 +71,8 @@ public class UserEntity {
     private List<SongEntity> songs;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private List<NotificationEntity> notifications;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "whom")
+    private List<ReportEntity> receivedReports;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "sender")
+    private List<ReportEntity> sentReports;
 }
