@@ -1,5 +1,6 @@
 package project.vilsoncake.Flowt.service;
 
+import project.vilsoncake.Flowt.entity.ReportEntity;
 import project.vilsoncake.Flowt.entity.UserEntity;
 import project.vilsoncake.Flowt.exception.AccountAlreadyVerifiedException;
 import project.vilsoncake.Flowt.exception.VerifyCodeNotFoundException;
@@ -11,5 +12,5 @@ public interface UserVerifyService {
     Map<String, String> verifyUserEmail(String code) throws VerifyCodeNotFoundException, AccountAlreadyVerifiedException;
     Map<String, String> sendChangePasswordMessageByUsername(String username);
     Map<String, String> sendChangePasswordMessageByEmail(String email);
-    Map<String, String> sendWarningMessage(String username);
+    boolean sendWarningMessage(ReportEntity report);
 }

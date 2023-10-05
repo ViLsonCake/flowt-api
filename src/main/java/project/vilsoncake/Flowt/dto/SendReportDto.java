@@ -8,5 +8,6 @@ import project.vilsoncake.Flowt.entity.enumerated.WhomReportType;
 public class SendReportDto {
     private WhomReportType whomType;
     private ReportContentType contentType;
+    private String contentTypeName;
     private String WhomName;
 }

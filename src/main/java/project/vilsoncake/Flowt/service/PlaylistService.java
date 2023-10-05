@@ -15,6 +15,7 @@ import java.util.Map;
 public interface PlaylistService {
     Map<String, String> createNewPlaylist(String authHeader, PlaylistDto playListDto);
     Map<String, String> addAvatarToPlaylist(String authHeader, String playListName, MultipartFile file) throws InvalidExtensionException;
+    boolean removePlaylistAvatarByUserAndName(UserEntity user, String name);
     Map<String, String> addSongToPlaylist(String authHeader, String playlistName, String songAuthor, String songName);
     Map<String, String> changePlaylistName(String authHeader, PlaylistNameDto playlistNameDto);
     Map<String, Boolean> changePlaylistAccessModifier(String authHeader, String playlistName);
@@ -22,4 +23,5 @@ public interface PlaylistService {
     PlaylistEntity getPlaylistByUserAndName(UserEntity user, String name);
     PlaylistsPageDto getPublicPlaylistsBySubstring(SubstringDto substring, int page, int size);
     byte[] getPlaylistAvatar(String username, String playlistName) throws MinioFileException;
+    boolean removePlaylistByUserAndName(UserEntity user, String name);
 }

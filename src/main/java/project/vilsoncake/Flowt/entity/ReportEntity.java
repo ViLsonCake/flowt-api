@@ -26,10 +26,14 @@ public class ReportEntity {
     @Enumerated(value = EnumType.STRING)
     @Column(name = "content_type")
     private ReportContentType contentType;
+    @Column(name = "content_name", nullable = false)
+    private String contentTypeName;
     @CurrentTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_at", updatable = false)
     private Date createdAt;
+    @Column(name = "checked")
+    private boolean checked = false;
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "whom_id")
@@ -39,9 +43,10 @@ public class ReportEntity {
     @JoinColumn(name = "sender_id")
     private UserEntity sender;
 
-    public ReportEntity(WhomReportType whomType, ReportContentType contentType, UserEntity whom, UserEntity sender) {
+    public ReportEntity(WhomReportType whomType, ReportContentType contentType, String contentTypeName, UserEntity whom, UserEntity sender) {
         this.whomType = whomType;
         this.contentType = contentType;
+        this.contentTypeName = contentTypeName;
         this.whom = whom;
         this.sender = sender;
     }

@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import project.vilsoncake.Flowt.config.MinioConfig;
 import project.vilsoncake.Flowt.dto.PlaylistDto;
@@ -99,6 +100,12 @@ public class PlaylistServiceImpl implements PlaylistService {
         minioFileService.saveFile(minioConfig.getPlaylistAvatarBucket(), filename, file);
 
         return Map.of("name", playlistName);
+    }
+
+    @Override
+    public boolean removePlaylistAvatarByUserAndName(UserEntity user, String name) {
+        PlaylistEntity playlist = getPlaylistByUserAndName(user, name);
+        return avatarService.deleteAvatar(playlist);
     }
 
     @Override
@@ -199,5 +206,13 @@ public class PlaylistServiceImpl implements PlaylistService {
                 playlists.getTotalPages(),
                 playlists.getContent().stream().map(PlaylistDto::fromPlaylist).toList()
         );
+    }
+
+    @Transactional
+    @Override
+    public boolean removePlaylistByUserAndName(UserEntity user, String name) {
+        PlaylistEntity playlist = getPlaylistByUserAndName(user, name);
+        playlistRepository.delete(playlist);
+        return true;
     }
 }

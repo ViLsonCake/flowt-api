@@ -6,15 +6,16 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.vilsoncake.Flowt.config.AppConfig;
-import project.vilsoncake.Flowt.entity.UserEntity;
-import project.vilsoncake.Flowt.entity.VerifyCodeEntity;
+import project.vilsoncake.Flowt.entity.*;
 import project.vilsoncake.Flowt.entity.enumerated.NotificationType;
+import project.vilsoncake.Flowt.entity.enumerated.WhomReportType;
 import project.vilsoncake.Flowt.exception.AccountAlreadyVerifiedException;
 import project.vilsoncake.Flowt.exception.VerifyCodeNotFoundException;
 import project.vilsoncake.Flowt.repository.UserRepository;
 import project.vilsoncake.Flowt.repository.VerifyCodeRepository;
 import project.vilsoncake.Flowt.service.*;
 import project.vilsoncake.Flowt.utils.MailUtils;
+import project.vilsoncake.Flowt.utils.ReportUtils;
 
 import java.util.Map;
 import java.util.UUID;
@@ -33,6 +34,7 @@ public class UserVerifyServiceImpl implements UserVerifyService {
     private final RedisService redisService;
     private final AppConfig appConfig;
     private final MailUtils mailUtils;
+    private final ReportUtils reportUtils;
 
     @Override
     public Map<String, String> saveAndSendNewCode(UserEntity user) {
@@ -139,33 +141,22 @@ public class UserVerifyServiceImpl implements UserVerifyService {
     }
 
     @Override
-    public Map<String, String> sendWarningMessage(String username) {
-        UserEntity user = userRepository.findByUsername(username).orElseThrow(() ->
-                new UsernameNotFoundException("User not found"));
-
-        // Sent mail
+    public boolean sendWarningMessage(ReportEntity report) {
+        String message = reportUtils.createReportMessage(report);
         Thread mailThread = new Thread(() -> {
             mailVerifyService.sendMessage(
-                    user.getEmail(),
-                    WARNING_USERNAME_SUBJECT,
-                    String.format(
-                            WARNING_USERNAME_TEXT,
-                            user.getUsername()
-                    )
+                    report.getWhom().getEmail(),
+                    "Flowt warning",
+                    message
             );
         });
         mailThread.start();
-
-        // Add warning to redis
-        redisService.setValueToWarning(username, String.valueOf(System.currentTimeMillis() + daysToMillis(3)));
-        // Add warning notifications
         notificationService.addNotification(
                 NotificationType.WARNING,
-                String.format(WARNING_USERNAME_TEXT, user.getUsername()),
-                user
+                message,
+                report.getWhom()
         );
-
-        return Map.of("message", "Mail sent");
+        return true;
     }
 
     private String generateCode() {
@@ -174,9 +165,5 @@ public class UserVerifyServiceImpl implements UserVerifyService {
             uuid = UUID.randomUUID().toString();
         } while (verifyCodeRepository.existsByCode(uuid));
         return uuid;
-    }
-
-    private Long daysToMillis(int days) {
-        return (long) days * 24 * 60 * 60 * 1000;
     }
 }

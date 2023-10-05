@@ -2,7 +2,7 @@ package project.vilsoncake.Flowt.constant;
 
 public class PatternConst {
     public static final String REGEX_USERNAME_PATTERN = "^[a-zA-Z0-9 ]{3,32}$";
-    public static final String REGEX_SONG_NAME_PATTERN = "^[a-zA-Z0-9 ]{3,32}$";
+    public static final String REGEX_SONG_NAME_PATTERN = "^[a-zA-Z0-9 -]{3,32}$";
     public static final String REGEX_PLAYLIST_NAME_PATTERN = "^[a-zA-Z0-9 ]{3,32}$";
     public static final String REGEX_ISSUE_DATE_PATTERN = "^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/\\d{4}$";
     public static final String REGEX_GENRE_PATTERN = "^(Rock|Pop|Hip-Hop|Rap|Classical|Jazz|Electronic|Techno|Metal|Punk|Country|Blues|Reggae|Funk|Soul|Disco|Rhythm and Blues|Indie|Alternative|Latin|Club|Dubstep|Drum and Bass|Trance|Dub|Dabble Rock|Chanson|Rapcore)$";

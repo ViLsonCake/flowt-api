@@ -14,10 +14,12 @@ import java.util.Map;
 public interface SongService {
     Map<String, String> saveNewSongEntity(String authHeader, SongRequest songRequest);
     Map<String, String> addAvatarByUserSongName(String authHeader, String name, MultipartFile file) throws InvalidExtensionException;
+    boolean removeSongAvatarByUserAndName(UserEntity user, String name);
     Map<String, String> saveNewAudioFile(String authHeader, String name, MultipartFile file) throws InvalidExtensionException, MinioFileException;
     SongEntity getSongInfo(String username, String name);
     SongEntity getRandomSongInfoByGenre(String genre);
     Map<String, String> removeUserSong(String authHeader, String name);
+    boolean removeUserSongByUserAndName(UserEntity user, String name);
     SongsResponse getSongsByUser(String authHeader, int page, int size);
     SongsResponse getSongsByGenre(String genre, int page, int size);
     SongsResponse getSongsBySubstring(SubstringDto substring, int page, int size);

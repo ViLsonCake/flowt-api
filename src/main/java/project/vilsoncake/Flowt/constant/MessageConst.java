@@ -23,4 +23,12 @@ public class MessageConst {
     public static final String SONG_CONGRATULATIONS_SUBJECT = "Congratulations!";
     public static final String SONG_CONGRATULATIONS_MESSAGE = "Congratulations %s! Your song \"%s\" has already gotten over %s listens.";
     public static final char BLUR_SYMBOL = '*';
+    public static final String USER_NAME_WARNING_MESSAGE = "Your username violates the rules of our platform, you must change it within 3 days, otherwise your account will be blocked.";
+    public static final String USER_DESCRIPTION_WARNING_MESSAGE = "Your description violates the rules of our platform, you must change it within 3 days, otherwise your account will be blocked.";
+    public static final String SONG_NAME_WARNING_MESSAGE = "A \"%s\" song title violates the rules of our platform, you must change it within 3 days, otherwise the song will be deleted.";
+    public static final String SONG_CONTENT_WARNING_MESSAGE = "Your song \"%s\" violates our platform rules and has been deleted.";
+    public static final String USER_AVATAR_WARNING_MESSAGE = "Your avatar violates our platform rules and has been replaced by default.";
+    public static final String SONG_AVATAR_WARNING_MESSAGE = "Avatar of your song \"%s\" violates our platform rules and has been replaced by default.";
+    public static final String PLAYLIST_NAME_WARNING_MESSAGE = "Name of your playlist \"%s\" violates our platform rules and has been replaced by default.";
+    public static final String PLAYLIST_AVATAR_WARNING_MESSAGE = "Avatar of your playlist \"%s\" violates our platform rules and has been replaced by default.";
 }

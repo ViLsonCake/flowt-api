@@ -83,6 +83,11 @@ public class UserManagementServiceImpl implements UserManagementService {
         return minioFileService.getFileContent(minioConfig.getUserAvatarBucket(), userAvatar.getFilename());
     }
 
+    @Override
+    public boolean removeUserAvatar(UserEntity user) {
+        return avatarService.deleteAvatar(user);
+    }
+
     @Transactional
     @Override
     public Map<String, String> subscribeToUser(String authHeader, String username) {

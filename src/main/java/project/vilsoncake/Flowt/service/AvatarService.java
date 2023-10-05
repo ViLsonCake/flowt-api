@@ -6,5 +6,6 @@ public interface AvatarService {
     boolean saveAvatar(MultipartFile avatar, String uuid, Object user);
     boolean existsByFilename(String filename);
     boolean existsByEntity(Object entity);
+    boolean deleteAvatar(Object entity);
     Object getByEntity(Object entity);
 }

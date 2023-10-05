@@ -125,6 +125,12 @@ public class SongServiceImpl implements SongService {
     }
 
     @Override
+    public boolean removeSongAvatarByUserAndName(UserEntity user, String name) {
+        SongEntity song = findByNameAndUser(name, user);
+        return avatarService.deleteAvatar(song);
+    }
+
+    @Override
     public SongsResponse getSongsByUser(String authHeader, int page, int size) {
         if (page < 0 || size < 1) return null;
 
@@ -184,6 +190,14 @@ public class SongServiceImpl implements SongService {
         songRepository.delete(song);
 
         return Map.of("message", String.format("Song '%s' removed", name));
+    }
+
+    @Transactional
+    @Override
+    public boolean removeUserSongByUserAndName(UserEntity user, String name) {
+        SongEntity song = findByNameAndUser(name, user);
+        songRepository.delete(song);
+        return true;
     }
 
     @Transactional

@@ -37,4 +37,11 @@ public class UserAvatarServiceImpl implements AvatarService {
     public boolean existsByFilename(String filename) {
         return userAvatarRepository.existsByFilename(filename);
     }
+
+    @Override
+    public boolean deleteAvatar(Object entity) {
+        UserAvatarEntity userAvatar = userAvatarRepository.findByUser((UserEntity) entity);
+        userAvatarRepository.delete(userAvatar);
+        return true;
+    }
 }

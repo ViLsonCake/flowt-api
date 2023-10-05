@@ -34,4 +34,14 @@ public class ReportController {
     ) {
         return ResponseEntity.ok(reportService.getReportsByType(type, page, size));
     }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<Map<String, String>> accessReport(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(reportService.accessReportById(id));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Map<String, String>> cancelReport(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(reportService.cancelReportById(id));
+    }
 }

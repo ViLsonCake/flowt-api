@@ -37,4 +37,11 @@ public class SongAvatarServiceImpl implements AvatarService {
     public SongAvatarEntity getByEntity(Object entity) {
         return songAvatarRepository.findBySong((SongEntity) entity);
     }
+
+    @Override
+    public boolean deleteAvatar(Object entity) {
+        SongAvatarEntity songAvatar = songAvatarRepository.findBySong((SongEntity) entity);
+        songAvatarRepository.delete(songAvatar);
+        return true;
+    }
 }

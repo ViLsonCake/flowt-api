@@ -37,4 +37,11 @@ public class PlaylistAvatarServiceImpl implements AvatarService {
     public PlaylistAvatarEntity getByEntity(Object entity) {
         return playlistAvatarRepository.findByPlaylist((PlaylistEntity) entity);
     }
+
+    @Override
+    public boolean deleteAvatar(Object entity) {
+        PlaylistAvatarEntity playlistAvatar = playlistAvatarRepository.findByPlaylist((PlaylistEntity) entity);
+        playlistAvatarRepository.delete(playlistAvatar);
+        return true;
+    }
 }
