@@ -5,7 +5,7 @@ import project.vilsoncake.Flowt.dto.*;
 
 import java.util.Map;
 
-public interface ChangeUserService {
+public interface UserChangeService {
     Map<String, String> changeUserUsername(String authHeader, UsernameDto newUsername, HttpServletResponse response);
     Map<String, String> changeUserEmail(String authHeader, EmailDto newEmail);
     Map<String, String> changeUserRegion(String authHeader, RegionDto newRegion);

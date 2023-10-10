@@ -19,7 +19,7 @@ import static project.vilsoncake.Flowt.entity.enumerated.WhomReportType.*;
 @RequiredArgsConstructor
 public class ScheduledServiceImpl implements ScheduledService {
 
-    private final ChangeUserService changeUserService;
+    private final UserChangeService userChangeService;
     private final SongService songService;
     private final PlaylistService playlistService;
     private final ReportService reportService;
@@ -33,9 +33,9 @@ public class ScheduledServiceImpl implements ScheduledService {
         Iterable<ReportEntity> reports = reportService.getAllReports();
 
         reports.forEach(report -> {
-            if (report.isChecked() && dateUtils.isWaitingPeriodExpired(report.getCreatedAt())) {
+            if (report.isChecked() && dateUtils.isWaitingPeriodExpired(report.getCheckedAt())) {
                 if (report.getWhomType().equals(USER)) {
-                    changeUserService.changeUserActive(report.getWhom().getUsername());
+                    userChangeService.changeUserActive(report.getWhom().getUsername());
                     log.info("User \"{}\" has been blocked", report.getWhom().getUsername());
                     reportService.cancelReportById(report.getId());
                 } else if (report.getWhomType().equals(SONG)) {

@@ -6,8 +6,6 @@ import project.vilsoncake.Flowt.entity.enumerated.ReportContentType;
 import project.vilsoncake.Flowt.entity.enumerated.WhomReportType;
 import project.vilsoncake.Flowt.exception.IncorrectReportException;
 
-import java.util.Map;
-
 import static project.vilsoncake.Flowt.constant.MessageConst.*;
 import static project.vilsoncake.Flowt.entity.enumerated.ReportContentType.*;
 import static project.vilsoncake.Flowt.entity.enumerated.WhomReportType.*;

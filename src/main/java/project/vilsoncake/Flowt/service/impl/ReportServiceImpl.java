@@ -9,12 +9,14 @@ import project.vilsoncake.Flowt.dto.ReportPageDto;
 import project.vilsoncake.Flowt.dto.SendReportDto;
 import project.vilsoncake.Flowt.entity.ReportEntity;
 import project.vilsoncake.Flowt.entity.UserEntity;
+import project.vilsoncake.Flowt.entity.enumerated.ReportContentType;
 import project.vilsoncake.Flowt.entity.enumerated.WhomReportType;
 import project.vilsoncake.Flowt.exception.ReportNotFoundException;
 import project.vilsoncake.Flowt.repository.ReportRepository;
 import project.vilsoncake.Flowt.service.*;
 import project.vilsoncake.Flowt.utils.AuthUtils;
 
+import java.util.Date;
 import java.util.Map;
 
 import static project.vilsoncake.Flowt.entity.enumerated.ReportContentType.AVATAR;
@@ -77,6 +79,7 @@ public class ReportServiceImpl implements ReportService {
         }
         userVerifyService.sendWarningMessage(report);
         report.setChecked(true);
+        report.setCheckedAt(new Date());
         reportRepository.save(report);
 
         return Map.of("message", "Report checked");
@@ -90,6 +93,18 @@ public class ReportServiceImpl implements ReportService {
 
         reportRepository.deleteById(id);
         return Map.of("message", String.format("Report with id %s canceled", id));
+    }
+
+    @Override
+    public boolean cancelReportByWhomTypeAndContentTypeAndContentTypeNameAndWhom(WhomReportType whomReportType, ReportContentType reportContentType, String contentTypeName, UserEntity whom) {
+        reportRepository.deleteAll(reportRepository.findAllByWhomTypeAndContentTypeAndContentTypeNameAndWhom(whomReportType, reportContentType, contentTypeName, whom));
+        return true;
+    }
+
+    @Override
+    public boolean cancelReportByWhomTypeAndContentTypeAndWhom(WhomReportType whomReportType, ReportContentType reportContentType, UserEntity whom) {
+        reportRepository.deleteAll(reportRepository.findAllByWhomTypeAndContentTypeAndWhom(whomReportType ,reportContentType, whom));
+        return true;
     }
 
     @Override

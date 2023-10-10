@@ -9,7 +9,7 @@ import project.vilsoncake.Flowt.entity.SongEntity;
 import project.vilsoncake.Flowt.repository.SongAvatarRepository;
 import project.vilsoncake.Flowt.service.AvatarService;
 
-@Service
+@Service("songAvatarService")
 @Slf4j
 @RequiredArgsConstructor
 public class SongAvatarServiceImpl implements AvatarService {

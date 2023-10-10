@@ -4,6 +4,7 @@ import io.minio.MinioClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -54,7 +55,8 @@ public class SecurityConfig {
                         .requestMatchers("/users/restore-password").permitAll()
                         .requestMatchers("/users/**").fullyAuthenticated()
                         .requestMatchers("/search/**").permitAll()
-                        .requestMatchers("/reports/**").permitAll()
+                        .requestMatchers("/reports").permitAll()
+                        .requestMatchers("/reports/**").hasAnyAuthority(ADMIN.getAuthority(), MODERATOR.getAuthority())
                         .requestMatchers("/songs/audio/**").permitAll()
                         .requestMatchers("/admin/**").hasAuthority(ADMIN.getAuthority())
                         .requestMatchers("/moderator/**").hasAnyAuthority(ADMIN.getAuthority(), MODERATOR.getAuthority())

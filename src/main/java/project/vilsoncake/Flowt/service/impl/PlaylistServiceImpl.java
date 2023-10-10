@@ -1,7 +1,7 @@
 package project.vilsoncake.Flowt.service.impl;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import project.vilsoncake.Flowt.config.MinioConfig;
 import project.vilsoncake.Flowt.dto.PlaylistDto;
-import project.vilsoncake.Flowt.dto.PlaylistNameDto;
 import project.vilsoncake.Flowt.dto.PlaylistsPageDto;
 import project.vilsoncake.Flowt.dto.SubstringDto;
 import project.vilsoncake.Flowt.entity.PlaylistAvatarEntity;
@@ -32,27 +31,17 @@ import java.util.Map;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class PlaylistServiceImpl implements PlaylistService {
 
     private final PlaylistRepository playlistRepository;
     private final UserService userService;
     private final SongService songService;
-    private final AvatarService avatarService;
+    private final AvatarService playlistAvatarService;
     private final AuthUtils authUtils;
     private final FileUtils fileUtils;
     private final MinioFileService minioFileService;
     private final MinioConfig minioConfig;
-
-    public PlaylistServiceImpl(PlaylistRepository playlistRepository, UserService userService, SongService songService, @Qualifier("playlistAvatarServiceImpl") AvatarService avatarService, AuthUtils authUtils, FileUtils fileUtils, MinioFileService minioFileService, MinioConfig minioConfig) {
-        this.playlistRepository = playlistRepository;
-        this.userService = userService;
-        this.songService = songService;
-        this.avatarService = avatarService;
-        this.authUtils = authUtils;
-        this.fileUtils = fileUtils;
-        this.minioFileService = minioFileService;
-        this.minioConfig = minioConfig;
-    }
 
     @Override
     public Map<String, String> createNewPlaylist(String authHeader, PlaylistDto playlistDto) {
@@ -87,13 +76,13 @@ public class PlaylistServiceImpl implements PlaylistService {
 
         String filename;
 
-        if (!avatarService.existsByEntity(playlist)) {
+        if (!playlistAvatarService.existsByEntity(playlist)) {
             // Generate filename
             filename = fileUtils.generateRandomUUID();
             // Save file info in sql
-            avatarService.saveAvatar(file, filename, playlist);
+            playlistAvatarService.saveAvatar(file, filename, playlist);
         } else {
-            filename = ((PlaylistAvatarEntity) avatarService.getByEntity(user)).getFilename();
+            filename = ((PlaylistAvatarEntity) playlistAvatarService.getByEntity(user)).getFilename();
         }
 
         // Save file data in minio storage
@@ -105,7 +94,7 @@ public class PlaylistServiceImpl implements PlaylistService {
     @Override
     public boolean removePlaylistAvatarByUserAndName(UserEntity user, String name) {
         PlaylistEntity playlist = getPlaylistByUserAndName(user, name);
-        return avatarService.deleteAvatar(playlist);
+        return playlistAvatarService.deleteAvatar(playlist);
     }
 
     @Override
@@ -155,32 +144,6 @@ public class PlaylistServiceImpl implements PlaylistService {
     }
 
     @Override
-    public Map<String, String> changePlaylistName(String authHeader, PlaylistNameDto playlistNameDto) {
-        String username = authUtils.getUsernameFromAuthHeader(authHeader);
-        UserEntity user = userService.getUserByUsername(username);
-        PlaylistEntity playlist = getPlaylistByUserAndName(user, playlistNameDto.getPlaylistName());
-
-        // Change name
-        playlist.setName(playlistNameDto.getNewPlaylistName());
-        playlistRepository.save(playlist);
-
-        return Map.of("name", playlist.getName());
-    }
-
-    @Override
-    public Map<String, Boolean> changePlaylistAccessModifier(String authHeader, String playlistName) {
-        String username = authUtils.getUsernameFromAuthHeader(authHeader);
-        UserEntity user = userService.getUserByUsername(username);
-        PlaylistEntity playlist = getPlaylistByUserAndName(user, playlistName);
-
-        // Change access modifier
-        playlist.setPrivate(!playlist.isPrivate());
-        playlistRepository.save(playlist);
-
-        return Map.of("accessModifier", playlist.isPrivate());
-    }
-
-    @Override
     public byte[] getPlaylistAvatar(String username, String playlistName) throws MinioFileException {
         UserEntity user = userService.getUserByUsername(username);
         // Get user playlist
@@ -190,12 +153,6 @@ public class PlaylistServiceImpl implements PlaylistService {
         if (playlistAvatar == null) throw new MinioFileException("File not found");
 
         return minioFileService.getFileContent(minioConfig.getPlaylistAvatarBucket(), playlistAvatar.getFilename());
-    }
-
-    @Override
-    public PlaylistEntity getPlaylistByUserAndName(UserEntity user, String name) {
-        return playlistRepository.findByUserAndName(user, name).orElseThrow(() ->
-                new PlaylistNotFoundException("Playlist not found"));
     }
 
     @Override
@@ -214,5 +171,11 @@ public class PlaylistServiceImpl implements PlaylistService {
         PlaylistEntity playlist = getPlaylistByUserAndName(user, name);
         playlistRepository.delete(playlist);
         return true;
+    }
+
+    @Override
+    public PlaylistEntity getPlaylistByUserAndName(UserEntity user, String name) {
+        return playlistRepository.findByUserAndName(user, name).orElseThrow(() ->
+                new PlaylistNotFoundException("Playlist not found"));
     }
 }

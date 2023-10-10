@@ -1,0 +1,1 @@
+ALTER TABLE report ADD checked_at TIMESTAMP;

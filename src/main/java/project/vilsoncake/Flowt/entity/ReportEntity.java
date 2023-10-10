@@ -34,6 +34,8 @@ public class ReportEntity {
     private Date createdAt;
     @Column(name = "checked")
     private boolean checked = false;
+    @Column(name = "checked_at", updatable = false)
+    private Date checkedAt;
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "whom_id")

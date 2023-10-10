@@ -6,11 +6,13 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import project.vilsoncake.Flowt.dto.SongNameDto;
 import project.vilsoncake.Flowt.dto.SongRequest;
 import project.vilsoncake.Flowt.dto.SongsResponse;
 import project.vilsoncake.Flowt.entity.SongEntity;
 import project.vilsoncake.Flowt.exception.InvalidExtensionException;
 import project.vilsoncake.Flowt.exception.MinioFileException;
+import project.vilsoncake.Flowt.service.SongChangeService;
 import project.vilsoncake.Flowt.service.SongService;
 
 import java.util.Map;
@@ -21,6 +23,7 @@ import java.util.Map;
 public class SongController {
 
     private final SongService songService;
+    private final SongChangeService songChangeService;
 
     @GetMapping("/{username}/{songName}")
     public ResponseEntity<SongEntity> getSongInfo(
@@ -74,7 +77,7 @@ public class SongController {
             @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authHeader,
             @PathVariable("name") String name,
             @RequestParam("file") MultipartFile file) throws InvalidExtensionException, MinioFileException {
-        return ResponseEntity.ok(songService.saveNewAudioFile(authHeader, name, file));
+        return ResponseEntity.ok(songChangeService.saveNewAudioFile(authHeader, name, file));
     }
 
     @PostMapping("/avatar/{name}")
@@ -83,7 +86,15 @@ public class SongController {
             @PathVariable("name") String name,
             @RequestParam("file") MultipartFile avatar
     ) throws InvalidExtensionException {
-        return ResponseEntity.ok(songService.addAvatarByUserSongName(authHeader, name, avatar));
+        return ResponseEntity.ok(songChangeService.addAvatarByUserSongName(authHeader, name, avatar));
+    }
+
+    @PatchMapping
+    public ResponseEntity<Map<String, String>> changeSongName(
+            @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authHeader,
+            @RequestBody SongNameDto songNameDto
+    ) {
+        return ResponseEntity.ok(songChangeService.changeSongName(authHeader, songNameDto));
     }
 
     @DeleteMapping("/{name}")

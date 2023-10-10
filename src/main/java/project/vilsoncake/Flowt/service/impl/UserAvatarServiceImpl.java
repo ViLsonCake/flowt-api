@@ -9,7 +9,7 @@ import project.vilsoncake.Flowt.entity.UserEntity;
 import project.vilsoncake.Flowt.repository.UserAvatarRepository;
 import project.vilsoncake.Flowt.service.AvatarService;
 
-@Service("userAvatarServiceImpl")
+@Service("userAvatarService")
 @Slf4j
 @RequiredArgsConstructor
 public class UserAvatarServiceImpl implements AvatarService {

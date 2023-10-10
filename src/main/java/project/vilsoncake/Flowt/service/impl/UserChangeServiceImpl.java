@@ -13,26 +13,27 @@ import project.vilsoncake.Flowt.entity.enumerated.NotificationType;
 import project.vilsoncake.Flowt.exception.EmailAlreadyExistException;
 import project.vilsoncake.Flowt.exception.UsernameAlreadyExistException;
 import project.vilsoncake.Flowt.repository.UserRepository;
-import project.vilsoncake.Flowt.service.ChangeUserService;
-import project.vilsoncake.Flowt.service.NotificationService;
-import project.vilsoncake.Flowt.service.RedisService;
-import project.vilsoncake.Flowt.service.TokenService;
+import project.vilsoncake.Flowt.service.*;
 import project.vilsoncake.Flowt.utils.AuthUtils;
 import project.vilsoncake.Flowt.utils.JwtUtils;
 
 import java.util.Map;
 
+import static project.vilsoncake.Flowt.entity.enumerated.ReportContentType.DESCRIPTION;
+import static project.vilsoncake.Flowt.entity.enumerated.ReportContentType.NAME;
 import static project.vilsoncake.Flowt.entity.enumerated.Role.MODERATOR;
+import static project.vilsoncake.Flowt.entity.enumerated.WhomReportType.USER;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class ChangeUserServiceImpl implements ChangeUserService {
+public class UserChangeServiceImpl implements UserChangeService {
 
     private final UserRepository userRepository;
     private final UserDetailsService userDetailsService;
     private final RedisService redisService;
     private final TokenService tokenService;
+    private final ReportService reportService;
     private final NotificationService notificationService;
     private final JwtUtils jwtUtils;
     private final AuthUtils authUtils;
@@ -53,9 +54,10 @@ public class ChangeUserServiceImpl implements ChangeUserService {
             notificationService.removeNotificationByType(NotificationType.WARNING);
         }
 
-        // Save new username
         user.setUsername(usernameDto.getNewUsername());
         userRepository.save(user);
+
+        reportService.cancelReportByWhomTypeAndContentTypeAndWhom(USER, NAME, user);
 
         // Create and save a new pair of tokens
         UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUsername());
@@ -104,6 +106,8 @@ public class ChangeUserServiceImpl implements ChangeUserService {
         // Save new description
         user.setDescription(descriptionDto.getNewDescription());
         userRepository.save(user);
+
+        reportService.cancelReportByWhomTypeAndContentTypeAndWhom(USER, DESCRIPTION, user);
 
         return Map.of("description", descriptionDto.getNewDescription());
     }

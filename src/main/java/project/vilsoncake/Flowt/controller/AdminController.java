@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import project.vilsoncake.Flowt.dto.ChangeAuthorityDto;
 import project.vilsoncake.Flowt.dto.UserDto;
-import project.vilsoncake.Flowt.service.ChangeUserService;
+import project.vilsoncake.Flowt.service.UserChangeService;
 import project.vilsoncake.Flowt.service.UserService;
 
 import java.util.Map;
@@ -15,7 +15,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class AdminController {
 
-    private final ChangeUserService changeUserService;
+    private final UserChangeService userChangeService;
     private final UserService userService;
 
     @GetMapping("/user/{username}")
@@ -25,7 +25,7 @@ public class AdminController {
 
     @PatchMapping("/user/{username}")
     public ResponseEntity<ChangeAuthorityDto> changeUserAuthority(@PathVariable("username") String username) {
-        return ResponseEntity.ok(changeUserService.changeUserAuthority(username));
+        return ResponseEntity.ok(userChangeService.changeUserAuthority(username));
     }
 
     @DeleteMapping("/user/{username}")

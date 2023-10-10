@@ -22,7 +22,7 @@ import java.util.Map;
 public class UserController {
 
     private final UserManagementService userManagementService;
-    private final ChangeUserService changeUserService;
+    private final UserChangeService userChangeService;
     private final UserService userService;
     private final LikedService likedService;
     private final SongService songService;
@@ -122,7 +122,7 @@ public class UserController {
             @RequestBody UsernameDto usernameDto,
             HttpServletResponse response
             ) {
-        return ResponseEntity.ok(changeUserService.changeUserUsername(authHeader, usernameDto, response));
+        return ResponseEntity.ok(userChangeService.changeUserUsername(authHeader, usernameDto, response));
     }
 
     @PatchMapping("/email")
@@ -130,7 +130,7 @@ public class UserController {
             @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authHeader,
             @RequestBody EmailDto emailDto
     ) {
-        return ResponseEntity.ok(changeUserService.changeUserEmail(authHeader, emailDto));
+        return ResponseEntity.ok(userChangeService.changeUserEmail(authHeader, emailDto));
     }
 
     @PatchMapping("/region")
@@ -138,7 +138,7 @@ public class UserController {
             @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authHeader,
             @RequestBody RegionDto regionDto
     ) {
-        return ResponseEntity.ok(changeUserService.changeUserRegion(authHeader, regionDto));
+        return ResponseEntity.ok(userChangeService.changeUserRegion(authHeader, regionDto));
     }
 
     @PatchMapping("/description")
@@ -146,6 +146,6 @@ public class UserController {
             @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authHeader,
             @RequestBody DescriptionDto descriptionDto
     ) {
-        return ResponseEntity.ok(changeUserService.changeUserDescription(authHeader, descriptionDto));
+        return ResponseEntity.ok(userChangeService.changeUserDescription(authHeader, descriptionDto));
     }
 }

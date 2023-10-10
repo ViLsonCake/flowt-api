@@ -1,7 +1,7 @@
 package project.vilsoncake.Flowt.service.impl;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,27 +24,17 @@ import static project.vilsoncake.Flowt.constant.MessageConst.FOLLOW_MESSAGE;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class UserManagementServiceImpl implements UserManagementService {
 
     private final UserService userService;
     private final NotificationService notificationService;
     private final FollowerService followerService;
-    private final AvatarService avatarService;
+    private final AvatarService userAvatarService;
     private final MinioFileService minioFileService;
     private final MinioConfig minioConfig;
     private final FileUtils fileUtils;
     private final AuthUtils authUtils;
-
-    public UserManagementServiceImpl(UserService userService, NotificationService notificationService, FollowerService followerService, @Qualifier("userAvatarServiceImpl") AvatarService avatarService, MinioFileService minioFileService, MinioConfig minioConfig, FileUtils fileUtils, AuthUtils authUtils) {
-        this.userService = userService;
-        this.notificationService = notificationService;
-        this.followerService = followerService;
-        this.avatarService = avatarService;
-        this.minioFileService = minioFileService;
-        this.minioConfig = minioConfig;
-        this.fileUtils = fileUtils;
-        this.authUtils = authUtils;
-    }
 
     @Transactional
     @Override
@@ -58,13 +48,13 @@ public class UserManagementServiceImpl implements UserManagementService {
 
         String filename;
 
-        if (!avatarService.existsByEntity(user)) {
+        if (!userAvatarService.existsByEntity(user)) {
             // Generate filename
             filename = fileUtils.generateRandomUUID();
             // Save file info in sql
-            avatarService.saveAvatar(avatar, filename, user);
+            userAvatarService.saveAvatar(avatar, filename, user);
         } else {
-            filename = ((UserAvatarEntity) avatarService.getByEntity(user)).getFilename();
+            filename = ((UserAvatarEntity) userAvatarService.getByEntity(user)).getFilename();
         }
 
         // Save file data in minio storage
@@ -85,7 +75,7 @@ public class UserManagementServiceImpl implements UserManagementService {
 
     @Override
     public boolean removeUserAvatar(UserEntity user) {
-        return avatarService.deleteAvatar(user);
+        return userAvatarService.deleteAvatar(user);
     }
 
     @Transactional

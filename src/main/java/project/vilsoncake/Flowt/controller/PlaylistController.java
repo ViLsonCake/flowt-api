@@ -8,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 import project.vilsoncake.Flowt.dto.PlaylistDto;
 import project.vilsoncake.Flowt.dto.PlaylistNameDto;
 import project.vilsoncake.Flowt.exception.InvalidExtensionException;
+import project.vilsoncake.Flowt.service.PlaylistChangeService;
 import project.vilsoncake.Flowt.service.PlaylistService;
 
 import java.util.Map;
@@ -18,6 +19,7 @@ import java.util.Map;
 public class PlaylistController {
 
     private final PlaylistService playListService;
+    private final PlaylistChangeService playlistChangeService;
 
     @PostMapping
     public ResponseEntity<Map<String, String>> createNewPlaylist(
@@ -51,7 +53,7 @@ public class PlaylistController {
             @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authHeader,
             @RequestBody PlaylistNameDto playlistNameDto
             ) {
-        return ResponseEntity.ok(playListService.changePlaylistName(authHeader, playlistNameDto));
+        return ResponseEntity.ok(playlistChangeService.changePlaylistName(authHeader, playlistNameDto));
     }
 
     @PatchMapping("/{playlistName}")
@@ -59,7 +61,7 @@ public class PlaylistController {
             @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authHeader,
             @PathVariable("playlistName") String playlistName
     ) {
-        return ResponseEntity.ok(playListService.changePlaylistAccessModifier(authHeader, playlistName));
+        return ResponseEntity.ok(playlistChangeService.changePlaylistAccessModifier(authHeader, playlistName));
     }
 
     @DeleteMapping("/{playlistName}/{songAuthor}/{songName}")

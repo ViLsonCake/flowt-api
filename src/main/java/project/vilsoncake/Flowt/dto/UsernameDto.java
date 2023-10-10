@@ -5,7 +5,6 @@ import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import project.vilsoncake.Flowt.constant.PatternConst;
 
 import static project.vilsoncake.Flowt.constant.PatternConst.REGEX_USERNAME_PATTERN;
 
