@@ -1,5 +1,6 @@
 package project.vilsoncake.Flowt.service.impl;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -32,6 +33,7 @@ public class LikedServiceImpl implements LikedService {
     private final AuthUtils authUtils;
     private final PageUtils pageUtils;
 
+    @Transactional
     @Override
     public Map<String, String> addSongToLiked(String authHeader, String author, String name) {
         String username = authUtils.getUsernameFromAuthHeader(authHeader);
