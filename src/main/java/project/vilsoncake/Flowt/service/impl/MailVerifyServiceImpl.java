@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
-import project.vilsoncake.Flowt.config.MailConfig;
+import project.vilsoncake.Flowt.properties.MailProperties;
 import project.vilsoncake.Flowt.service.MailVerifyService;
 
 @Service
@@ -13,12 +13,12 @@ import project.vilsoncake.Flowt.service.MailVerifyService;
 @RequiredArgsConstructor
 public class MailVerifyServiceImpl implements MailVerifyService {
     private final JavaMailSender mailSender;
-    private final MailConfig mailConfig;
+    private final MailProperties mailProperties;
 
     @Override
     public boolean sendMessage(String recipient, String subject, String body) {
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom(mailConfig.getUsername());
+        message.setFrom(mailProperties.getUsername());
         message.setTo(recipient);
         message.setSubject(subject);
         message.setText(body);

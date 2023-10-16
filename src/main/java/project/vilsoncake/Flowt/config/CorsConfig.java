@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
+import project.vilsoncake.Flowt.properties.ApplicationProperties;
 
 import java.util.Arrays;
 
@@ -13,12 +14,12 @@ import java.util.Arrays;
 @RequiredArgsConstructor
 public class CorsConfig {
 
-    private final AppConfig appConfig;
+    private final ApplicationProperties applicationProperties;
 
     @Bean
     public CorsFilter corsFilter() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.addAllowedOrigin(appConfig.getClientUrl());
+        corsConfiguration.addAllowedOrigin(applicationProperties.getClientUrl());
         corsConfiguration.setAllowedHeaders(Arrays.asList("Authorization", "access-control-allow-origin", "*"));
         corsConfiguration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE"));
         corsConfiguration.setAllowCredentials(true);

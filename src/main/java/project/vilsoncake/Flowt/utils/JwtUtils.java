@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-import project.vilsoncake.Flowt.config.JwtConfig;
+import project.vilsoncake.Flowt.properties.JwtProperties;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class JwtUtils {
 
-    private final JwtConfig jwtConfig;
+    private final JwtProperties jwtProperties;
 
     public String[] generateTokens(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
@@ -29,15 +29,15 @@ public class JwtUtils {
         claims.put("roles", rolesList);
 
         Date issuedDate = new Date();
-        Date accessExpiredDate = new Date(issuedDate.getTime() + jwtConfig.getAccessLifetime());
-        Date refreshExpiredDate = new Date(issuedDate.getTime() + daysToMillis(jwtConfig.getRefreshLifetime()));
+        Date accessExpiredDate = new Date(issuedDate.getTime() + jwtProperties.getAccessLifetime());
+        Date refreshExpiredDate = new Date(issuedDate.getTime() + daysToMillis(jwtProperties.getRefreshLifetime()));
 
         String accessToken = Jwts.builder()
                 .setClaims(claims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(issuedDate)
                 .setExpiration(accessExpiredDate)
-                .signWith(SignatureAlgorithm.HS256, jwtConfig.getAccessSecret())
+                .signWith(SignatureAlgorithm.HS256, jwtProperties.getAccessSecret())
                 .compact();
 
         String refreshToken = Jwts.builder()
@@ -45,7 +45,7 @@ public class JwtUtils {
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(issuedDate)
                 .setExpiration(refreshExpiredDate)
-                .signWith(SignatureAlgorithm.HS256, jwtConfig.getRefreshSecret())
+                .signWith(SignatureAlgorithm.HS256, jwtProperties.getRefreshSecret())
                 .compact();
 
         return new String[] {accessToken, refreshToken};
@@ -61,7 +61,7 @@ public class JwtUtils {
 
     private Claims getAllClaimsFromAccess(String token) {
         return Jwts.parser()
-                .setSigningKey(jwtConfig.getAccessSecret())
+                .setSigningKey(jwtProperties.getAccessSecret())
                 .parseClaimsJws(token)
                 .getBody();
     }
@@ -76,7 +76,7 @@ public class JwtUtils {
 
     private Claims getAllClaimsFromRefresh(String token) {
         return Jwts.parser()
-                .setSigningKey(jwtConfig.getRefreshSecret())
+                .setSigningKey(jwtProperties.getRefreshSecret())
                 .parseClaimsJws(token)
                 .getBody();
     }

@@ -7,7 +7,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import project.vilsoncake.Flowt.config.MinioConfig;
+import project.vilsoncake.Flowt.properties.MinioProperties;
 import project.vilsoncake.Flowt.dto.PlaylistDto;
 import project.vilsoncake.Flowt.dto.PlaylistsPageDto;
 import project.vilsoncake.Flowt.dto.SubstringDto;
@@ -41,7 +41,7 @@ public class PlaylistServiceImpl implements PlaylistService {
     private final AuthUtils authUtils;
     private final FileUtils fileUtils;
     private final MinioFileService minioFileService;
-    private final MinioConfig minioConfig;
+    private final MinioProperties minioProperties;
 
     @Override
     public Map<String, String> createNewPlaylist(String authHeader, PlaylistDto playlistDto) {
@@ -86,7 +86,7 @@ public class PlaylistServiceImpl implements PlaylistService {
         }
 
         // Save file data in minio storage
-        minioFileService.saveFile(minioConfig.getPlaylistAvatarBucket(), filename, file);
+        minioFileService.saveFile(minioProperties.getPlaylistAvatarBucket(), filename, file);
 
         return Map.of("name", playlistName);
     }
@@ -152,7 +152,7 @@ public class PlaylistServiceImpl implements PlaylistService {
 
         if (playlistAvatar == null) throw new MinioFileException("File not found");
 
-        return minioFileService.getFileContent(minioConfig.getPlaylistAvatarBucket(), playlistAvatar.getFilename());
+        return minioFileService.getFileContent(minioProperties.getPlaylistAvatarBucket(), playlistAvatar.getFilename());
     }
 
     @Override

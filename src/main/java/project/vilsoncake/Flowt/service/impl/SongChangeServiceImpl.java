@@ -4,12 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import project.vilsoncake.Flowt.config.MinioConfig;
+import project.vilsoncake.Flowt.properties.MinioProperties;
 import project.vilsoncake.Flowt.dto.SongNameDto;
 import project.vilsoncake.Flowt.entity.SongEntity;
 import project.vilsoncake.Flowt.entity.UserAvatarEntity;
 import project.vilsoncake.Flowt.entity.UserEntity;
-import project.vilsoncake.Flowt.entity.enumerated.ReportContentType;
 import project.vilsoncake.Flowt.exception.InvalidExtensionException;
 import project.vilsoncake.Flowt.exception.MinioFileException;
 import project.vilsoncake.Flowt.exception.SongAlreadyExistByUserException;
@@ -38,7 +37,7 @@ public class SongChangeServiceImpl implements SongChangeService {
     private final ReportService reportService;
     private final AuthUtils authUtils;
     private final FileUtils fileUtils;
-    private final MinioConfig minioConfig;
+    private final MinioProperties minioProperties;
 
     @Transactional
     @Override
@@ -62,7 +61,7 @@ public class SongChangeServiceImpl implements SongChangeService {
         }
 
         // Save file data in minio storage
-        minioFileService.saveFile(minioConfig.getSongAvatarBucket(), filename, file);
+        minioFileService.saveFile(minioProperties.getSongAvatarBucket(), filename, file);
 
         return Map.of("name", name);
     }
@@ -90,7 +89,7 @@ public class SongChangeServiceImpl implements SongChangeService {
             audioFileService.saveFile(filename, file, song);
         }
         // Save file data in minio storage
-        minioFileService.saveFile(minioConfig.getAudioBucket(), filename, file);
+        minioFileService.saveFile(minioProperties.getAudioBucket(), filename, file);
 
         reportService.cancelReportByWhomTypeAndContentTypeAndContentTypeNameAndWhom(SONG, CONTENT, song.getName(), user);
 

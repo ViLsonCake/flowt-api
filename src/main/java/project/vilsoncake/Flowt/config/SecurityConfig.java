@@ -4,7 +4,6 @@ import io.minio.MinioClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -21,6 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import project.vilsoncake.Flowt.properties.MinioProperties;
 
 import static project.vilsoncake.Flowt.entity.enumerated.Role.ADMIN;
 import static project.vilsoncake.Flowt.entity.enumerated.Role.MODERATOR;
@@ -33,7 +33,7 @@ public class SecurityConfig {
     private final PasswordEncoder passwordEncoder;
     private final UserDetailsService userDetailsService;
     private final JwtFilter jwtFilter;
-    private final MinioConfig minioConfig;
+    private final MinioProperties minioProperties;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -83,8 +83,8 @@ public class SecurityConfig {
     @Bean
     public MinioClient minioClient() {
         return MinioClient.builder()
-                .endpoint(minioConfig.getUrl())
-                .credentials(minioConfig.getAccessKey(), minioConfig.getSecretKey())
+                .endpoint(minioProperties.getUrl())
+                .credentials(minioProperties.getAccessKey(), minioProperties.getSecretKey())
                 .build();
     }
 }

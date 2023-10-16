@@ -6,11 +6,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import project.vilsoncake.Flowt.config.MinioConfig;
+import project.vilsoncake.Flowt.properties.MinioProperties;
 import project.vilsoncake.Flowt.dto.SongRequest;
 import project.vilsoncake.Flowt.dto.SongsResponse;
 import project.vilsoncake.Flowt.dto.SubstringDto;
-import project.vilsoncake.Flowt.entity.AudioFileEntity;
 import project.vilsoncake.Flowt.entity.SongAvatarEntity;
 import project.vilsoncake.Flowt.entity.SongEntity;
 import project.vilsoncake.Flowt.entity.UserEntity;
@@ -39,7 +38,7 @@ public class SongServiceImpl implements SongService {
     private final AvatarService songAvatarService;
     private final LastListenedService lastListenedService;
     private final MinioFileService minioFileService;
-    private final MinioConfig minioConfig;
+    private final MinioProperties minioProperties;
 
     @Override
     public Map<String, String> saveNewSongEntity(String authHeader, SongRequest songRequest) {
@@ -125,7 +124,7 @@ public class SongServiceImpl implements SongService {
         SongEntity song = findByNameAndUser(name, user);
 
         // Remove audio file from MinIO
-        minioFileService.removeFile(minioConfig.getAudioBucket(), song.getAudioFile().getFilename());
+        minioFileService.removeFile(minioProperties.getAudioBucket(), song.getAudioFile().getFilename());
         // Remove song with avatar and audio from postgres
         songRepository.delete(song);
 
@@ -150,7 +149,7 @@ public class SongServiceImpl implements SongService {
             incrementSongListens(song, user);
             lastListenedService.addSongToLastListenedByUser(user, song);
 
-            return minioFileService.getFileContent(minioConfig.getAudioBucket(), song.getAudioFile().getFilename());
+            return minioFileService.getFileContent(minioProperties.getAudioBucket(), song.getAudioFile().getFilename());
         }
 
         throw new MinioFileException("File not found");
@@ -166,7 +165,7 @@ public class SongServiceImpl implements SongService {
 
         if (songAvatar == null) throw new MinioFileException("File not found");
 
-        return minioFileService.getFileContent(minioConfig.getSongAvatarBucket(), songAvatar.getFilename());
+        return minioFileService.getFileContent(minioProperties.getSongAvatarBucket(), songAvatar.getFilename());
     }
 
     @Transactional

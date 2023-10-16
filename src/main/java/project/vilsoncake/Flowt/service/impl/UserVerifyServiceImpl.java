@@ -5,10 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import project.vilsoncake.Flowt.config.AppConfig;
+import project.vilsoncake.Flowt.properties.ApplicationProperties;
 import project.vilsoncake.Flowt.entity.*;
 import project.vilsoncake.Flowt.entity.enumerated.NotificationType;
-import project.vilsoncake.Flowt.entity.enumerated.WhomReportType;
 import project.vilsoncake.Flowt.exception.AccountAlreadyVerifiedException;
 import project.vilsoncake.Flowt.exception.VerifyCodeNotFoundException;
 import project.vilsoncake.Flowt.repository.UserRepository;
@@ -32,7 +31,7 @@ public class UserVerifyServiceImpl implements UserVerifyService {
     private final NotificationService notificationService;
     private final MailVerifyService mailVerifyService;
     private final RedisService redisService;
-    private final AppConfig appConfig;
+    private final ApplicationProperties applicationProperties;
     private final MailUtils mailUtils;
     private final ReportUtils reportUtils;
 
@@ -52,7 +51,7 @@ public class UserVerifyServiceImpl implements UserVerifyService {
                     String.format(
                             VERIFY_EMAIL_TEXT,
                             user.getUsername(),
-                            (appConfig.getVerifyUrl() + userVerifyCode)
+                            (applicationProperties.getVerifyUrl() + userVerifyCode)
                     )
             );
             });

@@ -5,7 +5,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import project.vilsoncake.Flowt.config.JwtConfig;
+import project.vilsoncake.Flowt.properties.JwtProperties;
 import project.vilsoncake.Flowt.entity.TokenEntity;
 import project.vilsoncake.Flowt.entity.UserEntity;
 import project.vilsoncake.Flowt.repository.TokenRepository;
@@ -18,7 +18,7 @@ import project.vilsoncake.Flowt.service.UserService;
 public class TokenServiceImpl implements TokenService {
     private final TokenRepository tokenRepository;
     private final UserService userService;
-    private final JwtConfig jwtConfig;
+    private final JwtProperties jwtProperties;
 
     @Override
     public void saveNewToken(String token, String username, HttpServletResponse response) {
@@ -32,7 +32,7 @@ public class TokenServiceImpl implements TokenService {
 
         // Add refresh token to http-only cookie
         Cookie tokenCookie = new Cookie("refreshToken", token);
-        tokenCookie.setMaxAge(daysToSeconds(jwtConfig.getRefreshLifetime()));
+        tokenCookie.setMaxAge(daysToSeconds(jwtProperties.getRefreshLifetime()));
         tokenCookie.setHttpOnly(true);
         response.addCookie(tokenCookie);
     }

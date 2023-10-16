@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import project.vilsoncake.Flowt.config.MinioConfig;
+import project.vilsoncake.Flowt.properties.MinioProperties;
 import project.vilsoncake.Flowt.entity.FollowerEntity;
 import project.vilsoncake.Flowt.entity.enumerated.NotificationType;
 import project.vilsoncake.Flowt.entity.UserAvatarEntity;
@@ -32,7 +32,7 @@ public class UserManagementServiceImpl implements UserManagementService {
     private final FollowerService followerService;
     private final AvatarService userAvatarService;
     private final MinioFileService minioFileService;
-    private final MinioConfig minioConfig;
+    private final MinioProperties minioProperties;
     private final FileUtils fileUtils;
     private final AuthUtils authUtils;
 
@@ -58,7 +58,7 @@ public class UserManagementServiceImpl implements UserManagementService {
         }
 
         // Save file data in minio storage
-        minioFileService.saveFile(minioConfig.getUserAvatarBucket(), filename, avatar);
+        minioFileService.saveFile(minioProperties.getUserAvatarBucket(), filename, avatar);
 
         return Map.of("username", username);
     }
@@ -70,7 +70,7 @@ public class UserManagementServiceImpl implements UserManagementService {
 
         if (userAvatar == null) throw new MinioFileException("File not found");
 
-        return minioFileService.getFileContent(minioConfig.getUserAvatarBucket(), userAvatar.getFilename());
+        return minioFileService.getFileContent(minioProperties.getUserAvatarBucket(), userAvatar.getFilename());
     }
 
     @Override
