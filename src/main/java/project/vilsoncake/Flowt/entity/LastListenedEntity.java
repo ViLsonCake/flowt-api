@@ -1,6 +1,5 @@
 package project.vilsoncake.Flowt.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,23 +8,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "liked")
+@Table(name = "last_listened")
 @Data
 @NoArgsConstructor
-public class LikedEntity {
-
+public class LastListenedEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "liked_id", updatable = false)
-    private Long likedId;
+    @Column(name = "id", updatable = false)
+    private Long id;
     @ManyToMany
     private List<SongEntity> songs;
-    @JsonIgnore
     @OneToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", unique = true)
     private UserEntity user;
 
-    public LikedEntity(UserEntity user) {
+    public LastListenedEntity(UserEntity user) {
         this.songs = new ArrayList<>();
         this.user = user;
     }

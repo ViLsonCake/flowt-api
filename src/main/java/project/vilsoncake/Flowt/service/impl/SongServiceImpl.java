@@ -37,6 +37,7 @@ public class SongServiceImpl implements SongService {
     private final AuthUtils authUtils;
     private final MailUtils mailUtils;
     private final AvatarService songAvatarService;
+    private final LastListenedService lastListenedService;
     private final MinioFileService minioFileService;
     private final MinioConfig minioConfig;
 
@@ -147,9 +148,9 @@ public class SongServiceImpl implements SongService {
 
         if (song != null && song.getAudioFile() != null) {
             incrementSongListens(song, user);
-            AudioFileEntity audioFile = song.getAudioFile();
+            lastListenedService.addSongToLastListenedByUser(user, song);
 
-            return minioFileService.getFileContent(minioConfig.getAudioBucket(), audioFile.getFilename());
+            return minioFileService.getFileContent(minioConfig.getAudioBucket(), song.getAudioFile().getFilename());
         }
 
         throw new MinioFileException("File not found");

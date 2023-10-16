@@ -1,3 +1,0 @@
-ALTER TABLE report ADD checked BOOLEAN DEFAULT FALSE;
-
-UPDATE report SET checked=FALSE;

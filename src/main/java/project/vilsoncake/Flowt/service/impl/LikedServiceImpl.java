@@ -40,7 +40,7 @@ public class LikedServiceImpl implements LikedService {
         SongEntity song = songService.findByNameAndUser(name, authorUser);
 
         // if user don't have liken entity, create
-        if (user.getLiked() == null) createLikedEntityFromUser(user);
+        if (user.getLiked() == null) createUserLikedEntity(user);
 
         Map<String, String> response = new HashMap<>();
 
@@ -84,8 +84,8 @@ public class LikedServiceImpl implements LikedService {
     }
 
     @Override
-    public boolean createLikedEntityFromUser(UserEntity user) {
-        LikedEntity liked = new LikedEntity(new ArrayList<>(), user);
+    public boolean createUserLikedEntity(UserEntity user) {
+        LikedEntity liked = new LikedEntity(user);
         likedRepository.save(liked);
         return true;
     }

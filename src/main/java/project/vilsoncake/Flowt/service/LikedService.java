@@ -8,6 +8,6 @@ import java.util.Map;
 public interface LikedService {
     Map<String, String> addSongToLiked(String authHeader, String username, String name);
     Map<String, String> removeSongFromLiked(String authHeader, String username, String name);
-    boolean createLikedEntityFromUser(UserEntity user);
+    boolean createUserLikedEntity(UserEntity user);
     LikedSongsDto getLikedSongs(String authHeader, int page, int size);
 }

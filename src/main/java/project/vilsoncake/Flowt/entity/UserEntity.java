@@ -60,7 +60,9 @@ public class UserEntity {
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
     private UserAvatarEntity userAvatar;
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
-    private LikedEntity liked;
+    private LikedEntity liked = new LikedEntity(this);
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
+    private LastListenedEntity lastListened = new LastListenedEntity(this);
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private List<FollowerEntity> subscribes;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "follower")

@@ -1,0 +1,1 @@
+ALTER TABLE report ADD IF NOT EXISTS checked_at TIMESTAMP;
