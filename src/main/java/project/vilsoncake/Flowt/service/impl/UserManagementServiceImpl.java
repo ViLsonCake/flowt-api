@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import project.vilsoncake.Flowt.entity.ProfileHatEntity;
 import project.vilsoncake.Flowt.properties.MinioProperties;
 import project.vilsoncake.Flowt.entity.FollowerEntity;
 import project.vilsoncake.Flowt.entity.enumerated.NotificationType;
@@ -31,6 +32,7 @@ public class UserManagementServiceImpl implements UserManagementService {
     private final NotificationService notificationService;
     private final FollowerService followerService;
     private final AvatarService userAvatarService;
+    private final ProfileHatService profileHatService;
     private final MinioFileService minioFileService;
     private final MinioProperties minioProperties;
     private final FileUtils fileUtils;
@@ -64,6 +66,32 @@ public class UserManagementServiceImpl implements UserManagementService {
     }
 
     @Override
+    public Map<String, String> addUserProfileHatByUsername(String authHeader, MultipartFile image) throws MinioFileException, InvalidExtensionException {
+        // Validate file
+        if (image.getOriginalFilename() != null && !fileUtils.isValidAvatarExtension(image.getOriginalFilename()))
+            throw new InvalidExtensionException("Invalid file extension (must be png or jpg)");
+
+        String username = authUtils.getUsernameFromAuthHeader(authHeader);
+        UserEntity user = userService.getUserByUsername(username);
+
+        String filename;
+
+        if (!profileHatService.existsByUser(user)) {
+            // Generate filename
+            filename = fileUtils.generateRandomUUID();
+            // Save file info in sql
+            profileHatService.saveImage(image, filename, user);
+        } else {
+            filename = profileHatService.getByUser(user).getFilename();
+        }
+
+        // Save file data in minio storage
+        minioFileService.saveFile(minioProperties.getUserProfileHatBucket(), filename, image);
+
+        return Map.of("username", username);
+    }
+
+    @Override
     public byte[] getUserAvatarByUsername(String username) throws MinioFileException {
         UserEntity user = userService.getUserByUsername(username);
         UserAvatarEntity userAvatar = user.getUserAvatar();
@@ -71,6 +99,16 @@ public class UserManagementServiceImpl implements UserManagementService {
         if (userAvatar == null) throw new MinioFileException("File not found");
 
         return minioFileService.getFileContent(minioProperties.getUserAvatarBucket(), userAvatar.getFilename());
+    }
+
+    @Override
+    public byte[] getUserProfileHatByUsername(String username) throws MinioFileException {
+        UserEntity user = userService.getUserByUsername(username);
+        ProfileHatEntity profileHat = user.getProfileHat();
+
+        if (profileHat == null) throw new MinioFileException("File not found");
+
+        return minioFileService.getFileContent(minioProperties.getUserProfileHatBucket(), profileHat.getFilename());
     }
 
     @Override

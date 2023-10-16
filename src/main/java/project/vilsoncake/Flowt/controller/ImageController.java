@@ -21,11 +21,18 @@ public class ImageController {
     private final SongService songService;
     private final PlaylistService playlistService;
 
-    @GetMapping("/user/{username}")
+    @GetMapping("/user/avatar/{username}")
     public ResponseEntity<byte[]> getUserAvatar(@PathVariable("username") String username) throws MinioFileException {
         return ResponseEntity.ok()
                 .contentType(MediaType.IMAGE_JPEG)
                 .body(userManagementService.getUserAvatarByUsername(username));
+    }
+
+    @GetMapping("/user/profile-hat/{username}")
+    public ResponseEntity<byte[]> getUserProfileHat(@PathVariable("username") String username) throws MinioFileException {
+        return ResponseEntity.ok()
+                .contentType(MediaType.IMAGE_JPEG)
+                .body(userManagementService.getUserProfileHatByUsername(username));
     }
 
     @GetMapping("/song/{username}/{songName}")

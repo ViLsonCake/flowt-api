@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 public class MinioProperties {
     private String audioBucket;
     private String userAvatarBucket;
+    private String userProfileHatBucket;
     private String songAvatarBucket;
     private String playlistAvatarBucket;
     private String url;
