@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.vilsoncake.Flowt.dto.*;
+import project.vilsoncake.Flowt.entity.LastListenedEntity;
 import project.vilsoncake.Flowt.entity.NotificationEntity;
 import project.vilsoncake.Flowt.entity.PlaylistEntity;
 import project.vilsoncake.Flowt.entity.UserEntity;
@@ -153,6 +154,13 @@ public class UserServiceImpl implements UserService {
         UserEntity user = getUserByUsername(username);
 
         return Map.of("playlists", user.getPlaylists());
+    }
+
+    @Override
+    public LastListenedEntity getUserLastListened(String authHeader) {
+        String username = authUtils.getUsernameFromAuthHeader(authHeader);
+        UserEntity user = getUserByUsername(username);
+        return user.getLastListened();
     }
 
     @Override
