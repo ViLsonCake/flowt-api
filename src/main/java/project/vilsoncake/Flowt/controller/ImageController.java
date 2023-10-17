@@ -28,8 +28,8 @@ public class ImageController {
                 .body(userManagementService.getUserAvatarByUsername(username));
     }
 
-    @GetMapping("/user/profile-hat/{username}")
-    public ResponseEntity<byte[]> getUserProfileHat(@PathVariable("username") String username) throws MinioFileException {
+    @GetMapping("/user/profile-header/{username}")
+    public ResponseEntity<byte[]> getUserProfileHeader(@PathVariable("username") String username) throws MinioFileException {
         return ResponseEntity.ok()
                 .contentType(MediaType.IMAGE_JPEG)
                 .body(userManagementService.getUserProfileHeaderByUsername(username));
