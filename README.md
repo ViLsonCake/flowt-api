@@ -13,7 +13,8 @@ Permit all
 + POST /auth/registration - registration new user
 + POST /auth/login - create access and refresh jwt tokens
 + GET /auth/refresh - refresh access and refresh tokens
-+ GET /images/user/:username - get user avatar by username
++ GET /images/user/avatar/:username - get user avatar by username
++ GET /images/user/profile-header/:username - get user profile header by username
 + GET /images/song/:username/:name - get song avatar by author and name
 + GET /images/playlist/:username/:name - get playlist avatar by username and name
 + POST /verify/restore-password - send mail with code for restoring the password by email from request
@@ -24,6 +25,7 @@ Permit all
 ___
 Authenticated
 + POST /users/avatar - change user avatar
++ POST /users/profile-header - change user profile header
 + POST /users/change-password - change authenticated user password
 + POST /users/subscribe/:username - subscribe authenticated user to another user
 + POST /users/unsubscribe/:username - unsubscribe authenticated user to another user
@@ -38,6 +40,7 @@ Authenticated
 + GET /users/songs - get authenticated user songs list
 + GET /users/playlists - get authenticated user playlists list
 + GET /users/notifications - get authenticated user notifications list
++ GET /users/last-listened - get authenticated user 15 last listened songs
 + GET /verify/email - verify user email
 + GET /verify/password - send mail with code for restoring the password
 + GET /songs/:username/:name - get song info by author and song name
@@ -57,6 +60,10 @@ Authenticated
 + PATCH /playlists/:playlistName - change playlist access modifier
 + DELETE /playlists/:playlistName/:author/:songName - remove song from playlist
 + DELETE /notifications/:id - remove user notification by id
++ POST /reports - send report
++ GET /reports/:type - get report by type
++ PATCH /reports/:id - access report by id
++ DELETE /report/:id - cancel report by id
 ___ 
 For moderators
 + POST /moderator/warning-mail/:username - send to user warning mail
