@@ -3,31 +3,31 @@ package project.vilsoncake.Flowt.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import project.vilsoncake.Flowt.entity.ProfileHatEntity;
+import project.vilsoncake.Flowt.entity.ProfileHeaderEntity;
 import project.vilsoncake.Flowt.entity.UserEntity;
-import project.vilsoncake.Flowt.repository.ProfileHatRepository;
+import project.vilsoncake.Flowt.repository.ProfileHeaderRepository;
 import project.vilsoncake.Flowt.service.ProfileHatService;
 
 @Service
 @RequiredArgsConstructor
 public class ProfileHatServiceImpl implements ProfileHatService {
 
-    private final ProfileHatRepository profileHatRepository;
+    private final ProfileHeaderRepository profileHeaderRepository;
 
     @Override
     public boolean existsByUser(UserEntity user) {
-        return profileHatRepository.existsByUser(user);
+        return profileHeaderRepository.existsByUser(user);
     }
 
     @Override
-    public ProfileHatEntity getByUser(UserEntity user) {
-        return profileHatRepository.getByUser(user);
+    public ProfileHeaderEntity getByUser(UserEntity user) {
+        return profileHeaderRepository.getByUser(user);
     }
 
     @Override
     public boolean saveImage(MultipartFile image, String uuid, UserEntity user) {
-        ProfileHatEntity profileHat = new ProfileHatEntity(uuid, String.valueOf(image.getSize()), user);
-        profileHatRepository.save(profileHat);
+        ProfileHeaderEntity profileHat = new ProfileHeaderEntity(uuid, String.valueOf(image.getSize()), user);
+        profileHeaderRepository.save(profileHat);
         return true;
     }
 }

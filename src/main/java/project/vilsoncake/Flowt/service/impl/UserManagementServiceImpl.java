@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import project.vilsoncake.Flowt.entity.ProfileHatEntity;
+import project.vilsoncake.Flowt.entity.ProfileHeaderEntity;
 import project.vilsoncake.Flowt.properties.MinioProperties;
 import project.vilsoncake.Flowt.entity.FollowerEntity;
 import project.vilsoncake.Flowt.entity.enumerated.NotificationType;
@@ -66,7 +66,7 @@ public class UserManagementServiceImpl implements UserManagementService {
     }
 
     @Override
-    public Map<String, String> addUserProfileHatByUsername(String authHeader, MultipartFile image) throws MinioFileException, InvalidExtensionException {
+    public Map<String, String> addUserProfileHeaderByUsername(String authHeader, MultipartFile image) throws MinioFileException, InvalidExtensionException {
         // Validate file
         if (image.getOriginalFilename() != null && !fileUtils.isValidAvatarExtension(image.getOriginalFilename()))
             throw new InvalidExtensionException("Invalid file extension (must be png or jpg)");
@@ -102,9 +102,9 @@ public class UserManagementServiceImpl implements UserManagementService {
     }
 
     @Override
-    public byte[] getUserProfileHatByUsername(String username) throws MinioFileException {
+    public byte[] getUserProfileHeaderByUsername(String username) throws MinioFileException {
         UserEntity user = userService.getUserByUsername(username);
-        ProfileHatEntity profileHat = user.getProfileHat();
+        ProfileHeaderEntity profileHat = user.getProfileHeader();
 
         if (profileHat == null) throw new MinioFileException("File not found");
 

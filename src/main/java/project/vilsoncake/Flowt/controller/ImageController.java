@@ -32,7 +32,7 @@ public class ImageController {
     public ResponseEntity<byte[]> getUserProfileHat(@PathVariable("username") String username) throws MinioFileException {
         return ResponseEntity.ok()
                 .contentType(MediaType.IMAGE_JPEG)
-                .body(userManagementService.getUserProfileHatByUsername(username));
+                .body(userManagementService.getUserProfileHeaderByUsername(username));
     }
 
     @GetMapping("/song/{username}/{songName}")

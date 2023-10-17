@@ -37,12 +37,12 @@ public class UserController {
         return ResponseEntity.ok(userManagementService.addUserAvatarByUsername(authHeader, avatar));
     }
 
-    @PostMapping("/profile-hat")
-    public ResponseEntity<Map<String, String>> addProfileHat(
+    @PostMapping("/profile-header")
+    public ResponseEntity<Map<String, String>> addProfileHeader(
             @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authHeader,
             @RequestParam("file") MultipartFile image
     ) throws MinioFileException, InvalidExtensionException {
-        return ResponseEntity.ok(userManagementService.addUserProfileHatByUsername(authHeader, image));
+        return ResponseEntity.ok(userManagementService.addUserProfileHeaderByUsername(authHeader, image));
     }
 
     @PostMapping("/change-password")

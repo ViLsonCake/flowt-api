@@ -5,10 +5,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "profile_hat")
+@Table(name = "profile_header")
 @Data
 @NoArgsConstructor
-public class ProfileHatEntity {
+public class ProfileHeaderEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,7 +22,7 @@ public class ProfileHatEntity {
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
-    public ProfileHatEntity(String filename, String size, UserEntity user) {
+    public ProfileHeaderEntity(String filename, String size, UserEntity user) {
         this.filename = filename;
         this.size = size;
         this.user = user;

@@ -60,7 +60,7 @@ public class UserEntity {
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
     private UserAvatarEntity userAvatar;
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
-    private ProfileHatEntity profileHat;
+    private ProfileHeaderEntity profileHeader;
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
     private LikedEntity liked = new LikedEntity(this);
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
