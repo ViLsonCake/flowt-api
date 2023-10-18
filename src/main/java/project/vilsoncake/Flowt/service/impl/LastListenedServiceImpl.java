@@ -22,9 +22,6 @@ public class LastListenedServiceImpl implements LastListenedService {
 
     @Override
     public boolean addSongToLastListenedByUser(UserEntity user, SongEntity song) {
-        if (user.getLastListened() == null) {
-            createUserLastListenedEntity(user);
-        }
         LastListenedEntity lastListenedEntity = lastListenedRepository.findByUser(user);
         List<SongEntity> lastListenedSongs = lastListenedEntity.getSongs();
         if (!isSongAlreadyInLastListened(song, user)) {
@@ -35,13 +32,6 @@ public class LastListenedServiceImpl implements LastListenedService {
         }
         lastListenedEntity.setSongs(lastListenedSongs);
         lastListenedRepository.save(lastListenedEntity);
-        return true;
-    }
-
-    @Override
-    public boolean createUserLastListenedEntity(UserEntity user) {
-        LastListenedEntity lastListened = new LastListenedEntity(user);
-        lastListenedRepository.save(lastListened);
         return true;
     }
 

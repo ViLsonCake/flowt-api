@@ -41,12 +41,9 @@ public class LikedServiceImpl implements LikedService {
         UserEntity authorUser = userService.getUserByUsername(author);
         SongEntity song = songService.findByNameAndUser(name, authorUser);
 
-        // if user don't have liken entity, create
-        if (user.getLiked() == null) createUserLikedEntity(user);
-
         Map<String, String> response = new HashMap<>();
 
-        if (user.getLiked().getSongs().contains(song)) {
+        if (!user.getLiked().getSongs().contains(song)) {
             // Add song to user liked
             LikedEntity liked = user.getLiked();
             liked.getSongs().add(song);
@@ -83,13 +80,6 @@ public class LikedServiceImpl implements LikedService {
         }
 
         return response;
-    }
-
-    @Override
-    public boolean createUserLikedEntity(UserEntity user) {
-        LikedEntity liked = new LikedEntity(user);
-        likedRepository.save(liked);
-        return true;
     }
 
     @Override
