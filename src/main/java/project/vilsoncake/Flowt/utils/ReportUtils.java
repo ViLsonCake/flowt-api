@@ -17,7 +17,7 @@ public class ReportUtils {
         WhomReportType whomType = report.getWhomType();
         ReportContentType contentType = report.getContentType();
 
-        if ((!whomType.equals(USER) && contentType.equals(DESCRIPTION)) ||
+        if ((!whomType.equals(USER) && (contentType.equals(DESCRIPTION) || contentType.equals(PROFILE_HEADER))) ||
                 (!whomType.equals(SONG) && contentType.equals(CONTENT))) {
             throw new IncorrectReportException("Incorrect report data");
         }
@@ -27,6 +27,8 @@ public class ReportUtils {
                 return USER_NAME_WARNING_MESSAGE;
             } else if (contentType.equals(AVATAR)) {
                 return USER_AVATAR_WARNING_MESSAGE;
+            } else if (contentType.equals(PROFILE_HEADER)) {
+                return USER_PROFILE_HEADER_MESSAGE;
             } else if (contentType.equals(DESCRIPTION)) {
                 return USER_DESCRIPTION_WARNING_MESSAGE;
             }

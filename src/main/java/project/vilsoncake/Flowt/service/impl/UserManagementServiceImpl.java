@@ -32,7 +32,7 @@ public class UserManagementServiceImpl implements UserManagementService {
     private final NotificationService notificationService;
     private final FollowerService followerService;
     private final AvatarService userAvatarService;
-    private final ProfileHatService profileHatService;
+    private final ProfileHeaderService profileHeaderService;
     private final MinioFileService minioFileService;
     private final MinioProperties minioProperties;
     private final FileUtils fileUtils;
@@ -76,13 +76,13 @@ public class UserManagementServiceImpl implements UserManagementService {
 
         String filename;
 
-        if (!profileHatService.existsByUser(user)) {
+        if (!profileHeaderService.existsByUser(user)) {
             // Generate filename
             filename = fileUtils.generateRandomUUID();
             // Save file info in sql
-            profileHatService.saveImage(image, filename, user);
+            profileHeaderService.saveImage(image, filename, user);
         } else {
-            filename = profileHatService.getByUser(user).getFilename();
+            filename = profileHeaderService.getByUser(user).getFilename();
         }
 
         // Save file data in minio storage

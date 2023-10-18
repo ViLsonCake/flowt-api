@@ -20,6 +20,7 @@ import java.util.Date;
 import java.util.Map;
 
 import static project.vilsoncake.Flowt.entity.enumerated.ReportContentType.AVATAR;
+import static project.vilsoncake.Flowt.entity.enumerated.ReportContentType.PROFILE_HEADER;
 import static project.vilsoncake.Flowt.entity.enumerated.WhomReportType.*;
 
 @Service
@@ -33,6 +34,7 @@ public class ReportServiceImpl implements ReportService {
     private final SongService songService;
     private final PlaylistService playlistService;
     private final UserVerifyService userVerifyService;
+    private final ProfileHeaderService profileHeaderService;
     private final ReportRepository reportRepository;
 
     @Override
@@ -73,9 +75,12 @@ public class ReportServiceImpl implements ReportService {
             throw new ReportNotFoundException(String.format("Report with id %s not found", id));
         }
         ReportEntity report = reportRepository.findById(id).get();
-        // If report type is avatar, set default
+
         if (report.getContentType().equals(AVATAR)) {
             removeAvatarFromEntityFromReport(report);
+        }
+        if (report.getContentType().equals(PROFILE_HEADER)) {
+            profileHeaderService.removeByUser(report.getWhom());
         }
         userVerifyService.sendWarningMessage(report);
         report.setChecked(true);

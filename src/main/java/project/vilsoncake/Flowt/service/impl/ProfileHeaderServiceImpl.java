@@ -6,11 +6,11 @@ import org.springframework.web.multipart.MultipartFile;
 import project.vilsoncake.Flowt.entity.ProfileHeaderEntity;
 import project.vilsoncake.Flowt.entity.UserEntity;
 import project.vilsoncake.Flowt.repository.ProfileHeaderRepository;
-import project.vilsoncake.Flowt.service.ProfileHatService;
+import project.vilsoncake.Flowt.service.ProfileHeaderService;
 
 @Service
 @RequiredArgsConstructor
-public class ProfileHatServiceImpl implements ProfileHatService {
+public class ProfileHeaderServiceImpl implements ProfileHeaderService {
 
     private final ProfileHeaderRepository profileHeaderRepository;
 
@@ -22,6 +22,13 @@ public class ProfileHatServiceImpl implements ProfileHatService {
     @Override
     public ProfileHeaderEntity getByUser(UserEntity user) {
         return profileHeaderRepository.getByUser(user);
+    }
+
+    @Override
+    public boolean removeByUser(UserEntity user) {
+        ProfileHeaderEntity profileHeader = profileHeaderRepository.getByUser(user);
+        profileHeaderRepository.delete(profileHeader);
+        return true;
     }
 
     @Override
