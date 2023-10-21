@@ -16,7 +16,7 @@ public class LastListenedEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", updatable = false)
     private Long id;
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     private List<SongEntity> songs;
     @OneToOne
     @JoinColumn(name = "user_id", unique = true)

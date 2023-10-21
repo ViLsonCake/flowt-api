@@ -44,13 +44,13 @@ public class SongEntity {
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "song")
     private AudioFileEntity audioFile;
     @JsonIgnore
-    @ManyToMany(mappedBy = "songs")
+    @ManyToMany(mappedBy = "songs", cascade = CascadeType.ALL)
     private List<PlaylistEntity> playlists;
     @JsonIgnore
-    @ManyToMany(mappedBy = "songs")
+    @ManyToMany(mappedBy = "songs", cascade = CascadeType.ALL)
     private List<LikedEntity> liked;
     @JsonIgnore
-    @ManyToMany(mappedBy = "songs")
+    @ManyToMany(mappedBy = "songs", cascade = CascadeType.ALL)
     private List<LastListenedEntity> lastListened;
     @JsonIgnore
     @ManyToOne
