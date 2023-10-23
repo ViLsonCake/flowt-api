@@ -11,18 +11,6 @@ import project.vilsoncake.Flowt.entity.UserEntity;
 public class ArtistVerifyUtils {
 
     public ArtistVerifyRequestEntity artistVerifyDtoToEntity(ArtistVerifyDto artistVerifyDto, UserEntity user) {
-//        return new ArtistVerifyRequestEntity(
-//                new PersonalDataEntity(
-//                        artistVerifyDto.getPersonalDataDto().getName(),
-//                        artistVerifyDto.getPersonalDataDto().getSurname(),
-//                        artistVerifyDto.getPersonalDataDto().getBirthDate(),
-//                        artistVerifyDto.getPersonalDataDto().getSex(),
-//                        artistVerifyDto.getPersonalDataDto().getCountry(),
-//                        artistVerifyDto.getPersonalDataDto().getPassportNumber()
-//                ),
-//                artistVerifyDto.getLinks().stream().map(linkDto -> new LinkEntity(linkDto.getUrl(), )).toList(),
-//                user
-//        );
         ArtistVerifyRequestEntity artistVerifyRequest = new ArtistVerifyRequestEntity();
         artistVerifyRequest.setPersonalData(
                 new PersonalDataEntity(
