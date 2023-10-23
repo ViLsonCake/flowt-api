@@ -1,5 +1,6 @@
 package project.vilsoncake.Flowt.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -26,7 +27,18 @@ public class PersonalDataEntity {
     private String country;
     @Column(name = "passport_number")
     private String passportNumber;
+    @JsonIgnore
     @OneToOne
     @JoinColumn(name = "request_id")
     private ArtistVerifyRequestEntity request;
+
+    public PersonalDataEntity(String name, String surname, String birthDate, String sex, String country, String passportNumber, ArtistVerifyRequestEntity request) {
+        this.name = name;
+        this.surname = surname;
+        this.birthDate = birthDate;
+        this.sex = sex;
+        this.country = country;
+        this.passportNumber = passportNumber;
+        this.request = request;
+    }
 }

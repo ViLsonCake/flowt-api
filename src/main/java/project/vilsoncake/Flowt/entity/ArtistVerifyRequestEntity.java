@@ -1,5 +1,6 @@
 package project.vilsoncake.Flowt.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -26,7 +27,16 @@ public class ArtistVerifyRequestEntity {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_at", updatable = false)
     private Date createdAt;
+    @Column(name = "checked")
+    private boolean checked = false;
+    @JsonIgnore
     @OneToOne
     @JoinColumn(name = "user_id")
     private UserEntity user;
+
+    public ArtistVerifyRequestEntity(PersonalDataEntity personalData, List<LinkEntity> links, UserEntity user) {
+        this.personalData = personalData;
+        this.links = links;
+        this.user = user;
+    }
 }

@@ -6,6 +6,10 @@ public class MessageConst {
             "Hi %s,\n" +
             "Follow this link and verify your Flowt account: \n" +
             "%s";
+    public static final String ARTIST_VERIFY_SUBJECT = "Artist verify";
+    public static final String ARTIST_VERIFY_MESSAGE =
+            "Congratulations %s!" +
+            "You are now officially confirmed as a music artist.";
     public static final String RESTORE_PASSWORD_SUBJECT = "Restore password code";
     public static final String RESTORE_PASSWORD_TEXT =
             "Hi %s, \n" +

@@ -1,0 +1,1 @@
+ALTER TABLE artist_verify_request ADD IF NOT EXISTS checked BOOLEAN DEFAULT FALSE;
