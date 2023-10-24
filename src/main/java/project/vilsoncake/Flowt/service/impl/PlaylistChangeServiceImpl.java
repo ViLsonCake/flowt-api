@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import project.vilsoncake.Flowt.dto.PlaylistNameDto;
 import project.vilsoncake.Flowt.entity.PlaylistEntity;
 import project.vilsoncake.Flowt.entity.UserEntity;
+import project.vilsoncake.Flowt.exception.PlaylistAlreadyExistException;
 import project.vilsoncake.Flowt.exception.PlaylistNotFoundException;
 import project.vilsoncake.Flowt.repository.PlaylistRepository;
 import project.vilsoncake.Flowt.service.PlaylistChangeService;
@@ -31,6 +32,10 @@ public class PlaylistChangeServiceImpl implements PlaylistChangeService {
         String username = authUtils.getUsernameFromAuthHeader(authHeader);
         UserEntity user = userService.getUserByUsername(username);
         PlaylistEntity playlist = getPlaylistByUserAndName(user, playlistNameDto.getPlaylistName());
+
+        if (getPlaylistByUserAndName(user, playlistNameDto.getNewPlaylistName()) != null) {
+            throw new PlaylistAlreadyExistException("Playlist with new name already exists");
+        }
 
         playlist.setName(playlistNameDto.getNewPlaylistName());
         playlistRepository.save(playlist);
