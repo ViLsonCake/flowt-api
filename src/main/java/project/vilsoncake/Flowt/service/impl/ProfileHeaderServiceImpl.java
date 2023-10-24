@@ -33,8 +33,8 @@ public class ProfileHeaderServiceImpl implements ProfileHeaderService {
 
     @Override
     public boolean saveImage(MultipartFile image, String uuid, UserEntity user) {
-        ProfileHeaderEntity profileHat = new ProfileHeaderEntity(uuid, String.valueOf(image.getSize()), user);
-        profileHeaderRepository.save(profileHat);
+        ProfileHeaderEntity profileHeader = new ProfileHeaderEntity(uuid, String.valueOf(image.getSize()), user);
+        profileHeaderRepository.save(profileHeader);
         return true;
     }
 }

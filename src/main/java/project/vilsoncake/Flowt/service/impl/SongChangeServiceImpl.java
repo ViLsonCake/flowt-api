@@ -42,8 +42,9 @@ public class SongChangeServiceImpl implements SongChangeService {
     @Transactional
     @Override
     public Map<String, String> addAvatarByUserSongName(String authHeader, String name, MultipartFile file) throws InvalidExtensionException {
-        if (file.getOriginalFilename() != null && !fileUtils.isValidAvatarExtension(file.getOriginalFilename()))
+        if (file.getOriginalFilename() != null && !fileUtils.isValidAvatarExtension(file.getOriginalFilename())) {
             throw new InvalidExtensionException("Invalid file extension (must be png or jpg)");
+        }
 
         String username = authUtils.getUsernameFromAuthHeader(authHeader);
         UserEntity user = userService.getUserByUsername(username);
@@ -102,7 +103,9 @@ public class SongChangeServiceImpl implements SongChangeService {
         UserEntity user = userService.getUserByUsername(username);
         SongEntity song = findByNameAndUser(songNameDto.getCurrentName(), user);
 
-        if (songRepository.existsByNameAndUser(songNameDto.getNewName(), user)) throw new SongAlreadyExistByUserException("User have name with same name");
+        if (songRepository.existsByNameAndUser(songNameDto.getNewName(), user)) {
+            throw new SongAlreadyExistByUserException("User have name with same name");
+        }
 
         reportService.cancelReportByWhomTypeAndContentTypeAndContentTypeNameAndWhom(SONG, NAME, songNameDto.getCurrentName(), user);
 

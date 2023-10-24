@@ -41,8 +41,9 @@ public class UserChangeServiceImpl implements UserChangeService {
     @Override
     public Map<String, String> changeUserUsername(String authHeader, UsernameDto usernameDto, HttpServletResponse response) {
         // Validate new username
-        if (userRepository.existsUserByUsername(usernameDto.getNewUsername()))
+        if (userRepository.existsUserByUsername(usernameDto.getNewUsername())) {
             throw new UsernameAlreadyExistException("Username already exits");
+        }
 
         String username = authUtils.getUsernameFromAuthHeader(authHeader);
         UserEntity user = userRepository.findByUsername(username).orElseThrow(() ->
@@ -70,8 +71,9 @@ public class UserChangeServiceImpl implements UserChangeService {
     @Override
     public Map<String, String> changeUserEmail(String authHeader, EmailDto emailDto) {
         // Validate new email
-        if (userRepository.existsUserByEmail(emailDto.getNewEmail()))
+        if (userRepository.existsUserByEmail(emailDto.getNewEmail())) {
             throw new EmailAlreadyExistException("Email already exits");
+        }
 
         String username = authUtils.getUsernameFromAuthHeader(authHeader);
         UserEntity user = userRepository.findByUsername(username).orElseThrow(() ->
@@ -118,8 +120,11 @@ public class UserChangeServiceImpl implements UserChangeService {
                 new UsernameNotFoundException("Username not found"));
 
         // Add to user moderator role or delete if user has
-        if (!user.getRoles().contains(MODERATOR)) user.getRoles().add(MODERATOR);
-        else user.getRoles().remove(MODERATOR);
+        if (!user.getRoles().contains(MODERATOR)) {
+            user.getRoles().add(MODERATOR);
+        } else {
+            user.getRoles().remove(MODERATOR);
+        }
         userRepository.save(user);
 
         return new ChangeAuthorityDto(user.getUsername(), user.getEmail(), user.getRoles(), user.isActive());

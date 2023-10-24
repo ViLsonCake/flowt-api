@@ -18,7 +18,9 @@ public class MailUtils {
     private final NotificationService notificationService;
 
     public boolean sendCongratulationsMessagesIfNeed(SongEntity song, UserEntity user) {
-        if (song.getListens() % 10_000 != 0) return false;
+        if (song.getListens() % 10_000 != 0) {
+            return false;
+        }
 
         // If listens divisible by 10,000. Example 30,000, 50,000, 120,000, send mail and add notification with congratulations
         notificationService.addNotification(
@@ -52,10 +54,14 @@ public class MailUtils {
         String[] splitMailAddress = mailAddress.split("@");
         StringBuilder stringBuilder = new StringBuilder(splitMailAddress[0]);
 
-        if (splitMailAddress.length < 2) return null;
+        if (splitMailAddress.length < 2) {
+            return null;
+        }
 
         for (int index = 0; index < stringBuilder.length(); index++) {
-            if (index < stringBuilder.length() - 3) stringBuilder.setCharAt(index, BLUR_SYMBOL);
+            if (index < stringBuilder.length() - 3) {
+                stringBuilder.setCharAt(index, BLUR_SYMBOL);
+            }
         }
 
         return stringBuilder + splitMailAddress[1];

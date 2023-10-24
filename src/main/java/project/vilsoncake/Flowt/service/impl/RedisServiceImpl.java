@@ -55,7 +55,9 @@ public class RedisServiceImpl implements RedisService {
     public String saveNewPasswordCode(String username) {
         String randomCode = String.valueOf(new Random().nextInt(1000, 9999));
         // Delete previous code
-        if (getValueFromCode(username) != null) deleteByKeyFromCode(username);
+        if (getValueFromCode(username) != null) {
+            deleteByKeyFromCode(username);
+        }
 
         setValueToCode(username, randomCode);
         return randomCode;

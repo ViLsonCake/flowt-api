@@ -34,11 +34,15 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     public Map<String, String> removeNotificationById(Long id) {
-        if(notificationRepository.findById(id).isEmpty()) throw new NotificationNotFoundException("Notification not found");
+        if (notificationRepository.findById(id).isEmpty()) {
+            throw new NotificationNotFoundException("Notification not found");
+        }
 
         NotificationEntity notification = notificationRepository.findById(id).get();
 
-        if (!notification.getType().equals(NotificationType.INFO)) throw new RemoveNotificationException("You can't remove notification with type non-info type");
+        if (!notification.getType().equals(NotificationType.INFO)) {
+            throw new RemoveNotificationException("You can't remove notification with type non-info type");
+        }
 
         notificationRepository.delete(notification);
         return Map.of("message", "Notification deleted");

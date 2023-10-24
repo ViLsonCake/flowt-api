@@ -49,8 +49,9 @@ public class PlaylistServiceImpl implements PlaylistService {
         UserEntity user = userService.getUserByUsername(username);
 
         // Check if user have playlist with the same name
-        if (playlistRepository.existsByUserAndName(user, playlistDto.getName()))
+        if (playlistRepository.existsByUserAndName(user, playlistDto.getName())) {
             throw new PlaylistAlreadyExistException("User already have playlist with same name");
+        }
 
         // Create new playlist and save
         PlaylistEntity playlist = new PlaylistEntity(
@@ -130,8 +131,9 @@ public class PlaylistServiceImpl implements PlaylistService {
             List<SongEntity> songsWithoutDeleted = new ArrayList<>();
             // Create new playlist songs list without specified song
             playlist.getSongs().forEach(playlistSong -> {
-                if (!playlistSong.getName().equals(songName) && !playlistSong.getUser().getUsername().equals(songAuthor))
+                if (!playlistSong.getName().equals(songName) && !playlistSong.getUser().getUsername().equals(songAuthor)) {
                     songsWithoutDeleted.add(playlistSong);
+                }
             });
             playlist.setSongs(songsWithoutDeleted);
             playlistRepository.save(playlist);
@@ -150,7 +152,9 @@ public class PlaylistServiceImpl implements PlaylistService {
         PlaylistEntity playlist = getPlaylistByUserAndName(user, playlistName);
         PlaylistAvatarEntity playlistAvatar = playlist.getPlaylistAvatar();
 
-        if (playlistAvatar == null) throw new MinioFileException("File not found");
+        if (playlistAvatar == null) {
+            throw new MinioFileException("File not found");
+        }
 
         return minioFileService.getFileContent(minioProperties.getPlaylistAvatarBucket(), playlistAvatar.getFilename());
     }

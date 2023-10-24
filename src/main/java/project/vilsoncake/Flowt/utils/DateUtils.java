@@ -12,10 +12,10 @@ public class DateUtils {
     public boolean isWaitingPeriodExpired(Date reportCreationDate) {
         Date currentDate = new Date();
         long differenceInMillis = currentDate.getTime() - reportCreationDate.getTime();
-        return differenceInMillis >= daysToMillis(WAITING_PERIOD_IN_DAYS);
+        return differenceInMillis >= getWaitingPeriodInDaysToMillis();
     }
 
-    private long daysToMillis(int days) {
-        return (long) days * 24 * 60 * 60 * 1000;
+    private long getWaitingPeriodInDaysToMillis() {
+        return WAITING_PERIOD_IN_DAYS * 24 * 60 * 60 * 1000;
     }
 }

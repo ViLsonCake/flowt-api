@@ -46,10 +46,14 @@ public class SongServiceImpl implements SongService {
         UserEntity user = userService.getUserByUsername(username);
 
         // If user email not verified, he can't add a song
-        if (!user.isEmailVerify()) throw new UserEmailNotVerifiedException("User email not verified");
+        if (!user.isEmailVerify()) {
+            throw new UserEmailNotVerifiedException("User email not verified");
+        }
 
         // If user have song with the same name
-        if (songRepository.existsByNameAndUser(songRequest.getName(), user)) throw new SongAlreadyExistByUserException("User have name with same name");
+        if (songRepository.existsByNameAndUser(songRequest.getName(), user)) {
+            throw new SongAlreadyExistByUserException("User have name with same name");
+        }
 
         // Save new song
         SongEntity song = new SongEntity();
@@ -71,7 +75,9 @@ public class SongServiceImpl implements SongService {
 
     @Override
     public SongsResponse getSongsByUser(String authHeader, int page, int size) {
-        if (page < 0 || size < 1) return null;
+        if (page < 0 || size < 1) {
+            return null;
+        }
 
         String username = authUtils.getUsernameFromAuthHeader(authHeader);
         UserEntity user = userService.getUserByUsername(username);
@@ -82,7 +88,9 @@ public class SongServiceImpl implements SongService {
 
     @Override
     public SongsResponse getSongsByGenre(String genre, int page, int size) {
-        if (page < 0 || size < 1) return null;
+        if (page < 0 || size < 1) {
+            return null;
+        }
 
         Page<SongEntity> songsOnPage = songRepository.findAllByGenre(genre, PageRequest.of(page, size));
 
@@ -108,8 +116,12 @@ public class SongServiceImpl implements SongService {
     @Override
     public SongEntity getRandomSongInfoByGenre(String genre) {
         List<SongEntity> songs = songRepository.findAllByGenre(genre);
-        if (songs.size() == 1) return songs.get(0);
-        if (songs.isEmpty()) return null;
+        if (songs.size() == 1) {
+            return songs.get(0);
+        }
+        if (songs.isEmpty()) {
+            return null;
+        }
 
         int randomSongIndex = new Random().nextInt(0, songs.size() - 1);
 
@@ -163,7 +175,9 @@ public class SongServiceImpl implements SongService {
 
         SongAvatarEntity songAvatar = song.getSongAvatar();
 
-        if (songAvatar == null) throw new MinioFileException("File not found");
+        if (songAvatar == null) {
+            throw new MinioFileException("File not found");
+        }
 
         return minioFileService.getFileContent(minioProperties.getSongAvatarBucket(), songAvatar.getFilename());
     }

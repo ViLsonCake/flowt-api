@@ -69,8 +69,9 @@ public class LikedServiceImpl implements LikedService {
             // Create new liked list without specified song
             List<SongEntity> songsWithoutDeleted = new ArrayList<>();
             liked.getSongs().forEach(likedSong -> {
-                if (!likedSong.getName().equalsIgnoreCase(name) && !likedSong.getUser().getUsername().equals(author))
+                if (!likedSong.getName().equalsIgnoreCase(name) && !likedSong.getUser().getUsername().equals(author)) {
                     songsWithoutDeleted.add(likedSong);
+                }
             });
             liked.setSongs(songsWithoutDeleted);
             likedRepository.save(liked);
@@ -84,7 +85,9 @@ public class LikedServiceImpl implements LikedService {
 
     @Override
     public LikedSongsDto getLikedSongs(String authHeader, int page, int size) {
-        if (page < 0 || size < 1) return null;
+        if (page < 0 || size < 1) {
+            return null;
+        }
 
         String username = authUtils.getUsernameFromAuthHeader(authHeader);
         UserEntity user = userService.getUserByUsername(username);

@@ -42,8 +42,9 @@ public class UserManagementServiceImpl implements UserManagementService {
     @Override
     public Map<String, String> addUserAvatarByUsername(String authHeader, MultipartFile avatar) throws InvalidExtensionException {
         // Validate file
-        if (avatar.getOriginalFilename() != null && !fileUtils.isValidAvatarExtension(avatar.getOriginalFilename()))
+        if (avatar.getOriginalFilename() != null && !fileUtils.isValidAvatarExtension(avatar.getOriginalFilename())) {
             throw new InvalidExtensionException("Invalid file extension (must be png or jpg)");
+        }
 
         String username = authUtils.getUsernameFromAuthHeader(authHeader);
         UserEntity user = userService.getUserByUsername(username);
@@ -68,8 +69,9 @@ public class UserManagementServiceImpl implements UserManagementService {
     @Override
     public Map<String, String> addUserProfileHeaderByUsername(String authHeader, MultipartFile image) throws MinioFileException, InvalidExtensionException {
         // Validate file
-        if (image.getOriginalFilename() != null && !fileUtils.isValidAvatarExtension(image.getOriginalFilename()))
+        if (image.getOriginalFilename() != null && !fileUtils.isValidAvatarExtension(image.getOriginalFilename())) {
             throw new InvalidExtensionException("Invalid file extension (must be png or jpg)");
+        }
 
         String username = authUtils.getUsernameFromAuthHeader(authHeader);
         UserEntity user = userService.getUserByUsername(username);
@@ -96,7 +98,9 @@ public class UserManagementServiceImpl implements UserManagementService {
         UserEntity user = userService.getUserByUsername(username);
         UserAvatarEntity userAvatar = user.getUserAvatar();
 
-        if (userAvatar == null) throw new MinioFileException("File not found");
+        if (userAvatar == null) {
+            throw new MinioFileException("File not found");
+        }
 
         return minioFileService.getFileContent(minioProperties.getUserAvatarBucket(), userAvatar.getFilename());
     }
@@ -104,11 +108,13 @@ public class UserManagementServiceImpl implements UserManagementService {
     @Override
     public byte[] getUserProfileHeaderByUsername(String username) throws MinioFileException {
         UserEntity user = userService.getUserByUsername(username);
-        ProfileHeaderEntity profileHat = user.getProfileHeader();
+        ProfileHeaderEntity profileHeader = user.getProfileHeader();
 
-        if (profileHat == null) throw new MinioFileException("File not found");
+        if (profileHeader == null) {
+            throw new MinioFileException("File not found");
+        }
 
-        return minioFileService.getFileContent(minioProperties.getUserProfileHatBucket(), profileHat.getFilename());
+        return minioFileService.getFileContent(minioProperties.getUserProfileHatBucket(), profileHeader.getFilename());
     }
 
     @Override

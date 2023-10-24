@@ -47,9 +47,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public Map<String, String> addUser(RegistrationDto registrationDto) {
         // Handle exception
-        if (userRepository.existsUserByUsername(registrationDto.getUsername())) throw new UsernameAlreadyExistException("Username already exists");
-        if (userRepository.existsUserByEmail(registrationDto.getEmail())) throw new EmailAlreadyExistException("Email already exists");
-        if (!registrationDto.getPassword().equals(registrationDto.getConfirmPassword())) throw new PasswordsNotMatchException("Passwords don't match");
+        if (userRepository.existsUserByUsername(registrationDto.getUsername())) {
+            throw new UsernameAlreadyExistException("Username already exists");
+        }
+        if (userRepository.existsUserByEmail(registrationDto.getEmail())) {
+            throw new EmailAlreadyExistException("Email already exists");
+        }
+        if (!registrationDto.getPassword().equals(registrationDto.getConfirmPassword())) {
+            throw new PasswordsNotMatchException("Passwords don't match");
+        }
 
         // Create new user and save
         UserEntity user = new UserEntity();
@@ -112,8 +118,9 @@ public class UserServiceImpl implements UserService {
         UserEntity user = getUserByUsername(username);
 
         // Validate password code
-        if(!redisService.isValidUserCode(username, changePasswordDto.getCode()))
+        if (!redisService.isValidUserCode(username, changePasswordDto.getCode())) {
             throw new InvalidPasswordCodeException("Invalid password code");
+        }
 
         user.setPassword(passwordEncoder.encode(changePasswordDto.getNewPassword()));
         userRepository.save(user);
@@ -129,8 +136,9 @@ public class UserServiceImpl implements UserService {
         UserEntity user = getUserByEmail(restorePasswordDto.getEmail());
 
         // Validate password code
-        if(!redisService.isValidUserCode(user.getUsername(), restorePasswordDto.getCode()))
+        if (!redisService.isValidUserCode(user.getUsername(), restorePasswordDto.getCode())) {
             throw new InvalidPasswordCodeException("Invalid password code");
+        }
 
         user.setPassword(passwordEncoder.encode(restorePasswordDto.getNewPassword()));
         userRepository.save(user);

@@ -24,7 +24,9 @@ public class TokenServiceImpl implements TokenService {
     public void saveNewToken(String token, String username, HttpServletResponse response) {
         UserEntity user = userService.getUserByUsername(username);
         TokenEntity tokenFromDb = tokenRepository.findByUser(user);
-        if (tokenFromDb != null) tokenRepository.delete(tokenFromDb);
+        if (tokenFromDb != null) {
+            tokenRepository.delete(tokenFromDb);
+        }
 
         // Save refresh token to db
         TokenEntity tokenEntity = new TokenEntity(token, user);

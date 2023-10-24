@@ -31,7 +31,9 @@ public class FollowerServiceImpl implements FollowerService {
 
     @Override
     public FollowersDto getUserFollowers(String authHeader, int page, int size) {
-        if (page < 0 || size < 1) return null;
+        if (page < 0 || size < 1) {
+            return null;
+        }
 
         String username = authUtils.getUsernameFromAuthHeader(authHeader);
         UserEntity user = userService.getUserByUsername(username);
@@ -45,7 +47,9 @@ public class FollowerServiceImpl implements FollowerService {
 
     @Override
     public SubscribesDto getUserSubscribes(String authHeader, int page, int size) {
-        if (page < 0 || size < 1) return null;
+        if (page < 0 || size < 1) {
+            return null;
+        }
 
         String username = authUtils.getUsernameFromAuthHeader(authHeader);
         UserEntity user = userService.getUserByUsername(username);

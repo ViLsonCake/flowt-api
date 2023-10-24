@@ -44,7 +44,9 @@ public class AuthServiceImpl implements AuthService {
         }
         UserDetails userDetails = userDetailsService.loadUserByUsername(authRequest.getUsername());
 
-        if (!userDetails.isEnabled()) throw new IncorrectCredentialsException("Your account has been blocked");
+        if (!userDetails.isEnabled()) {
+            throw new IncorrectCredentialsException("Your account has been blocked");
+        }
 
         String[] tokens = jwtUtils.generateTokens(userDetails);
         tokenService.saveNewToken(tokens[1], authRequest.getUsername(), response);
@@ -58,7 +60,9 @@ public class AuthServiceImpl implements AuthService {
         String usernameFromRefresh = getUsernameFromRefresh(refreshToken);
         String usernameFromAccess = authUtils.getUsernameFromAuthHeader(authRequest);
 
-        if (!usernameFromAccess.equals(usernameFromRefresh)) throw new TokenNotFoundException("Token not valid");
+        if (!usernameFromAccess.equals(usernameFromRefresh)) {
+            throw new TokenNotFoundException("Token not valid");
+        }
 
         UserDetails user = userDetailsService.loadUserByUsername(usernameFromRefresh);
         String[] tokens = jwtUtils.generateTokens(user);
@@ -69,8 +73,9 @@ public class AuthServiceImpl implements AuthService {
 
     private String getRefreshFromCookie(Cookie[] cookies) {
         for (Cookie cookie : cookies) {
-            if (cookie.getName().equals("refreshToken"))
+            if (cookie.getName().equals("refreshToken")) {
                 return cookie.getValue();
+            }
         }
         return null;
     }
