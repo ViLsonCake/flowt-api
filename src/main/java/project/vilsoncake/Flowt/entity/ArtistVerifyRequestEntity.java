@@ -22,7 +22,7 @@ public class ArtistVerifyRequestEntity {
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "request")
     private PersonalDataEntity personalData;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "request")
-    private List<LinkEntity> links;
+    private List<UserLinkEntity> links;
     @CurrentTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_at", updatable = false)
@@ -34,7 +34,7 @@ public class ArtistVerifyRequestEntity {
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
-    public ArtistVerifyRequestEntity(PersonalDataEntity personalData, List<LinkEntity> links, UserEntity user) {
+    public ArtistVerifyRequestEntity(PersonalDataEntity personalData, List<UserLinkEntity> links, UserEntity user) {
         this.personalData = personalData;
         this.links = links;
         this.user = user;
