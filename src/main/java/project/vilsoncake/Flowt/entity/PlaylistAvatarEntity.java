@@ -18,7 +18,7 @@ public class PlaylistAvatarEntity {
     @Column(name = "filename")
     private String filename;
     @Column(name = "size")
-    private String size;
+    private String size = "0";
     @OneToOne
     @JoinColumn(name = "playlist_id")
     private PlaylistEntity playlist;

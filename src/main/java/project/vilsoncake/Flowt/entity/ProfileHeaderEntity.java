@@ -19,7 +19,7 @@ public class ProfileHeaderEntity {
     @Column(name = "filename")
     private String filename;
     @Column(name = "size")
-    private String size;
+    private String size = "0";
     @OneToOne
     @JoinColumn(name = "user_id")
     private UserEntity user;

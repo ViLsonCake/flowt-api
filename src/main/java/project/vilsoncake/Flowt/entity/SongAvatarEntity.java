@@ -18,7 +18,7 @@ public class SongAvatarEntity {
     @Column(name = "filename")
     private String filename;
     @Column(name = "size")
-    private String size;
+    private String size = "0";
     @OneToOne
     @JoinColumn(name = "song_id")
     private SongEntity song;
