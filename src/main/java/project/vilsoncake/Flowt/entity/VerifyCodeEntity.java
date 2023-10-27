@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Entity
 @Table(name = "verify_code")
 @Data
@@ -22,8 +24,12 @@ public class VerifyCodeEntity {
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
-    public VerifyCodeEntity(String code, UserEntity user) {
-        this.code = code;
+    public VerifyCodeEntity(UserEntity user) {
+        this.code = generateUUID();
         this.user = user;
+    }
+
+    private String generateUUID() {
+        return UUID.randomUUID().toString();
     }
 }

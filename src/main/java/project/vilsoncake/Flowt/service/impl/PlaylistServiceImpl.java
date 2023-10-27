@@ -64,6 +64,7 @@ public class PlaylistServiceImpl implements PlaylistService {
         return Map.of("message", String.format("PlayList '%s' saved", playlistDto.getName()));
     }
 
+    @Transactional
     @Override
     public Map<String, String> addAvatarToPlaylist(String authHeader, String playlistName, MultipartFile file) throws InvalidExtensionException {
         if (file.getOriginalFilename() != null && !fileUtils.isValidAvatarExtension(file.getOriginalFilename())) {
@@ -72,19 +73,9 @@ public class PlaylistServiceImpl implements PlaylistService {
 
         String username = authUtils.getUsernameFromAuthHeader(authHeader);
         UserEntity user = userService.getUserByUsername(username);
-        // Get user playlist
         PlaylistEntity playlist = getPlaylistByUserAndName(user, playlistName);
-
-        String filename;
-
-        if (!playlistAvatarService.existsByEntity(playlist)) {
-            // Generate filename
-            filename = fileUtils.generateRandomUUID();
-            // Save file info in sql
-            playlistAvatarService.saveAvatar(file, filename, playlist);
-        } else {
-            filename = ((PlaylistAvatarEntity) playlistAvatarService.getByEntity(user)).getFilename();
-        }
+        playlist.getPlaylistAvatar().setSize(String.valueOf(file.getSize()));
+        String filename = playlist.getPlaylistAvatar().getFilename();
 
         // Save file data in minio storage
         minioFileService.saveFile(minioProperties.getPlaylistAvatarBucket(), filename, file);

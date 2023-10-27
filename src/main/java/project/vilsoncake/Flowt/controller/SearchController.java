@@ -20,7 +20,7 @@ public class SearchController {
     private final PlaylistService playlistService;
     private final UserService userService;
 
-    @GetMapping("/songs")
+    @PostMapping("/songs")
     public ResponseEntity<SongsResponse> searchSongsBySubstring(
             @RequestBody SubstringDto substringDto,
             @RequestParam(required = false, defaultValue = "0") int page,
@@ -29,7 +29,7 @@ public class SearchController {
         return ResponseEntity.ok(songService.getSongsBySubstring(substringDto, page, size));
     }
 
-    @GetMapping("/playlists")
+    @PostMapping("/playlists")
     public ResponseEntity<PlaylistsPageDto> searchPlaylistsBySubstring(
             @RequestBody SubstringDto substringDto,
             @RequestParam(required = false, defaultValue = "0") int page,
@@ -38,7 +38,7 @@ public class SearchController {
         return ResponseEntity.ok(playlistService.getPublicPlaylistsBySubstring(substringDto, page, size));
     }
 
-    @GetMapping("/users")
+    @PostMapping("/users")
     public ResponseEntity<UsersPageDto> searchUsersBySubstring(
             @RequestBody SubstringDto substringDto,
             @RequestParam(required = false, defaultValue = "0") int page,

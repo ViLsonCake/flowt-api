@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Entity
 @Table(name = "audio_file")
 @Data
@@ -21,9 +23,12 @@ public class AudioFileEntity {
     @JoinColumn(name = "song_id")
     private SongEntity song;
 
-    public AudioFileEntity(String filename, String size, SongEntity song) {
-        this.filename = filename;
-        this.size = size;
+    public AudioFileEntity(SongEntity song) {
+        this.filename = generateUUID();
         this.song = song;
+    }
+
+    private String generateUUID() {
+        return UUID.randomUUID().toString();
     }
 }

@@ -47,7 +47,6 @@ public class LikedServiceImpl implements LikedService {
             // Add song to user liked
             LikedEntity liked = user.getLiked();
             liked.getSongs().add(song);
-            likedRepository.save(liked);
             response.put("message", String.format("Song '%s' added to liked %s username", name, username));
         } else {
             response.put("message", String.format("Song '%s' already in liked %s username", name, username));

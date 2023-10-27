@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Entity
 @Table(name = "playlist_avatar")
 @Data
@@ -21,9 +23,12 @@ public class PlaylistAvatarEntity {
     @JoinColumn(name = "playlist_id")
     private PlaylistEntity playlist;
 
-    public PlaylistAvatarEntity(String filename, String size, PlaylistEntity playlist) {
-        this.filename = filename;
-        this.size = size;
+    public PlaylistAvatarEntity(PlaylistEntity playlist) {
+        this.filename = generateUUID();
         this.playlist = playlist;
+    }
+
+    private String generateUUID() {
+        return UUID.randomUUID().toString();
     }
 }

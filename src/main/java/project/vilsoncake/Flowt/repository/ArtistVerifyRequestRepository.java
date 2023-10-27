@@ -10,5 +10,6 @@ import java.util.Optional;
 
 public interface ArtistVerifyRequestRepository extends CrudRepository<ArtistVerifyRequestEntity, Long> {
     Optional<ArtistVerifyRequestEntity> findByUser(UserEntity user);
+    Boolean existsByUser(UserEntity user);
     Page<ArtistVerifyRequestEntity> findAllByCheckedFalseOrderByCreatedAt(Pageable pageable);
 }

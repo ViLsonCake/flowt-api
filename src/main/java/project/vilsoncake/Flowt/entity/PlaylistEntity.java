@@ -28,7 +28,7 @@ public class PlaylistEntity {
     private List<SongEntity> songs;
     @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "playlist")
-    private PlaylistAvatarEntity playlistAvatar;
+    private PlaylistAvatarEntity playlistAvatar = new PlaylistAvatarEntity(this);
     @Column(name = "is_private")
     private boolean isPrivate = true;
     @JsonIgnore

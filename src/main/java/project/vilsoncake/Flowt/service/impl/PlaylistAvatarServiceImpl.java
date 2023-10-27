@@ -17,28 +17,6 @@ public class PlaylistAvatarServiceImpl implements AvatarService {
     private final PlaylistAvatarRepository playlistAvatarRepository;
 
     @Override
-    public boolean saveAvatar(MultipartFile avatar, String uuid, Object playlist) {
-        PlaylistAvatarEntity playlistAvatar = new PlaylistAvatarEntity(uuid, String.valueOf(avatar.getSize()), (PlaylistEntity) playlist);
-        playlistAvatarRepository.save(playlistAvatar);
-        return true;
-    }
-
-    @Override
-    public boolean existsByFilename(String filename) {
-        return playlistAvatarRepository.existsByFilename(filename);
-    }
-
-    @Override
-    public boolean existsByEntity(Object entity) {
-        return playlistAvatarRepository.existsByPlaylist((PlaylistEntity) entity);
-    }
-
-    @Override
-    public PlaylistAvatarEntity getByEntity(Object entity) {
-        return playlistAvatarRepository.findByPlaylist((PlaylistEntity) entity);
-    }
-
-    @Override
     public boolean deleteAvatar(Object entity) {
         PlaylistAvatarEntity playlistAvatar = playlistAvatarRepository.findByPlaylist((PlaylistEntity) entity);
         playlistAvatarRepository.delete(playlistAvatar);

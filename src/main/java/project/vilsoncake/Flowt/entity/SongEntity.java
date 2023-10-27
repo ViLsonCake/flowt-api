@@ -39,10 +39,10 @@ public class SongEntity {
     private Long listens;
     @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "song")
-    private SongAvatarEntity songAvatar;
+    private SongAvatarEntity songAvatar = new SongAvatarEntity(this);
     @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "song")
-    private AudioFileEntity audioFile;
+    private AudioFileEntity audioFile = new AudioFileEntity(this);
     @JsonIgnore
     @ManyToMany(mappedBy = "songs", cascade = CascadeType.ALL)
     private List<PlaylistEntity> playlists;

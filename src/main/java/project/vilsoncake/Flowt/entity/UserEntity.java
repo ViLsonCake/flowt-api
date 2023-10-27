@@ -56,11 +56,11 @@ public class UserEntity {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private List<TokenEntity> token;
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
-    private VerifyCodeEntity verifyCode;
+    private VerifyCodeEntity verifyCode = new VerifyCodeEntity(this);
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
-    private UserAvatarEntity userAvatar;
+    private UserAvatarEntity userAvatar = new UserAvatarEntity(this);
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
-    private ProfileHeaderEntity profileHeader;
+    private ProfileHeaderEntity profileHeader = new ProfileHeaderEntity(this);
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
     private ArtistVerifyRequestEntity artistVerifyRequest;
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")

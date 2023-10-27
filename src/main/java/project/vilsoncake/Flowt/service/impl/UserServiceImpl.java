@@ -66,7 +66,7 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
 
         // Generate verify code and save
-        userVerifyService.saveAndSendNewCode(user);
+        userVerifyService.sendVerifyMailAndNotification(user);
         // Add verify notification
         notificationService.addNotification(
                 NotificationType.MANDATORY,

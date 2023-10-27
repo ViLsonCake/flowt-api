@@ -39,7 +39,7 @@ public class ArtistVerifyServiceImpl implements ArtistVerifyService {
         String username = authUtils.getUsernameFromAuthHeader(authHeader);
         UserEntity sender = userService.getUserByUsername(username);
 
-        if (sender.isArtistVerify()) {
+        if (sender.isArtistVerify() || artistVerifyRequestRepository.existsByUser(sender)) {
             throw new ArtistAlreadyVerifiedException(String.format("Artist \"%s\" is already verified", username));
         }
 

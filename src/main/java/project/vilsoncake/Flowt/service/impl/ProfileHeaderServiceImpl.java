@@ -15,26 +15,9 @@ public class ProfileHeaderServiceImpl implements ProfileHeaderService {
     private final ProfileHeaderRepository profileHeaderRepository;
 
     @Override
-    public boolean existsByUser(UserEntity user) {
-        return profileHeaderRepository.existsByUser(user);
-    }
-
-    @Override
-    public ProfileHeaderEntity getByUser(UserEntity user) {
-        return profileHeaderRepository.getByUser(user);
-    }
-
-    @Override
     public boolean removeByUser(UserEntity user) {
         ProfileHeaderEntity profileHeader = profileHeaderRepository.getByUser(user);
         profileHeaderRepository.delete(profileHeader);
-        return true;
-    }
-
-    @Override
-    public boolean saveImage(MultipartFile image, String uuid, UserEntity user) {
-        ProfileHeaderEntity profileHeader = new ProfileHeaderEntity(uuid, String.valueOf(image.getSize()), user);
-        profileHeaderRepository.save(profileHeader);
         return true;
     }
 }

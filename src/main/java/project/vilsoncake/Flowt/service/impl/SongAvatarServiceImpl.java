@@ -17,28 +17,6 @@ public class SongAvatarServiceImpl implements AvatarService {
     private final SongAvatarRepository songAvatarRepository;
 
     @Override
-    public boolean saveAvatar(MultipartFile avatar, String uuid, Object song) {
-        SongAvatarEntity songAvatar = new SongAvatarEntity(uuid, String.valueOf(avatar.getSize()), (SongEntity) song);
-        songAvatarRepository.save(songAvatar);
-        return true;
-    }
-
-    @Override
-    public boolean existsByFilename(String filename) {
-        return songAvatarRepository.existsByFilename(filename);
-    }
-
-    @Override
-    public boolean existsByEntity(Object entity) {
-        return songAvatarRepository.existsBySong((SongEntity) entity);
-    }
-
-    @Override
-    public SongAvatarEntity getByEntity(Object entity) {
-        return songAvatarRepository.findBySong((SongEntity) entity);
-    }
-
-    @Override
     public boolean deleteAvatar(Object entity) {
         SongAvatarEntity songAvatar = songAvatarRepository.findBySong((SongEntity) entity);
         songAvatarRepository.delete(songAvatar);

@@ -4,21 +4,22 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import project.vilsoncake.Flowt.properties.MinioProperties;
 import project.vilsoncake.Flowt.dto.SongNameDto;
 import project.vilsoncake.Flowt.entity.SongEntity;
-import project.vilsoncake.Flowt.entity.UserAvatarEntity;
 import project.vilsoncake.Flowt.entity.UserEntity;
 import project.vilsoncake.Flowt.exception.InvalidExtensionException;
 import project.vilsoncake.Flowt.exception.MinioFileException;
 import project.vilsoncake.Flowt.exception.SongAlreadyExistByUserException;
 import project.vilsoncake.Flowt.exception.SongNotFoundException;
+import project.vilsoncake.Flowt.properties.MinioProperties;
 import project.vilsoncake.Flowt.repository.SongRepository;
-import project.vilsoncake.Flowt.service.*;
+import project.vilsoncake.Flowt.service.MinioFileService;
+import project.vilsoncake.Flowt.service.ReportService;
+import project.vilsoncake.Flowt.service.SongChangeService;
+import project.vilsoncake.Flowt.service.UserService;
 import project.vilsoncake.Flowt.utils.AuthUtils;
 import project.vilsoncake.Flowt.utils.FileUtils;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import static project.vilsoncake.Flowt.entity.enumerated.ReportContentType.CONTENT;
@@ -31,9 +32,7 @@ public class SongChangeServiceImpl implements SongChangeService {
 
     private final SongRepository songRepository;
     private final UserService userService;
-    private final AvatarService songAvatarService;
     private final MinioFileService minioFileService;
-    private final AudioFileService audioFileService;
     private final ReportService reportService;
     private final AuthUtils authUtils;
     private final FileUtils fileUtils;
@@ -49,17 +48,8 @@ public class SongChangeServiceImpl implements SongChangeService {
         String username = authUtils.getUsernameFromAuthHeader(authHeader);
         UserEntity user = userService.getUserByUsername(username);
         SongEntity song = findByNameAndUser(name, user);
-
-        String filename;
-
-        if (!songAvatarService.existsByEntity(song)) {
-            // Generate filename
-            filename = fileUtils.generateRandomUUID();
-            // Save file info in sql
-            songAvatarService.saveAvatar(file, filename, song);
-        } else {
-            filename = ((UserAvatarEntity) songAvatarService.getByEntity(user)).getFilename();
-        }
+        song.getSongAvatar().setSize(String.valueOf(file.getSize()));
+        String filename = song.getSongAvatar().getFilename();
 
         // Save file data in minio storage
         minioFileService.saveFile(minioProperties.getSongAvatarBucket(), filename, file);
@@ -77,24 +67,15 @@ public class SongChangeServiceImpl implements SongChangeService {
         String username = authUtils.getUsernameFromAuthHeader(authHeader);
         UserEntity user = userService.getUserByUsername(username);
         SongEntity song = findByNameAndUser(name, user);
-        String filename;
-        Map<String, String> response = new HashMap<>();
+        song.getAudioFile().setSize(String.valueOf(file.getSize()));
+        String filename = song.getAudioFile().getFilename();
 
-        if (audioFileService.existsBySong(song)) {
-            filename = song.getAudioFile().getFilename();
-            response.put("message", "New audio file saved");
-        } else {
-            filename = fileUtils.generateRandomUUID();
-            response.put("message", "Audio file changed");
-            // Save file info in sql
-            audioFileService.saveFile(filename, file, song);
-        }
         // Save file data in minio storage
         minioFileService.saveFile(minioProperties.getAudioBucket(), filename, file);
 
         reportService.cancelReportByWhomTypeAndContentTypeAndContentTypeNameAndWhom(SONG, CONTENT, song.getName(), user);
 
-        return response;
+        return Map.of("message", "Audio file successfully added");
     }
 
     @Override

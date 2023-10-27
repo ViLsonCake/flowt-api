@@ -36,30 +36,22 @@ public class UserVerifyServiceImpl implements UserVerifyService {
     private final ReportUtils reportUtils;
 
     @Override
-    public Map<String, String> saveAndSendNewCode(UserEntity user) {
-        // Generate new code and save
-        String userVerifyCode = generateCode();
-        if (!verifyCodeRepository.existsByUser(user)) {
-            VerifyCodeEntity verifyCodeEntity = new VerifyCodeEntity(userVerifyCode, user);
-            verifyCodeRepository.save(verifyCodeEntity);
-
-            // Send verify mail
-            Thread mailThread = new Thread(() -> {
+    public Map<String, String> sendVerifyMailAndNotification(UserEntity user) {
+        // Send verify mail
+        Thread mailThread = new Thread(() -> {
             mailVerifyService.sendMessage(
                     user.getEmail(),
                     VERIFY_EMAIL_SUBJECT,
                     String.format(
                             VERIFY_EMAIL_TEXT,
                             user.getUsername(),
-                            (applicationProperties.getVerifyUrl() + userVerifyCode)
+                            (applicationProperties.getVerifyUrl() + user.getVerifyCode().getCode())
                     )
             );
-            });
-            mailThread.start();
+        });
+        mailThread.start();
 
-            return Map.of("username", user.getUsername());
-        }
-        return Map.of("error", "Token not found");
+        return Map.of("username", user.getUsername());
     }
 
     @Transactional

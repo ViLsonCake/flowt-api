@@ -32,7 +32,6 @@ public class UserManagementServiceImpl implements UserManagementService {
     private final NotificationService notificationService;
     private final FollowerService followerService;
     private final AvatarService userAvatarService;
-    private final ProfileHeaderService profileHeaderService;
     private final MinioFileService minioFileService;
     private final MinioProperties minioProperties;
     private final FileUtils fileUtils;
@@ -48,17 +47,9 @@ public class UserManagementServiceImpl implements UserManagementService {
 
         String username = authUtils.getUsernameFromAuthHeader(authHeader);
         UserEntity user = userService.getUserByUsername(username);
+        user.getUserAvatar().setSize(String.valueOf(avatar.getSize()));
 
-        String filename;
-
-        if (!userAvatarService.existsByEntity(user)) {
-            // Generate filename
-            filename = fileUtils.generateRandomUUID();
-            // Save file info in sql
-            userAvatarService.saveAvatar(avatar, filename, user);
-        } else {
-            filename = ((UserAvatarEntity) userAvatarService.getByEntity(user)).getFilename();
-        }
+        String filename = user.getUserAvatar().getFilename();
 
         // Save file data in minio storage
         minioFileService.saveFile(minioProperties.getUserAvatarBucket(), filename, avatar);
@@ -66,26 +57,17 @@ public class UserManagementServiceImpl implements UserManagementService {
         return Map.of("username", username);
     }
 
+    @Transactional
     @Override
     public Map<String, String> addUserProfileHeaderByUsername(String authHeader, MultipartFile image) throws MinioFileException, InvalidExtensionException {
-        // Validate file
         if (image.getOriginalFilename() != null && !fileUtils.isValidAvatarExtension(image.getOriginalFilename())) {
             throw new InvalidExtensionException("Invalid file extension (must be png or jpg)");
         }
 
         String username = authUtils.getUsernameFromAuthHeader(authHeader);
         UserEntity user = userService.getUserByUsername(username);
-
-        String filename;
-
-        if (!profileHeaderService.existsByUser(user)) {
-            // Generate filename
-            filename = fileUtils.generateRandomUUID();
-            // Save file info in sql
-            profileHeaderService.saveImage(image, filename, user);
-        } else {
-            filename = profileHeaderService.getByUser(user).getFilename();
-        }
+        user.getProfileHeader().setSize(String.valueOf(image.getSize()));
+        String filename = user.getProfileHeader().getFilename();
 
         // Save file data in minio storage
         minioFileService.saveFile(minioProperties.getUserProfileHatBucket(), filename, image);
