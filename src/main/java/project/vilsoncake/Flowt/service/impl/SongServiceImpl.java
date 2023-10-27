@@ -99,7 +99,7 @@ public class SongServiceImpl implements SongService {
 
     @Override
     public SongsResponse getSongsBySubstring(SubstringDto substringDto, int page, int size) {
-        Page<SongEntity> songs = songRepository.findByNameContainingIgnoreCase(substringDto.getSubstring(), PageRequest.of(page, size));
+        Page<SongEntity> songs = songRepository.findByNameContainingIgnoreCaseOrderByListensDesc(substringDto.getSubstring(), PageRequest.of(page, size));
 
         return new SongsResponse(
                 songs.getTotalPages(),
@@ -147,6 +147,8 @@ public class SongServiceImpl implements SongService {
     @Override
     public boolean removeUserSongByUserAndName(UserEntity user, String name) {
         SongEntity song = findByNameAndUser(name, user);
+        minioFileService.removeFile(minioProperties.getAudioBucket(), song.getAudioFile().getFilename());
+        minioFileService.removeFile(minioProperties.getSongAvatarBucket(), song.getSongAvatar().getFilename());
         songRepository.delete(song);
         return true;
     }

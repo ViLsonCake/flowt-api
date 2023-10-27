@@ -18,5 +18,5 @@ public interface SongRepository extends CrudRepository<SongEntity, Long> {
     Page<SongEntity> findAllByGenre(String genre, Pageable pageable);
     List<SongEntity> findAllByGenre(String genre);
     Boolean existsByNameAndUser(String name, UserEntity user);
-    Page<SongEntity> findByNameContainingIgnoreCase(String substring, Pageable pageable);
+    Page<SongEntity> findByNameContainingIgnoreCaseOrderByListensDesc(String substring, Pageable pageable);
 }
