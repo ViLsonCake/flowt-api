@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import project.vilsoncake.Flowt.dto.SongDto;
 import project.vilsoncake.Flowt.properties.MinioProperties;
 import project.vilsoncake.Flowt.dto.SongRequest;
 import project.vilsoncake.Flowt.dto.SongsResponse;
@@ -81,9 +82,12 @@ public class SongServiceImpl implements SongService {
 
         String username = authUtils.getUsernameFromAuthHeader(authHeader);
         UserEntity user = userService.getUserByUsername(username);
-        Page<SongEntity> pageSongs = songRepository.findAllByUser(user, PageRequest.of(page, size));
+        Page<SongEntity> songsOnPage = songRepository.findAllByUser(user, PageRequest.of(page, size));
 
-        return new SongsResponse(pageSongs.getTotalPages(), pageSongs.toList());
+        return new SongsResponse(
+                songsOnPage.getTotalPages(),
+                songsOnPage.getContent().stream().map(SongDto::fromSongEntity).toList()
+        );
     }
 
     @Override
@@ -94,16 +98,19 @@ public class SongServiceImpl implements SongService {
 
         Page<SongEntity> songsOnPage = songRepository.findAllByGenre(genre, PageRequest.of(page, size));
 
-        return new SongsResponse(songsOnPage.getTotalPages(), songsOnPage.getContent());
+        return new SongsResponse(
+                songsOnPage.getTotalPages(),
+                songsOnPage.getContent().stream().map(SongDto::fromSongEntity).toList()
+        );
     }
 
     @Override
     public SongsResponse getSongsBySubstring(SubstringDto substringDto, int page, int size) {
-        Page<SongEntity> songs = songRepository.findByNameContainingIgnoreCaseOrderByListensDesc(substringDto.getSubstring(), PageRequest.of(page, size));
+        Page<SongEntity> songsOnPage = songRepository.findByNameContainingIgnoreCaseOrderByListensDesc(substringDto.getSubstring(), PageRequest.of(page, size));
 
         return new SongsResponse(
-                songs.getTotalPages(),
-                songs.getContent()
+                songsOnPage.getTotalPages(),
+                songsOnPage.getContent().stream().map(SongDto::fromSongEntity).toList()
         );
     }
 

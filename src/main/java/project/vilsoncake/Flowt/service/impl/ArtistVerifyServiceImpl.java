@@ -5,8 +5,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import project.vilsoncake.Flowt.dto.ArtistVerifyDto;
+import project.vilsoncake.Flowt.dto.ArtistVerifyRequestDto;
 import project.vilsoncake.Flowt.dto.ArtistVerifyPageDto;
+import project.vilsoncake.Flowt.dto.ArtistVerifyResponseDto;
 import project.vilsoncake.Flowt.entity.ArtistVerifyRequestEntity;
 import project.vilsoncake.Flowt.entity.UserEntity;
 import project.vilsoncake.Flowt.exception.ArtistAlreadyVerifiedException;
@@ -35,7 +36,7 @@ public class ArtistVerifyServiceImpl implements ArtistVerifyService {
     private final ArtistVerifyUtils artistVerifyUtils;
 
     @Override
-    public Map<String, String> saveNewArtistVerifyRequest(String authHeader, ArtistVerifyDto artistVerifyDto) {
+    public Map<String, String> saveNewArtistVerifyRequest(String authHeader, ArtistVerifyRequestDto artistVerifyRequestDto) {
         String username = authUtils.getUsernameFromAuthHeader(authHeader);
         UserEntity sender = userService.getUserByUsername(username);
 
@@ -43,7 +44,7 @@ public class ArtistVerifyServiceImpl implements ArtistVerifyService {
             throw new ArtistAlreadyVerifiedException(String.format("Artist \"%s\" is already verified", username));
         }
 
-        ArtistVerifyRequestEntity artistVerifyRequest = artistVerifyUtils.artistVerifyDtoToEntity(artistVerifyDto, sender);
+        ArtistVerifyRequestEntity artistVerifyRequest = artistVerifyUtils.artistVerifyDtoToEntity(artistVerifyRequestDto, sender);
         artistVerifyRequestRepository.save(artistVerifyRequest);
 
         return Map.of("username", username);
@@ -101,7 +102,7 @@ public class ArtistVerifyServiceImpl implements ArtistVerifyService {
 
         return new ArtistVerifyPageDto(
                 artistVerifyRequests.getTotalPages(),
-                artistVerifyRequests.getContent()
+                artistVerifyRequests.getContent().stream().map(ArtistVerifyResponseDto::fromEntity).toList()
         );
     }
 }

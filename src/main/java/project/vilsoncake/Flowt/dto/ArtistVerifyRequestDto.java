@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class ArtistVerifyDto {
+public class ArtistVerifyRequestDto {
     private PersonalDataDto personalDataDto;
     private List<LinkDto> links;
 }

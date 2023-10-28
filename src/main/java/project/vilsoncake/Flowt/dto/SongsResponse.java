@@ -3,7 +3,6 @@ package project.vilsoncake.Flowt.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import project.vilsoncake.Flowt.entity.SongEntity;
 
 import java.util.List;
 
@@ -12,5 +11,5 @@ import java.util.List;
 @NoArgsConstructor
 public class SongsResponse {
     private int count;
-    private List<SongEntity> songs;
+    private List<SongDto> songs;
 }

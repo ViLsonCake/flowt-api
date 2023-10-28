@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import project.vilsoncake.Flowt.dto.ArtistVerifyDto;
+import project.vilsoncake.Flowt.dto.ArtistVerifyRequestDto;
 import project.vilsoncake.Flowt.dto.PasswordCodeDto;
 import project.vilsoncake.Flowt.exception.AccountAlreadyVerifiedException;
 import project.vilsoncake.Flowt.exception.VerifyCodeNotFoundException;
@@ -34,9 +34,9 @@ public class VerifyController {
     @PostMapping("/artist")
     public ResponseEntity<Map<String, String>> sendVerifyArtistRequest(
             @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authHeader,
-            @RequestBody ArtistVerifyDto artistVerifyDto
+            @RequestBody ArtistVerifyRequestDto artistVerifyRequestDto
             ) {
-        return ResponseEntity.ok(artistVerifyService.saveNewArtistVerifyRequest(authHeader, artistVerifyDto));
+        return ResponseEntity.ok(artistVerifyService.saveNewArtistVerifyRequest(authHeader, artistVerifyRequestDto));
     }
 
     @PostMapping("/restore-password")

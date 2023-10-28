@@ -12,5 +12,5 @@ public interface UserRepository extends CrudRepository<UserEntity, Long> {
     Optional<UserEntity> findByEmail(String email);
     Boolean existsUserByUsername(String username);
     Boolean existsUserByEmail(String email);
-    Page<UserEntity> findByUsernameContainingIgnoreCase(String substring, Pageable pageable);
+    Page<UserEntity> findByUsernameContainingIgnoreCaseOrderByFollowers(String substring, Pageable pageable);
 }

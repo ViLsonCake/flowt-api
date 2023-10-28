@@ -11,8 +11,9 @@ import project.vilsoncake.Flowt.entity.PlaylistEntity;
 public class PlaylistDto {
     private String name;
     private Boolean isPrivate;
+    private String username;
 
     public static PlaylistDto fromPlaylist(PlaylistEntity playlist) {
-        return new PlaylistDto(playlist.getName(), playlist.isPrivate());
+        return new PlaylistDto(playlist.getName(), playlist.isPrivate(), playlist.getUser().getUsername());
     }
 }
