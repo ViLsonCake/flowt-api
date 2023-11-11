@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 import project.vilsoncake.Flowt.dto.RegistrationValidationDto;
 import project.vilsoncake.Flowt.exception.*;
 
@@ -59,5 +60,11 @@ public class ErrorHandlerController {
 
         log.warn(convertErrorMessages.substring(1, convertErrorMessages.length() - 1));
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", convertErrorMessages.substring(1, convertErrorMessages.length() - 1)));
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<Map<String, String>> webclientException(WebClientResponseException exception) {
+        log.warn(exception.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", exception.getMessage()));
     }
 }

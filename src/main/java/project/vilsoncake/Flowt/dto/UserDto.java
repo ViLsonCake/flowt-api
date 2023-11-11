@@ -13,6 +13,7 @@ public class UserDto {
     private String email;
     private String region;
     private String description;
+    private boolean userHaveAvatar;
 
     public static UserDto fromUser(UserEntity user) {
         UserDto userDto = new UserDto();
@@ -20,6 +21,7 @@ public class UserDto {
         userDto.setEmail(user.getEmail());
         userDto.setRegion(user.getRegion());
         userDto.setDescription(user.getDescription());
+        userDto.setUserHaveAvatar(user.getUserAvatar().isUserHaveAvatar());
         return userDto;
     }
 }

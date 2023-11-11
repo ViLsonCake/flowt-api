@@ -20,6 +20,8 @@ public class UserAvatarEntity {
     private String filename;
     @Column(name = "size")
     private String size = "0";
+    @Column(name = "user_have_avatar")
+    private boolean userHaveAvatar = false;
     @OneToOne
     @JoinColumn(name = "user_id")
     private UserEntity user;

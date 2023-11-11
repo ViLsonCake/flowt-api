@@ -1,0 +1,1 @@
+ALTER TABLE user_avatar ADD IF NOT EXISTS user_have_avatar BOOLEAN DEFAULT FALSE;

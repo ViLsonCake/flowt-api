@@ -6,12 +6,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import project.vilsoncake.Flowt.dto.GoogleOauthRequest;
 import project.vilsoncake.Flowt.dto.JwtRequest;
 import project.vilsoncake.Flowt.dto.JwtResponse;
 import project.vilsoncake.Flowt.dto.RegistrationDto;
 import project.vilsoncake.Flowt.service.AuthService;
 import project.vilsoncake.Flowt.service.UserService;
 
+import java.net.URISyntaxException;
 import java.util.Map;
 
 @RestController
@@ -35,5 +37,10 @@ public class AuthController {
     @GetMapping("/refresh")
     public ResponseEntity<JwtResponse> refreshUserToken(@RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authRequest, HttpServletRequest request, HttpServletResponse response) {
         return ResponseEntity.ok(authService.refreshTokens(authRequest, request, response));
+    }
+
+    @PostMapping("/oauth/google")
+    public ResponseEntity<JwtResponse> googleOauthLogin(@RequestBody GoogleOauthRequest googleOauthRequest, HttpServletResponse response) throws URISyntaxException {
+        return ResponseEntity.ok(authService.getAuthTokenByGoogleAuthorizationCode(googleOauthRequest, response));
     }
 }

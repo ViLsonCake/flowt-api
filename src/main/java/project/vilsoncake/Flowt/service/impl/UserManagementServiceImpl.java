@@ -50,6 +50,7 @@ public class UserManagementServiceImpl implements UserManagementService {
         user.getUserAvatar().setSize(String.valueOf(avatar.getSize()));
 
         String filename = user.getUserAvatar().getFilename();
+        user.getUserAvatar().setUserHaveAvatar(true);
 
         // Save file data in minio storage
         minioFileService.saveFile(minioProperties.getUserAvatarBucket(), filename, avatar);
