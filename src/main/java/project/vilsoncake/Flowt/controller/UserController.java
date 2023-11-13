@@ -112,7 +112,7 @@ public class UserController {
             @RequestParam(required = false, defaultValue = "0") int page,
             @RequestParam(required = false, defaultValue = "10") int size
     ) {
-        return ResponseEntity.ok(songService.getSongsByUser(authHeader, page, size));
+        return ResponseEntity.ok(songService.getAuthenticatedUserSongs(authHeader, page, size));
     }
 
     @GetMapping("/playlists")

@@ -75,12 +75,27 @@ public class SongServiceImpl implements SongService {
     }
 
     @Override
-    public SongsResponse getSongsByUser(String authHeader, int page, int size) {
+    public SongsResponse getAuthenticatedUserSongs(String authHeader, int page, int size) {
         if (page < 0 || size < 1) {
             return null;
         }
 
         String username = authUtils.getUsernameFromAuthHeader(authHeader);
+        UserEntity user = userService.getUserByUsername(username);
+        Page<SongEntity> songsOnPage = songRepository.findAllByUser(user, PageRequest.of(page, size));
+
+        return new SongsResponse(
+                songsOnPage.getTotalPages(),
+                songsOnPage.getContent().stream().map(SongDto::fromSongEntity).toList()
+        );
+    }
+
+    @Override
+    public SongsResponse getSongsByUsername(String username, int page, int size) {
+        if (page < 0 || size < 1) {
+            return null;
+        }
+
         UserEntity user = userService.getUserByUsername(username);
         Page<SongEntity> songsOnPage = songRepository.findAllByUser(user, PageRequest.of(page, size));
 

@@ -48,7 +48,7 @@ public class SongController {
                 .body(bytes);
     }
 
-    @GetMapping("/{genre}")
+    @GetMapping("/genre/{genre}")
     public ResponseEntity<SongsResponse> getSongsByGenre(
             @PathVariable("genre") String genre,
             @RequestParam(required = false, defaultValue = "0") int page,
@@ -70,6 +70,15 @@ public class SongController {
             @RequestBody SongRequest songRequest
     ) {
         return ResponseEntity.ok(songService.saveNewSongEntity(authHeader, songRequest));
+    }
+
+    @GetMapping("/user-songs/{username}")
+    public ResponseEntity<SongsResponse> getSongsByUsername(
+            @PathVariable("username") String username,
+            @RequestParam(required = false, defaultValue = "0") int page,
+            @RequestParam(required = false, defaultValue = "10") int size
+    ) {
+        return ResponseEntity.ok(songService.getSongsByUsername(username, page, size));
     }
 
     @PostMapping("/audio/{name}")

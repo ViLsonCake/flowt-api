@@ -16,7 +16,8 @@ public interface SongService {
     SongEntity getRandomSongInfoByGenre(String genre);
     Map<String, String> removeUserSong(String authHeader, String name);
     boolean removeUserSongByUserAndName(UserEntity user, String name);
-    SongsResponse getSongsByUser(String authHeader, int page, int size);
+    SongsResponse getAuthenticatedUserSongs(String authHeader, int page, int size);
+    SongsResponse getSongsByUsername(String username, int page, int size);
     SongsResponse getSongsByGenre(String genre, int page, int size);
     SongsResponse getSongsBySubstring(SubstringDto substring, int page, int size);
     byte[] getSongAudioFile(String username, String name) throws MinioFileException;
