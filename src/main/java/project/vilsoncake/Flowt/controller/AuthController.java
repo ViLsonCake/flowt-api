@@ -35,8 +35,12 @@ public class AuthController {
     }
 
     @GetMapping("/refresh")
-    public ResponseEntity<JwtResponse> refreshUserToken(@RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authRequest, HttpServletRequest request, HttpServletResponse response) {
-        return ResponseEntity.ok(authService.refreshTokens(authRequest, request, response));
+    public ResponseEntity<JwtResponse> refreshUserToken(
+            @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authRequest,
+            @CookieValue("refreshToken") String refreshToken,
+            HttpServletResponse response
+    ) {
+        return ResponseEntity.ok(authService.refreshTokens(authRequest, refreshToken, response));
     }
 
     @PostMapping("/oauth/google")

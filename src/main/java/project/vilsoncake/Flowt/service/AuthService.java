@@ -10,6 +10,6 @@ import java.net.URISyntaxException;
 
 public interface AuthService {
     JwtResponse generateAuthTokensAndSave(JwtRequest authRequest, HttpServletResponse response);
-    JwtResponse refreshTokens(String authRequest, HttpServletRequest request, HttpServletResponse response);
+    JwtResponse refreshTokens(String authRequest, String cookieRefreshToken, HttpServletResponse response);
     JwtResponse getAuthTokenByGoogleAuthorizationCode(GoogleOauthRequest googleOauthRequest, HttpServletResponse response) throws URISyntaxException;
 }

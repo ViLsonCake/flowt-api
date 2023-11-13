@@ -3,8 +3,6 @@ package project.vilsoncake.Flowt.service.impl;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureException;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,10 +18,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
-import project.vilsoncake.Flowt.dto.GoogleAccessTokenResponse;
-import project.vilsoncake.Flowt.dto.GoogleOauthRequest;
-import project.vilsoncake.Flowt.dto.JwtRequest;
-import project.vilsoncake.Flowt.dto.JwtResponse;
+import project.vilsoncake.Flowt.dto.*;
 import project.vilsoncake.Flowt.exception.IncorrectCredentialsException;
 import project.vilsoncake.Flowt.exception.TokenNotFoundException;
 import project.vilsoncake.Flowt.properties.GoogleOauthProperties;
@@ -63,16 +58,15 @@ public class AuthServiceImpl implements AuthService {
             throw new IncorrectCredentialsException("Your account has been blocked");
         }
 
-        String[] tokens = jwtUtils.generateTokens(userDetails);
-        tokenService.saveNewToken(tokens[1], userDetails.getUsername(), response);
-        return new JwtResponse(tokens[0]);
+        JwtTokensDto tokens = jwtUtils.generateTokens(userDetails);
+        tokenService.saveNewToken(tokens.getRefreshToken(), userDetails.getUsername(), response);
+        return new JwtResponse(tokens.getAccessToken());
     }
 
     @Transactional
     @Override
-    public JwtResponse refreshTokens(String authRequest, HttpServletRequest request, HttpServletResponse response) {
-        String refreshToken = getRefreshFromCookie(request.getCookies());
-        String usernameFromRefresh = getUsernameFromRefresh(refreshToken);
+    public JwtResponse refreshTokens(String authRequest, String cookieRefreshToken, HttpServletResponse response) {
+        String usernameFromRefresh = getUsernameFromRefresh(cookieRefreshToken);
         String usernameFromAccess = authUtils.getUsernameFromAuthHeader(authRequest);
 
         if (!usernameFromAccess.equals(usernameFromRefresh)) {
@@ -80,10 +74,9 @@ public class AuthServiceImpl implements AuthService {
         }
 
         UserDetails user = userDetailsService.loadUserByUsername(usernameFromRefresh);
-        String[] tokens = jwtUtils.generateTokens(user);
-        tokenService.saveNewToken(tokens[1], usernameFromRefresh, response);
-        log.info("New token: {}", tokens[0]);
-        return new JwtResponse(tokens[0]);
+        JwtTokensDto tokens = jwtUtils.generateTokens(user);
+        tokenService.saveNewToken(tokens.getRefreshToken(), usernameFromRefresh, response);
+        return new JwtResponse(tokens.getAccessToken());
     }
 
     @Transactional
@@ -113,19 +106,9 @@ public class AuthServiceImpl implements AuthService {
         String authenticatedUserEmail = getEmailFromGoogleIdToken(googleAccessTokenResponse.getIdToken());
 
         UserDetails user = userDetailsService.loadUserByUsername(authenticatedUserEmail);
-        String[] tokens = jwtUtils.generateTokens(user);
-        tokenService.saveNewToken(tokens[1], user.getUsername(), response);
-        log.info("New token: {}", tokens[0]);
-        return new JwtResponse(tokens[0]);
-    }
-
-    private String getRefreshFromCookie(Cookie[] cookies) {
-        for (Cookie cookie : cookies) {
-            if (cookie.getName().equals("refreshToken")) {
-                return cookie.getValue();
-            }
-        }
-        return null;
+        JwtTokensDto tokens = jwtUtils.generateTokens(user);
+        tokenService.saveNewToken(tokens.getRefreshToken(), user.getUsername(), response);
+        return new JwtResponse(tokens.getAccessToken());
     }
 
     private String getUsernameFromRefresh(String refreshToken) {
@@ -160,7 +143,7 @@ public class AuthServiceImpl implements AuthService {
 
         for (String pair : keyValuePairs) {
             String[] entry = pair.split(":");
-            map.put(entry[0].substring(1, entry[0].length() - 1).trim(), entry[1].substring(1, entry[1].length() - 1).trim());          //add them to the hashmap and trim whitespaces
+            map.put(entry[0].substring(1, entry[0].length() - 1).trim(), entry[1].substring(1, entry[1].length() - 1).trim());
         }
         return map;
     }

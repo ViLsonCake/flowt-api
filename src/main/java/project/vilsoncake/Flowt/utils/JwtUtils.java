@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+import project.vilsoncake.Flowt.dto.JwtTokensDto;
 import project.vilsoncake.Flowt.properties.JwtProperties;
 
 import java.util.Date;
@@ -21,7 +22,7 @@ public class JwtUtils {
 
     private final JwtProperties jwtProperties;
 
-    public String[] generateTokens(UserDetails userDetails) {
+    public JwtTokensDto generateTokens(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
         List<String> rolesList = userDetails.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
@@ -48,7 +49,7 @@ public class JwtUtils {
                 .signWith(SignatureAlgorithm.HS256, jwtProperties.getRefreshSecret())
                 .compact();
 
-        return new String[] {accessToken, refreshToken};
+        return new JwtTokensDto(accessToken, refreshToken);
     }
 
     public String getUsernameFromAccess(String token) {
