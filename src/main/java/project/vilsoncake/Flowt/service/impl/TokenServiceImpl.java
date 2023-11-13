@@ -2,6 +2,7 @@ package project.vilsoncake.Flowt.service.impl;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,17 +21,12 @@ public class TokenServiceImpl implements TokenService {
     private final UserService userService;
     private final JwtProperties jwtProperties;
 
+    @Transactional
     @Override
     public void saveNewToken(String token, String username, HttpServletResponse response) {
         UserEntity user = userService.getUserByUsername(username);
         TokenEntity tokenFromDb = tokenRepository.findByUser(user);
-        if (tokenFromDb != null) {
-            tokenRepository.delete(tokenFromDb);
-        }
-
-        // Save refresh token to db
-        TokenEntity tokenEntity = new TokenEntity(token, user);
-        tokenRepository.save(tokenEntity);
+        tokenFromDb.setToken(token);
 
         // Add refresh token to http-only cookie
         Cookie tokenCookie = new Cookie("refreshToken", token);

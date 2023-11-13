@@ -86,6 +86,7 @@ public class AuthServiceImpl implements AuthService {
         return new JwtResponse(tokens[0]);
     }
 
+    @Transactional
     @Override
     public JwtResponse getAuthTokenByGoogleAuthorizationCode(GoogleOauthRequest googleOauthRequest, HttpServletResponse response) throws URISyntaxException {
         // Exchange authorization code on id token
