@@ -11,5 +11,5 @@ import java.util.List;
 @NoArgsConstructor
 public class SubscribesDto {
     private int count;
-    private List<String> subscribes;
+    private List<UserDto> subscribes;
 }

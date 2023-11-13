@@ -11,5 +11,5 @@ import java.util.List;
 @NoArgsConstructor
 public class FollowersDto {
     private int count;
-    private List<String> followers;
+    private List<UserDto> followers;
 }

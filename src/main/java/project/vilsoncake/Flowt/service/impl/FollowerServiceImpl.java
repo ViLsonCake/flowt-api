@@ -7,6 +7,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import project.vilsoncake.Flowt.dto.FollowersDto;
 import project.vilsoncake.Flowt.dto.SubscribesDto;
+import project.vilsoncake.Flowt.dto.UserDto;
 import project.vilsoncake.Flowt.entity.FollowerEntity;
 import project.vilsoncake.Flowt.entity.UserEntity;
 import project.vilsoncake.Flowt.repository.FollowerRepository;
@@ -41,7 +42,7 @@ public class FollowerServiceImpl implements FollowerService {
 
         return new FollowersDto(
                 followers.getTotalPages(),
-                followers.getContent().stream().map(follower -> follower.getUser().getUsername()).toList()
+                followers.getContent().stream().map(follower -> UserDto.fromUser(follower.getUser())).toList()
         );
     }
 
@@ -57,7 +58,7 @@ public class FollowerServiceImpl implements FollowerService {
 
         return new SubscribesDto(
                 followers.getTotalPages(),
-                followers.getContent().stream().map(follower -> follower.getFollower().getUsername()).toList()
+                followers.getContent().stream().map(subscribe -> UserDto.fromUser(subscribe.getFollower())).toList()
         );
     }
 }
