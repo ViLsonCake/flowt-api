@@ -26,7 +26,12 @@ public class TokenServiceImpl implements TokenService {
     public void saveNewToken(String token, String username, HttpServletResponse response) {
         UserEntity user = userService.getUserByUsername(username);
         TokenEntity tokenFromDb = tokenRepository.findByUser(user);
-        tokenFromDb.setToken(token);
+
+        if (tokenFromDb != null) {
+            tokenFromDb.setToken(token);
+        } else {
+            TokenEntity tokenEntity = new TokenEntity(token, user);
+        }
 
         // Add refresh token to http-only cookie
         Cookie tokenCookie = new Cookie("refreshToken", token);

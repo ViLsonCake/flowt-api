@@ -39,7 +39,7 @@ public class UserChangeServiceImpl implements UserChangeService {
     private final AuthUtils authUtils;
 
     @Override
-    public Map<String, String> changeUserUsername(String authHeader, UsernameDto usernameDto, HttpServletResponse response) {
+    public JwtResponse changeUserUsername(String authHeader, UsernameDto usernameDto, HttpServletResponse response) {
         // Validate new username
         if (userRepository.existsUserByUsername(usernameDto.getNewUsername())) {
             throw new UsernameAlreadyExistException("Username already exits");
@@ -62,10 +62,10 @@ public class UserChangeServiceImpl implements UserChangeService {
 
         // Create and save a new pair of tokens
         UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUsername());
-        String[] tokens = jwtUtils.generateTokens(userDetails);
-        tokenService.saveNewToken(tokens[1], user.getUsername(), response);
+        JwtTokensDto tokens = jwtUtils.generateTokens(userDetails);
+        tokenService.saveNewToken(tokens.getRefreshToken(), user.getUsername(), response);
 
-        return Map.of("token", tokens[0]);
+        return new JwtResponse(tokens.getAccessToken());
     }
 
     @Override

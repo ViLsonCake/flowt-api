@@ -131,7 +131,7 @@ public class UserController {
     }
 
     @PatchMapping("/username")
-    public ResponseEntity<Map<String, String>> changeUsername(
+    public ResponseEntity<JwtResponse> changeUsername(
             @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authHeader,
             @RequestBody UsernameDto usernameDto,
             HttpServletResponse response
