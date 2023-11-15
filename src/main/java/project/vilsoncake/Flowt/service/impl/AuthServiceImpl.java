@@ -12,6 +12,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
@@ -20,6 +21,7 @@ import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import project.vilsoncake.Flowt.dto.*;
 import project.vilsoncake.Flowt.exception.IncorrectCredentialsException;
+import project.vilsoncake.Flowt.exception.OauthRegistrationRequiredException;
 import project.vilsoncake.Flowt.exception.TokenNotFoundException;
 import project.vilsoncake.Flowt.properties.GoogleOauthProperties;
 import project.vilsoncake.Flowt.service.AuthService;
@@ -103,12 +105,17 @@ public class AuthServiceImpl implements AuthService {
         if (googleAccessTokenResponse == null) {
             throw new TokenNotFoundException("Token not found");
         }
+
         String authenticatedUserEmail = getEmailFromGoogleIdToken(googleAccessTokenResponse.getIdToken());
 
-        UserDetails user = userDetailsService.loadUserByUsername(authenticatedUserEmail);
-        JwtTokensDto tokens = jwtUtils.generateTokens(user);
-        tokenService.saveNewToken(tokens.getRefreshToken(), user.getUsername(), response);
-        return new JwtResponse(tokens.getAccessToken());
+        try {
+            UserDetails user = userDetailsService.loadUserByUsername(authenticatedUserEmail);
+            JwtTokensDto tokens = jwtUtils.generateTokens(user);
+            tokenService.saveNewToken(tokens.getRefreshToken(), user.getUsername(), response);
+            return new JwtResponse( tokens.getAccessToken());
+        } catch (UsernameNotFoundException e) {
+            throw new OauthRegistrationRequiredException(authenticatedUserEmail);
+        }
     }
 
     private String getUsernameFromRefresh(String refreshToken) {
