@@ -29,8 +29,10 @@ public class TokenServiceImpl implements TokenService {
 
         if (tokenFromDb != null) {
             tokenFromDb.setToken(token);
+            tokenRepository.save(tokenFromDb);
         } else {
             TokenEntity tokenEntity = new TokenEntity(token, user);
+            tokenRepository.save(tokenEntity);
         }
 
         // Add refresh token to http-only cookie
