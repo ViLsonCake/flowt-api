@@ -4,7 +4,6 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureException;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -114,7 +113,7 @@ public class AuthServiceImpl implements AuthService {
             UserDetails user = userDetailsService.loadUserByUsername(authenticatedUserEmail);
             JwtTokensDto tokens = jwtUtils.generateTokens(user);
             tokenService.saveNewToken(tokens.getRefreshToken(), user.getUsername(), response);
-            return new JwtResponse( tokens.getAccessToken());
+            return new JwtResponse(tokens.getAccessToken());
         } catch (UsernameNotFoundException e) {
             GoogleUserInfoResponse userInfo = webClient.get()
                     .uri(new URI(googleOauthProperties.getUserInfoUrl()))

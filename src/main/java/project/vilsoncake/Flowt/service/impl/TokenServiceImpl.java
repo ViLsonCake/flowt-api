@@ -39,6 +39,7 @@ public class TokenServiceImpl implements TokenService {
         Cookie tokenCookie = new Cookie("refreshToken", token);
         tokenCookie.setMaxAge(daysToSeconds(jwtProperties.getRefreshLifetime()));
         tokenCookie.setHttpOnly(true);
+        tokenCookie.setPath("/auth");
         response.addCookie(tokenCookie);
     }
 
