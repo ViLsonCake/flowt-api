@@ -1,19 +1,28 @@
 package project.vilsoncake.Flowt.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import project.vilsoncake.Flowt.entity.PlaylistEntity;
 
+import java.util.List;
+
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 public class PlaylistDto {
+    private Long id;
     private String name;
-    private Boolean isPrivate;
+    private List<SongDto> songs;
+    private boolean isPrivate;
     private String username;
 
-    public static PlaylistDto fromPlaylist(PlaylistEntity playlist) {
-        return new PlaylistDto(playlist.getName(), playlist.isPrivate(), playlist.getUser().getUsername());
+    public static PlaylistDto fromPlaylistEntity(PlaylistEntity playlistEntity) {
+        PlaylistDto playlistDto = new PlaylistDto();
+        playlistDto.setId(playlistEntity.getPlaylistId());
+        playlistDto.setName(playlistEntity.getName());
+        playlistDto.setPrivate(playlistEntity.isPrivate());
+        playlistDto.setUsername(playlistEntity.getUser().getUsername());
+        playlistDto.setSongs(playlistEntity.getSongs().stream().map(SongDto::fromSongEntity).toList());
+
+        return playlistDto;
     }
 }

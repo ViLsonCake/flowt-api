@@ -13,6 +13,7 @@ public class SongDto {
     private String name;
     private String issueYear;
     private String genre;
+    private Long likes;
     private Long listens;
     private String author;
 
@@ -22,6 +23,7 @@ public class SongDto {
         songDto.setName(song.getName());
         songDto.setIssueYear(song.getIssueYear());
         songDto.setGenre(song.getGenre());
+        songDto.setLikes((long) song.getLiked().size());
         songDto.setListens(song.getListens());
         songDto.setAuthor(song.getUser().getUsername());
         return songDto;

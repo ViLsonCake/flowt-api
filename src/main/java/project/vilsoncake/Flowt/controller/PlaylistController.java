@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import project.vilsoncake.Flowt.dto.PlaylistDto;
+import project.vilsoncake.Flowt.dto.PlaylistRequest;
 import project.vilsoncake.Flowt.dto.PlaylistNameDto;
 import project.vilsoncake.Flowt.exception.InvalidExtensionException;
 import project.vilsoncake.Flowt.service.PlaylistChangeService;
@@ -21,12 +22,20 @@ public class PlaylistController {
     private final PlaylistService playListService;
     private final PlaylistChangeService playlistChangeService;
 
+    @GetMapping("/{username}/{playlistName}")
+    public ResponseEntity<PlaylistDto> getPlaylist(
+            @PathVariable("username") String username,
+            @PathVariable("playlistName") String playlistName
+    ) {
+        return ResponseEntity.ok(playListService.getPlaylistByNameAndUser(username, playlistName));
+    }
+
     @PostMapping
     public ResponseEntity<Map<String, String>> createNewPlaylist(
-            @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false, defaultValue = "") String authHeader,
-            @RequestBody PlaylistDto playlistDto
+            @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authHeader,
+            @RequestBody PlaylistRequest playlistRequest
     ) {
-        return ResponseEntity.ok(playListService.createNewPlaylist(authHeader, playlistDto));
+        return ResponseEntity.ok(playListService.createNewPlaylist(authHeader, playlistRequest));
     }
 
     @PostMapping("/avatar/{playlistName}")

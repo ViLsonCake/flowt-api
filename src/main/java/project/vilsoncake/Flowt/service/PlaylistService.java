@@ -2,7 +2,7 @@ package project.vilsoncake.Flowt.service;
 
 import org.springframework.web.multipart.MultipartFile;
 import project.vilsoncake.Flowt.dto.PlaylistDto;
-import project.vilsoncake.Flowt.dto.PlaylistNameDto;
+import project.vilsoncake.Flowt.dto.PlaylistRequest;
 import project.vilsoncake.Flowt.dto.PlaylistsPageDto;
 import project.vilsoncake.Flowt.dto.SubstringDto;
 import project.vilsoncake.Flowt.entity.PlaylistEntity;
@@ -13,7 +13,8 @@ import project.vilsoncake.Flowt.exception.MinioFileException;
 import java.util.Map;
 
 public interface PlaylistService {
-    Map<String, String> createNewPlaylist(String authHeader, PlaylistDto playListDto);
+    PlaylistDto getPlaylistByNameAndUser(String username, String playlistName);
+    Map<String, String> createNewPlaylist(String authHeader, PlaylistRequest playListRequest);
     Map<String, String> addAvatarToPlaylist(String authHeader, String playListName, MultipartFile file) throws InvalidExtensionException;
     boolean removePlaylistAvatarByUserAndName(UserEntity user, String name);
     Map<String, String> addSongToPlaylist(String authHeader, String playlistName, String songAuthor, String songName);

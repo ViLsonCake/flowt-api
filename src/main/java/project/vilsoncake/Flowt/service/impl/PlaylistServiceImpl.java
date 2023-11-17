@@ -7,8 +7,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import project.vilsoncake.Flowt.properties.MinioProperties;
 import project.vilsoncake.Flowt.dto.PlaylistDto;
+import project.vilsoncake.Flowt.properties.MinioProperties;
+import project.vilsoncake.Flowt.dto.PlaylistRequest;
 import project.vilsoncake.Flowt.dto.PlaylistsPageDto;
 import project.vilsoncake.Flowt.dto.SubstringDto;
 import project.vilsoncake.Flowt.entity.PlaylistAvatarEntity;
@@ -44,24 +45,32 @@ public class PlaylistServiceImpl implements PlaylistService {
     private final MinioProperties minioProperties;
 
     @Override
-    public Map<String, String> createNewPlaylist(String authHeader, PlaylistDto playlistDto) {
+    public PlaylistDto getPlaylistByNameAndUser(String username, String playlistName) {
+        UserEntity user = userService.getUserByUsername(username);
+        PlaylistEntity playlist = getPlaylistByUserAndName(user, playlistName);
+
+        return PlaylistDto.fromPlaylistEntity(playlist);
+    }
+
+    @Override
+    public Map<String, String> createNewPlaylist(String authHeader, PlaylistRequest playlistRequest) {
         String username = authUtils.getUsernameFromAuthHeader(authHeader);
         UserEntity user = userService.getUserByUsername(username);
 
         // Check if user have playlist with the same name
-        if (playlistRepository.existsByUserAndName(user, playlistDto.getName())) {
+        if (playlistRepository.existsByUserAndName(user, playlistRequest.getName())) {
             throw new PlaylistAlreadyExistException("User already have playlist with same name");
         }
 
         // Create new playlist and save
         PlaylistEntity playlist = new PlaylistEntity(
-                playlistDto.getName(),
+                playlistRequest.getName(),
                 new ArrayList<>(),
                 user
         );
         playlistRepository.save(playlist);
 
-        return Map.of("message", String.format("PlayList '%s' saved", playlistDto.getName()));
+        return Map.of("message", String.format("PlayList '%s' saved", playlistRequest.getName()));
     }
 
     @Transactional
@@ -156,7 +165,7 @@ public class PlaylistServiceImpl implements PlaylistService {
 
         return new PlaylistsPageDto(
                 playlists.getTotalPages(),
-                playlists.getContent().stream().map(PlaylistDto::fromPlaylist).toList()
+                playlists.getContent().stream().map(PlaylistRequest::fromPlaylist).toList()
         );
     }
 
