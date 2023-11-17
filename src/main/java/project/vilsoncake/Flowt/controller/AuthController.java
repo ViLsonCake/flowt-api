@@ -5,10 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import project.vilsoncake.Flowt.dto.GoogleOauthRequest;
-import project.vilsoncake.Flowt.dto.JwtRequest;
-import project.vilsoncake.Flowt.dto.JwtResponse;
-import project.vilsoncake.Flowt.dto.RegistrationDto;
+import project.vilsoncake.Flowt.dto.*;
 import project.vilsoncake.Flowt.service.AuthService;
 import project.vilsoncake.Flowt.service.UserService;
 
@@ -46,4 +43,5 @@ public class AuthController {
     public ResponseEntity<JwtResponse> googleOauthLogin(@RequestBody GoogleOauthRequest googleOauthRequest, HttpServletResponse response) throws URISyntaxException {
         return ResponseEntity.ok(authService.getAuthTokenByGoogleAuthorizationCode(googleOauthRequest, response));
     }
+
 }

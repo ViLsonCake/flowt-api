@@ -4,8 +4,10 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureException;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -114,7 +116,14 @@ public class AuthServiceImpl implements AuthService {
             tokenService.saveNewToken(tokens.getRefreshToken(), user.getUsername(), response);
             return new JwtResponse( tokens.getAccessToken());
         } catch (UsernameNotFoundException e) {
-            throw new OauthRegistrationRequiredException(authenticatedUserEmail);
+            GoogleUserInfoResponse userInfo = webClient.get()
+                    .uri(new URI(googleOauthProperties.getUserInfoUrl()))
+                    .header(HttpHeaders.AUTHORIZATION, String.format("Bearer %s", googleAccessTokenResponse.getAccessToken()))
+                    .retrieve()
+                    .bodyToMono(GoogleUserInfoResponse.class)
+                    .block();
+
+            throw new OauthRegistrationRequiredException("Oauth registration required", authenticatedUserEmail, userInfo.getPicture());
         }
     }
 

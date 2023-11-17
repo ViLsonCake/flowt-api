@@ -1,0 +1,13 @@
+package project.vilsoncake.Flowt.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class ExceptionData {
+    private String email;
+    private String imageUrl;
+}

@@ -14,6 +14,7 @@ import project.vilsoncake.Flowt.exception.InvalidExtensionException;
 import project.vilsoncake.Flowt.exception.MinioFileException;
 import project.vilsoncake.Flowt.service.*;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -35,6 +36,14 @@ public class UserController {
             @RequestParam("file") MultipartFile avatar
     ) throws MinioFileException, InvalidExtensionException {
         return ResponseEntity.ok(userManagementService.addUserAvatarByUsername(authHeader, avatar));
+    }
+
+    @PostMapping("/avatar/url")
+    public ResponseEntity<Map<String, String>> addAvatarFromUrl(
+            @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authHeader,
+            @RequestBody UrlAvatarRequest imageUrl
+    ) {
+        return ResponseEntity.ok(userManagementService.addUserAvatarUrl(authHeader, imageUrl));
     }
 
     @PostMapping("/profile-header")

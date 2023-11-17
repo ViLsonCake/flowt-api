@@ -8,9 +8,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
+import project.vilsoncake.Flowt.dto.ExceptionData;
 import project.vilsoncake.Flowt.dto.RegistrationValidationDto;
 import project.vilsoncake.Flowt.exception.*;
 
+import java.io.IOException;
 import java.util.Map;
 
 @RestControllerAdvice
@@ -81,9 +83,17 @@ public class ErrorHandlerController {
     }
 
     @ExceptionHandler
-    public ResponseEntity<Map<String, String>> oauthRegistrationRequiredException(OauthRegistrationRequiredException exception) {
+    public ResponseEntity<ExceptionData> oauthRegistrationRequiredException(OauthRegistrationRequiredException exception) {
         return ResponseEntity
                 .status(HttpStatus.CONFLICT)
-                .body(Map.of("email", exception.getMessage()));
+                .body(exception.getExceptionData());
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<Map<String, String>> IOException(IOException e) {
+        log.warn(e.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(Map.of("error", e.getMessage()));
     }
 }

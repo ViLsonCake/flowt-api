@@ -10,5 +10,6 @@ import org.springframework.stereotype.Component;
 public class ApplicationProperties {
     private String clientUrl;
     private String url;
+    private String usersAvatarUrl;
     private String verifyUrl;
 }

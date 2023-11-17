@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "google")
 public class GoogleOauthProperties {
     private String tokenUrl;
+    private String userInfoUrl;
     private String clientId;
     private String clientSecret;
     private String redirectUri;

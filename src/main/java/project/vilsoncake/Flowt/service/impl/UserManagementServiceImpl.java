@@ -5,14 +5,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import project.vilsoncake.Flowt.entity.ProfileHeaderEntity;
-import project.vilsoncake.Flowt.properties.MinioProperties;
+import project.vilsoncake.Flowt.dto.UrlAvatarRequest;
 import project.vilsoncake.Flowt.entity.FollowerEntity;
-import project.vilsoncake.Flowt.entity.enumerated.NotificationType;
+import project.vilsoncake.Flowt.entity.ProfileHeaderEntity;
 import project.vilsoncake.Flowt.entity.UserAvatarEntity;
 import project.vilsoncake.Flowt.entity.UserEntity;
+import project.vilsoncake.Flowt.entity.enumerated.NotificationType;
 import project.vilsoncake.Flowt.exception.InvalidExtensionException;
 import project.vilsoncake.Flowt.exception.MinioFileException;
+import project.vilsoncake.Flowt.properties.MinioProperties;
 import project.vilsoncake.Flowt.service.*;
 import project.vilsoncake.Flowt.utils.AuthUtils;
 import project.vilsoncake.Flowt.utils.FileUtils;
@@ -51,11 +52,22 @@ public class UserManagementServiceImpl implements UserManagementService {
 
         String filename = user.getUserAvatar().getFilename();
         user.getUserAvatar().setUserHaveAvatar(true);
+        user.getUserAvatar().setDefaultAvatarUrl();
 
         // Save file data in minio storage
         minioFileService.saveFile(minioProperties.getUserAvatarBucket(), filename, avatar);
 
         return Map.of("username", username);
+    }
+
+    @Transactional
+    @Override
+    public Map<String, String> addUserAvatarUrl(String authHeader, UrlAvatarRequest urlAvatarRequest) {
+        String username = authUtils.getUsernameFromAuthHeader(authHeader);
+        UserEntity user = userService.getUserByUsername(username);
+        user.getUserAvatar().setAvatarUrl(urlAvatarRequest.getImageUrl());
+
+        return Map.of("message", "Avatar url changed");
     }
 
     @Transactional
