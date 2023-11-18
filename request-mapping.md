@@ -16,7 +16,8 @@ Permit all
 + GET /search/users - search users by substring
 ___
 Authenticated
-+ POST /users/avatar - change user avatar
++ POST /users/avatar - change user avatar file
++ POST /users/avatar/url - change user avatar url
 + POST /users/profile-header - change user profile header
 + POST /users/change-password - change authenticated user password
 + POST /users/subscribe/:username - subscribe authenticated user to another user
