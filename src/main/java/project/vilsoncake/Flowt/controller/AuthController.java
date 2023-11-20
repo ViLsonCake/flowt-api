@@ -44,4 +44,9 @@ public class AuthController {
         return ResponseEntity.ok(authService.getAuthTokenByGoogleAuthorizationCode(googleOauthRequest, response));
     }
 
+    @PostMapping("/oauth/facebook")
+    public ResponseEntity<JwtResponse> facebookOauthLogin(@RequestBody FacebookOauthRequest facebookOauthRequest, HttpServletResponse response) throws URISyntaxException {
+        return ResponseEntity.ok(authService.getJwtFromFacebookAccessToken(facebookOauthRequest, response));
+    }
+
 }

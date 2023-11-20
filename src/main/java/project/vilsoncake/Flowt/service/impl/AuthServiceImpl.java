@@ -20,10 +20,12 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
+import project.vilsoncake.Flowt.constant.UrlConst;
 import project.vilsoncake.Flowt.dto.*;
 import project.vilsoncake.Flowt.exception.IncorrectCredentialsException;
 import project.vilsoncake.Flowt.exception.OauthRegistrationRequiredException;
 import project.vilsoncake.Flowt.exception.TokenNotFoundException;
+import project.vilsoncake.Flowt.properties.FacebookOauthProperties;
 import project.vilsoncake.Flowt.properties.GoogleOauthProperties;
 import project.vilsoncake.Flowt.service.AuthService;
 import project.vilsoncake.Flowt.service.TokenService;
@@ -36,6 +38,8 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
+import static project.vilsoncake.Flowt.constant.UrlConst.FACEBOOK_QUERY_FIELDS_VALUE;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -47,6 +51,7 @@ public class AuthServiceImpl implements AuthService {
     private final JwtUtils jwtUtils;
     private final AuthUtils authUtils;
     private final GoogleOauthProperties googleOauthProperties;
+    private final FacebookOauthProperties facebookOauthProperties;
 
     @Override
     public JwtResponse generateAuthTokensAndSave(JwtRequest authRequest, HttpServletResponse response) {
@@ -123,6 +128,30 @@ public class AuthServiceImpl implements AuthService {
                     .block();
 
             throw new OauthRegistrationRequiredException("Oauth registration required", authenticatedUserEmail, userInfo.getPicture());
+        }
+    }
+
+    @Override
+    public JwtResponse getJwtFromFacebookAccessToken(FacebookOauthRequest facebookOauthRequest, HttpServletResponse response) throws URISyntaxException {
+        WebClient webClient = WebClient.create();
+
+        FacebookUserInfoResponse userInfo = webClient.get()
+                .uri(new URI(String.format("https://graph.facebook.com/v18.0/me?access_token=%s&fields=%s", facebookOauthRequest.getAccessToken(), FACEBOOK_QUERY_FIELDS_VALUE)))
+                .retrieve()
+                .bodyToMono(FacebookUserInfoResponse.class)
+                .block();
+
+        if (userInfo == null) {
+            throw new TokenNotFoundException("Token not found");
+        }
+
+        try {
+            UserDetails user = userDetailsService.loadUserByUsername(userInfo.getEmail());
+            JwtTokensDto tokens = jwtUtils.generateTokens(user);
+            tokenService.saveNewToken(tokens.getRefreshToken(), user.getUsername(), response);
+            return new JwtResponse(tokens.getAccessToken());
+        } catch (UsernameNotFoundException e) {
+            throw new OauthRegistrationRequiredException("Oauth registration required", userInfo.getEmail(), null);
         }
     }
 
