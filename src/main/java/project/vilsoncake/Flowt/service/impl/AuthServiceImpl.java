@@ -136,7 +136,7 @@ public class AuthServiceImpl implements AuthService {
         WebClient webClient = WebClient.create();
 
         FacebookUserInfoResponse userInfo = webClient.get()
-                .uri(new URI(String.format("https://graph.facebook.com/v18.0/me?access_token=%s&fields=%s", facebookOauthRequest.getAccessToken(), FACEBOOK_QUERY_FIELDS_VALUE)))
+                .uri(new URI(String.format(facebookOauthProperties.getUserInfoUrl(), facebookOauthRequest.getAccessToken(), FACEBOOK_QUERY_FIELDS_VALUE)))
                 .retrieve()
                 .bodyToMono(FacebookUserInfoResponse.class)
                 .block();
