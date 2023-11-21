@@ -1,5 +1,7 @@
 package project.vilsoncake.Flowt.constant;
 
+import java.util.List;
+
 public class PatternConst {
     public static final String REGEX_USERNAME_PATTERN = "^[a-zA-Z0-9 ]{3,32}$";
     public static final String REGEX_SONG_NAME_PATTERN = "^[a-zA-Z0-9 -]{3,32}$";
@@ -11,4 +13,5 @@ public class PatternConst {
     public static final String REGEX_NAME_AND_SURNAME_PATTERN = "^[A-Z|А-Я][a-zа-я]+$";
     public static final String REGEX_DATE_PATTERN = "^(0[1-9]|[12][0-9]|3[01])\\.(0[1-9]|1[0-2])\\.\\d{4}$";
     public static final String REGEX_PASSPORT_NUMBER_PATTERN = "^[a-zA-Z0-9]{8,}$";
+    public static final List<String> VALID_AUDIO_FILE_EXTENSIONS = List.of("mp3", "wav", "ogg");
 }

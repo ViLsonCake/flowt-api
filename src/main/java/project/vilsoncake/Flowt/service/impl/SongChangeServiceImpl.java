@@ -61,7 +61,7 @@ public class SongChangeServiceImpl implements SongChangeService {
     @Override
     public Map<String, String> saveNewAudioFile(String authHeader, String name, MultipartFile file) throws InvalidExtensionException, MinioFileException {
         if (file.getOriginalFilename() != null && !fileUtils.isValidAudioFileExtension(file.getOriginalFilename())) {
-            throw new InvalidExtensionException("Invalid file extension (must be mp3)");
+            throw new InvalidExtensionException("Invalid file extension (must be .mp3, .wav. or .ogg)");
         }
 
         String username = authUtils.getUsernameFromAuthHeader(authHeader);
