@@ -65,6 +65,7 @@ public class UserManagementServiceImpl implements UserManagementService {
     public Map<String, String> addUserAvatarUrl(String authHeader, UrlAvatarRequest urlAvatarRequest) {
         String username = authUtils.getUsernameFromAuthHeader(authHeader);
         UserEntity user = userService.getUserByUsername(username);
+        user.getUserAvatar().setUserHaveAvatar(true);
         user.getUserAvatar().setAvatarUrl(urlAvatarRequest.getImageUrl());
 
         return Map.of("message", "Avatar url changed");
