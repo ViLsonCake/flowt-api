@@ -8,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 import project.vilsoncake.Flowt.dto.PlaylistDto;
 import project.vilsoncake.Flowt.dto.PlaylistRequest;
 import project.vilsoncake.Flowt.dto.PlaylistNameDto;
+import project.vilsoncake.Flowt.dto.SongsListDto;
 import project.vilsoncake.Flowt.exception.InvalidExtensionException;
 import project.vilsoncake.Flowt.service.PlaylistChangeService;
 import project.vilsoncake.Flowt.service.PlaylistService;
@@ -55,6 +56,15 @@ public class PlaylistController {
             @PathVariable("songName") String songName
     ) {
         return ResponseEntity.ok(playListService.addSongToPlaylist(authHeader, playlistName, songAuthor, songName));
+    }
+
+    @PostMapping("/{playlistName}")
+    public ResponseEntity<Map<String, String>> addSongsToPlaylist(
+            @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authHeader,
+            @PathVariable("playlistName") String playlistName,
+            @RequestBody SongsListDto songsListDto
+    ) {
+        return ResponseEntity.ok(playListService.addSongsToPlaylist(authHeader, playlistName, songsListDto));
     }
 
     @PatchMapping

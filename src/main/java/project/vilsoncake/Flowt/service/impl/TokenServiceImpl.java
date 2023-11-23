@@ -25,15 +25,12 @@ public class TokenServiceImpl implements TokenService {
     @Override
     public void saveNewToken(String token, String username, HttpServletResponse response) {
         UserEntity user = userService.getUserByUsername(username);
-        TokenEntity tokenFromDb = tokenRepository.findByUser(user);
+        TokenEntity tokenEntity = tokenRepository.findByUser(user);
 
-        if (tokenFromDb != null) {
-            tokenFromDb.setToken(token);
-            tokenRepository.save(tokenFromDb);
-        } else {
-            TokenEntity tokenEntity = new TokenEntity(token, user);
-            tokenRepository.save(tokenEntity);
+        if (tokenEntity == null) {
+            tokenEntity = new TokenEntity(token, user);
         }
+        tokenEntity.setToken(token);
 
         // Add refresh token to http-only cookie
         Cookie tokenCookie = new Cookie("refreshToken", token);

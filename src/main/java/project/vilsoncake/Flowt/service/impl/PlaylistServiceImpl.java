@@ -7,11 +7,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import project.vilsoncake.Flowt.dto.PlaylistDto;
+import project.vilsoncake.Flowt.dto.*;
 import project.vilsoncake.Flowt.properties.MinioProperties;
-import project.vilsoncake.Flowt.dto.PlaylistRequest;
-import project.vilsoncake.Flowt.dto.PlaylistsPageDto;
-import project.vilsoncake.Flowt.dto.SubstringDto;
 import project.vilsoncake.Flowt.entity.PlaylistAvatarEntity;
 import project.vilsoncake.Flowt.entity.PlaylistEntity;
 import project.vilsoncake.Flowt.entity.SongEntity;
@@ -117,6 +114,25 @@ public class PlaylistServiceImpl implements PlaylistService {
         }
 
         return response;
+    }
+
+    @Override
+    public Map<String, String> addSongsToPlaylist(String authHeader, String playlistName, SongsListDto songsListDto) {
+        String username = authUtils.getUsernameFromAuthHeader(authHeader);
+        UserEntity user = userService.getUserByUsername(username);
+        PlaylistEntity playlist = getPlaylistByUserAndName(user, playlistName);
+
+        songsListDto.getSongs().forEach(songDto -> {
+            UserEntity author = userService.getUserByUsername(songDto.getAuthor());
+            SongEntity song = songService.findByNameAndUser(songDto.getName(), author);
+
+            if (!playlist.getSongs().contains(song)) {
+                playlist.getSongs().add(song);
+                playlistRepository.save(playlist);
+            }
+        });
+
+        return Map.of("message", "Songs saved");
     }
 
     @Override
