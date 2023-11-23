@@ -11,9 +11,9 @@ Permit all
 + GET /images/playlist/:username/:name - get playlist avatar by username and name
 + POST /verify/restore-password - send mail with code for restoring the password by email from request
 + POST /users/restore-password - change user password
-+ GET /search/songs - search songs by substring
-+ GET /search/playlist - search playlists by substring
-+ GET /search/users - search users by substring
++ POST /search/songs - search songs by substring
++ POST /search/playlists - search playlists by substring
++ POST /search/users - search users by substring
 ___
 Authenticated
 + POST /users/avatar - change user avatar file
