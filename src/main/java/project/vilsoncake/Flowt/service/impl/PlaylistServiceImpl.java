@@ -116,6 +116,7 @@ public class PlaylistServiceImpl implements PlaylistService {
         return response;
     }
 
+    @Transactional
     @Override
     public Map<String, String> addSongsToPlaylist(String authHeader, String playlistName, SongsListDto songsListDto) {
         String username = authUtils.getUsernameFromAuthHeader(authHeader);
