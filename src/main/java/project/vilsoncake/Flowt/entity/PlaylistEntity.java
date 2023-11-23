@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static project.vilsoncake.Flowt.constant.PatternConst.REGEX_PLAYLIST_NAME_PATTERN;
@@ -25,7 +26,7 @@ public class PlaylistEntity {
     @Column(name = "name")
     private String name;
     @ManyToMany(cascade = CascadeType.ALL)
-    private List<SongEntity> songs;
+    private List<SongEntity> songs = new ArrayList<>();
     @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "playlist")
     private PlaylistAvatarEntity playlistAvatar = new PlaylistAvatarEntity(this);
@@ -36,9 +37,9 @@ public class PlaylistEntity {
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
-    public PlaylistEntity(String name, List<SongEntity> songs, UserEntity user) {
+    public PlaylistEntity(String name, boolean isPrivate, UserEntity user) {
         this.name = name;
-        this.songs = songs;
+        this.isPrivate = isPrivate;
         this.user = user;
     }
 }
