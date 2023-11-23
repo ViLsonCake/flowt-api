@@ -65,9 +65,10 @@ public class PlaylistServiceImpl implements PlaylistService {
         // Create new playlist and save
         PlaylistEntity playlist = new PlaylistEntity(
                 playlistRequest.getName(),
-                playlistRequest.getIsPrivate(),
+                new ArrayList<>(),
                 user
         );
+        playlist.setPrivate(playlistRequest.getIsPrivate());
         playlistRepository.save(playlist);
 
         return Map.of("message", String.format("PlayList '%s' saved", playlistRequest.getName()));

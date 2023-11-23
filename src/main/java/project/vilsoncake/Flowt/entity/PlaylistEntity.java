@@ -26,7 +26,7 @@ public class PlaylistEntity {
     @Column(name = "name")
     private String name;
     @ManyToMany(cascade = CascadeType.ALL)
-    private List<SongEntity> songs = new ArrayList<>();
+    private List<SongEntity> songs;
     @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "playlist")
     private PlaylistAvatarEntity playlistAvatar = new PlaylistAvatarEntity(this);
@@ -37,9 +37,9 @@ public class PlaylistEntity {
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
-    public PlaylistEntity(String name, boolean isPrivate, UserEntity user) {
+    public PlaylistEntity(String name, List<SongEntity> songs, UserEntity user) {
         this.name = name;
-        this.isPrivate = isPrivate;
+        this.songs = songs;
         this.user = user;
     }
 }
