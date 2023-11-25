@@ -40,6 +40,9 @@ public class SongEntity {
     @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "song")
     private SongAvatarEntity songAvatar = new SongAvatarEntity(this);
+//    JsonIgnore
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "song")
+    private SongRegionStatisticEntity regionStatistic = new SongRegionStatisticEntity(this);
     @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "song")
     private AudioFileEntity audioFile = new AudioFileEntity(this);
