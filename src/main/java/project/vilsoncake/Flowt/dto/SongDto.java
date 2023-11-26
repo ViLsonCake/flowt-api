@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import project.vilsoncake.Flowt.entity.SongEntity;
+import project.vilsoncake.Flowt.entity.enumerated.Genre;
 
 @Data
 @NoArgsConstructor
@@ -12,7 +13,7 @@ public class SongDto {
     private Long songId;
     private String name;
     private String issueYear;
-    private String genre;
+    private Genre genre;
     private Long likes;
     private Long listens;
     private String author;

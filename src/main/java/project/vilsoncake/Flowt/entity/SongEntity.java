@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import project.vilsoncake.Flowt.entity.enumerated.Genre;
 
 import java.util.List;
 
@@ -30,10 +31,9 @@ public class SongEntity {
     @Pattern(regexp = REGEX_ISSUE_DATE_PATTERN, message = "Issue date must be in format \"DD/MM/YY\"")
     @Column(name = "issue_year")
     private String issueYear;
-    @NotBlank(message = "Genre cannot be empty")
-    @Pattern(regexp = REGEX_GENRE_PATTERN, message = "Genre is not valid")
     @Column(name = "genre")
-    private String genre;
+    @Enumerated(EnumType.STRING)
+    private Genre genre;
     @Min(value = 0, message = "Listens must be greater than zero")
     @Column(name = "listens")
     private Long listens;

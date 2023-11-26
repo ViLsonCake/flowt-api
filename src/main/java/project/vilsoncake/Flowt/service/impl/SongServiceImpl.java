@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import project.vilsoncake.Flowt.dto.SongDto;
 import project.vilsoncake.Flowt.entity.ListeningEntity;
 import project.vilsoncake.Flowt.entity.enumerated.Country;
+import project.vilsoncake.Flowt.entity.enumerated.Genre;
 import project.vilsoncake.Flowt.properties.MinioProperties;
 import project.vilsoncake.Flowt.dto.SongRequest;
 import project.vilsoncake.Flowt.dto.SongsResponse;
@@ -62,7 +63,7 @@ public class SongServiceImpl implements SongService {
         SongEntity song = new SongEntity();
         song.setName(songRequest.getName());
         song.setIssueYear(songRequest.getIssueYear());
-        song.setGenre(songRequest.getGenre());
+        song.setGenre(Genre.valueOf(songRequest.getGenre().toUpperCase()));
         song.setUser(user);
         song.setListens(0L);
         songRepository.save(song);

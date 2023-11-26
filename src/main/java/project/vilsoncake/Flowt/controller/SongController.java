@@ -1,11 +1,9 @@
 package project.vilsoncake.Flowt.controller;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import project.vilsoncake.Flowt.dto.SongNameDto;
@@ -20,7 +18,6 @@ import project.vilsoncake.Flowt.service.SongService;
 import java.util.Map;
 
 @RestController
-@Slf4j
 @RequestMapping("/songs")
 @RequiredArgsConstructor
 public class SongController {
@@ -115,7 +112,7 @@ public class SongController {
             @PathVariable("author") String author,
             @PathVariable("name") String name
     ) {
-        return null;
+        return ResponseEntity.ok(songService.updateListenerAndSongStatistic(authHeader, author, name));
     }
 
     @DeleteMapping("/{name}")
