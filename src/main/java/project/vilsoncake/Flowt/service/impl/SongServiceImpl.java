@@ -7,16 +7,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.vilsoncake.Flowt.dto.SongDto;
-import project.vilsoncake.Flowt.entity.ListeningEntity;
+import project.vilsoncake.Flowt.entity.*;
 import project.vilsoncake.Flowt.entity.enumerated.Country;
 import project.vilsoncake.Flowt.entity.enumerated.Genre;
 import project.vilsoncake.Flowt.properties.MinioProperties;
 import project.vilsoncake.Flowt.dto.SongRequest;
 import project.vilsoncake.Flowt.dto.SongsResponse;
 import project.vilsoncake.Flowt.dto.SubstringDto;
-import project.vilsoncake.Flowt.entity.SongAvatarEntity;
-import project.vilsoncake.Flowt.entity.SongEntity;
-import project.vilsoncake.Flowt.entity.UserEntity;
 import project.vilsoncake.Flowt.exception.MinioFileException;
 import project.vilsoncake.Flowt.exception.SongAlreadyExistByUserException;
 import project.vilsoncake.Flowt.exception.SongNotFoundException;
@@ -174,7 +171,6 @@ public class SongServiceImpl implements SongService {
         UserEntity user = userService.getUserByUsername(username);
         SongEntity song = findByNameAndUser(name, user);
         Country userCountry = Country.valueOf(user.getRegion().toUpperCase());
-        lastListenedService.addSongToLastListenedByUser(user, song);
 
         // Update song statistic
         List<ListeningEntity> listeningEntities = song.getRegionStatistic().getListeningEntities();
@@ -189,7 +185,12 @@ public class SongServiceImpl implements SongService {
         lastListenedService.addSongToLastListenedByUser(user, song);
 
         // Update user statistic
-        // TODO
+        List<ListenedEntity> listenedEntities = user.getListenedStatistic().getListenedEntities();
+        listenedEntities.add(new ListenedEntity(
+                song.getName(),
+                song.getGenre(),
+                song.getUser().getUsername()
+        ));
 
         return Map.of("message", "Statistic updated");
     }
