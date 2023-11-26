@@ -26,4 +26,11 @@ public class ListeningEntity {
     @ManyToOne
     @JoinColumn(name = "song_statistic_id")
     private SongRegionStatisticEntity songRegionStatistic;
+
+    public ListeningEntity(Region region, Country country, String username, SongRegionStatisticEntity songRegionStatistic) {
+        this.region = region;
+        this.country = country;
+        this.username = username;
+        this.songRegionStatistic = songRegionStatistic;
+    }
 }

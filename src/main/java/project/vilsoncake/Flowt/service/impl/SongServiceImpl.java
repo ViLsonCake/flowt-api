@@ -7,6 +7,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.vilsoncake.Flowt.dto.SongDto;
+import project.vilsoncake.Flowt.entity.ListeningEntity;
+import project.vilsoncake.Flowt.entity.enumerated.Country;
 import project.vilsoncake.Flowt.properties.MinioProperties;
 import project.vilsoncake.Flowt.dto.SongRequest;
 import project.vilsoncake.Flowt.dto.SongsResponse;
@@ -165,6 +167,32 @@ public class SongServiceImpl implements SongService {
         return Map.of("message", String.format("Song '%s' removed", name));
     }
 
+    @Override
+    public Map<String, String> updateListenerAndSongStatistic(String authHeader, String author, String name) {
+        String username = authUtils.getUsernameFromAuthHeader(authHeader);
+        UserEntity user = userService.getUserByUsername(username);
+        SongEntity song = findByNameAndUser(name, user);
+        Country userCountry = Country.valueOf(user.getRegion().toUpperCase());
+        lastListenedService.addSongToLastListenedByUser(user, song);
+
+        // Update song statistic
+        List<ListeningEntity> listeningEntities = song.getRegionStatistic().getListeningEntities();
+        listeningEntities.add(new ListeningEntity(
+                userCountry.getRegion(),
+                userCountry,
+                user.getUsername(),
+                song.getRegionStatistic()
+        ));
+
+        // Update last listened
+        lastListenedService.addSongToLastListenedByUser(user, song);
+
+        // Update user statistic
+        // TODO
+
+        return Map.of("message", "Statistic updated");
+    }
+
     @Transactional
     @Override
     public boolean removeUserSongByUserAndName(UserEntity user, String name) {
@@ -177,18 +205,17 @@ public class SongServiceImpl implements SongService {
 
     @Transactional
     @Override
-    public byte[] getSongAudioFile(String username, String name) throws MinioFileException {
-        UserEntity user = userService.getUserByUsername(username);
+    public byte[] getSongAudioFile(String author, String name) throws MinioFileException {
+        UserEntity user = userService.getUserByUsername(author);
         SongEntity song = findByNameAndUser(name, user);
 
-        if (song != null && song.getAudioFile() != null) {
-            incrementSongListens(song, user);
-            lastListenedService.addSongToLastListenedByUser(user, song);
-
-            return minioFileService.getFileContent(minioProperties.getAudioBucket(), song.getAudioFile().getFilename());
+        if (song == null || song.getAudioFile() == null) {
+            throw new MinioFileException("File not found");
         }
 
-        throw new MinioFileException("File not found");
+        incrementSongListens(song, user);
+
+        return minioFileService.getFileContent(minioProperties.getAudioBucket(), song.getAudioFile().getFilename());
     }
 
     @Transactional

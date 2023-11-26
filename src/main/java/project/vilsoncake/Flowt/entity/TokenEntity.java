@@ -17,13 +17,12 @@ public class TokenEntity {
     private Long tokenId;
     @NotNull(message = "Token cannot be null")
     @Column(name = "token")
-    private String token;
-    @ManyToOne
+    private String token = "";
+    @OneToOne
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
-    public TokenEntity(String token, UserEntity user) {
-        this.token = token;
+    public TokenEntity(UserEntity user) {
         this.user = user;
     }
 }

@@ -53,8 +53,8 @@ public class UserEntity {
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)
     private Set<Role> roles = new HashSet<>();
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
-    private List<TokenEntity> token;
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
+    private TokenEntity token = new TokenEntity(this);
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
     private VerifyCodeEntity verifyCode = new VerifyCodeEntity(this);
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
