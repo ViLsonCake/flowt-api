@@ -5,8 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import project.vilsoncake.Flowt.entity.enumerated.Genre;
 
-import java.util.List;
-
 @Entity
 @Table(name = "listened")
 @Data
@@ -24,8 +22,8 @@ public class ListenedEntity {
     private Genre genre;
     @Column(name = "author")
     private String author;
-    @ManyToMany
-    private List<UserListenedStatisticEntity> userListenedStatistics;
+    @ManyToOne
+    private UserListenedStatisticEntity userListenedStatistics;
 
     public ListenedEntity(String songName, Genre genre, String author) {
         this.songName = songName;

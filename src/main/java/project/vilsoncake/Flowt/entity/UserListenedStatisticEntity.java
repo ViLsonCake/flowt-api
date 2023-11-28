@@ -16,7 +16,7 @@ public class UserListenedStatisticEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", updatable = false)
     private Long id;
-    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "userListenedStatistics")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userListenedStatistics")
     private List<ListenedEntity> listenedEntities;
     @OneToOne
     @JoinColumn(name = "user_id")

@@ -111,7 +111,7 @@ public class SongServiceImpl implements SongService {
             return null;
         }
 
-        Page<SongEntity> songsOnPage = songRepository.findAllByGenre(genre, PageRequest.of(page, size));
+        Page<SongEntity> songsOnPage = songRepository.findAllByGenre(Genre.valueOf(genre.toUpperCase()), PageRequest.of(page, size));
 
         return new SongsResponse(
                 songsOnPage.getTotalPages(),
@@ -137,7 +137,7 @@ public class SongServiceImpl implements SongService {
 
     @Override
     public SongEntity getRandomSongInfoByGenre(String genre) {
-        List<SongEntity> songs = songRepository.findAllByGenre(genre);
+        List<SongEntity> songs = songRepository.findAllByGenre(Genre.valueOf(genre.toUpperCase()));
         if (songs.size() == 1) {
             return songs.get(0);
         }
@@ -149,6 +149,11 @@ public class SongServiceImpl implements SongService {
 
         // Get random song
         return songs.get(randomSongIndex);
+    }
+
+    @Override
+    public SongEntity getRandomUserSong(UserEntity user) {
+        return songRepository.getRandomUserSong(user);
     }
 
     @Override

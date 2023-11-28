@@ -14,6 +14,7 @@ public interface SongService {
     boolean removeSongAvatarByUserAndName(UserEntity user, String name);
     SongEntity getSongInfo(String username, String name);
     SongEntity getRandomSongInfoByGenre(String genre);
+    SongEntity getRandomUserSong(UserEntity user);
     Map<String, String> removeUserSong(String authHeader, String name);
     Map<String, String> updateListenerAndSongStatistic(String authHeader, String author, String name);
     boolean removeUserSongByUserAndName(UserEntity user, String name);
