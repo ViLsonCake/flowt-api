@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface RecommendationService {
     List<SongDto> getSongsMightLike(String authHeader);
+    List<SongDto> getRecommendationSongsByTopGenre(String authHeader);
 }

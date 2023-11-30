@@ -23,4 +23,6 @@ public interface SongRepository extends CrudRepository<SongEntity, Long> {
     Page<SongEntity> findByNameContainingIgnoreCaseOrderByListensDesc(String substring, Pageable pageable);
     @Query(value = "SELECT * FROM song WHERE user_id = :user.getUserId() ORDER BY RANDOM() LIMIT 1", nativeQuery = true)
     SongEntity getRandomUserSong(UserEntity user);
+    @Query(value = "SELECT * FROM song ORDER BY listens DESC LIMIT 15", nativeQuery = true)
+    List<SongEntity> getMostListenedSongsByGenre(Genre genre);
 }

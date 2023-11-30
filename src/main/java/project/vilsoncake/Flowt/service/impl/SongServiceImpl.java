@@ -7,25 +7,24 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.vilsoncake.Flowt.dto.SongDto;
-import project.vilsoncake.Flowt.entity.*;
-import project.vilsoncake.Flowt.entity.enumerated.Country;
-import project.vilsoncake.Flowt.entity.enumerated.Genre;
-import project.vilsoncake.Flowt.properties.MinioProperties;
 import project.vilsoncake.Flowt.dto.SongRequest;
 import project.vilsoncake.Flowt.dto.SongsResponse;
 import project.vilsoncake.Flowt.dto.SubstringDto;
+import project.vilsoncake.Flowt.entity.*;
+import project.vilsoncake.Flowt.entity.enumerated.Country;
+import project.vilsoncake.Flowt.entity.enumerated.Genre;
 import project.vilsoncake.Flowt.exception.MinioFileException;
 import project.vilsoncake.Flowt.exception.SongAlreadyExistByUserException;
 import project.vilsoncake.Flowt.exception.SongNotFoundException;
 import project.vilsoncake.Flowt.exception.UserEmailNotVerifiedException;
+import project.vilsoncake.Flowt.properties.MinioProperties;
 import project.vilsoncake.Flowt.repository.SongRepository;
 import project.vilsoncake.Flowt.service.*;
 import project.vilsoncake.Flowt.utils.AuthUtils;
 import project.vilsoncake.Flowt.utils.MailUtils;
+import project.vilsoncake.Flowt.utils.SongUtils;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -36,6 +35,7 @@ public class SongServiceImpl implements SongService {
     private final UserService userService;
     private final AuthUtils authUtils;
     private final MailUtils mailUtils;
+    private final SongUtils songUtils;
     private final AvatarService songAvatarService;
     private final LastListenedService lastListenedService;
     private final MinioFileService minioFileService;
@@ -154,6 +154,18 @@ public class SongServiceImpl implements SongService {
     @Override
     public SongEntity getRandomUserSong(UserEntity user) {
         return songRepository.getRandomUserSong(user);
+    }
+
+    @Override
+    public List<SongEntity> getRandomMostListenedSongsByGenres(List<Genre> genres) {
+        List<SongEntity> randomSongs = new ArrayList<>();
+        genres.forEach(genre -> {
+            List<SongEntity> mostListenedSongsByGenre = songRepository.getMostListenedSongsByGenre(genre);
+            List<SongEntity> randomSongsFromList = songUtils.getRandomSongsFromList(mostListenedSongsByGenre);
+            randomSongs.addAll(randomSongsFromList);
+        });
+        Collections.shuffle(randomSongs);
+        return randomSongs;
     }
 
     @Override

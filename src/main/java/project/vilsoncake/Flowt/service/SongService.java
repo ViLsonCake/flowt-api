@@ -5,9 +5,12 @@ import project.vilsoncake.Flowt.dto.SongsResponse;
 import project.vilsoncake.Flowt.dto.SubstringDto;
 import project.vilsoncake.Flowt.entity.SongEntity;
 import project.vilsoncake.Flowt.entity.UserEntity;
+import project.vilsoncake.Flowt.entity.enumerated.Genre;
 import project.vilsoncake.Flowt.exception.MinioFileException;
 
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public interface SongService {
     Map<String, String> saveNewSongEntity(String authHeader, SongRequest songRequest);
@@ -15,6 +18,7 @@ public interface SongService {
     SongEntity getSongInfo(String username, String name);
     SongEntity getRandomSongInfoByGenre(String genre);
     SongEntity getRandomUserSong(UserEntity user);
+    List<SongEntity> getRandomMostListenedSongsByGenres(List<Genre> genres);
     Map<String, String> removeUserSong(String authHeader, String name);
     Map<String, String> updateListenerAndSongStatistic(String authHeader, String author, String name);
     boolean removeUserSongByUserAndName(UserEntity user, String name);
