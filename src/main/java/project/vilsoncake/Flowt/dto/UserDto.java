@@ -15,6 +15,7 @@ public class UserDto {
     private String description;
     private String avatar;
     private boolean userHaveAvatar;
+    private boolean emailVerified;
 
     public static UserDto fromUser(UserEntity user) {
         UserDto userDto = new UserDto();
@@ -24,6 +25,7 @@ public class UserDto {
         userDto.setDescription(user.getDescription());
         userDto.setAvatar(user.getUserAvatar().getAvatarUrl());
         userDto.setUserHaveAvatar(user.getUserAvatar().isUserHaveAvatar());
+        userDto.setEmailVerified(user.isEmailVerify());
         return userDto;
     }
 }
