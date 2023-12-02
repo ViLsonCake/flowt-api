@@ -5,10 +5,10 @@ Permit all
 + POST /auth/login - create access and refresh jwt tokens
 + POST /auth/oauth/google - login user by google authentication
 + GET /auth/refresh - refresh access and refresh tokens
-+ GET /images/user/avatar/:username - get user avatar by username
-+ GET /images/user/profile-header/:username - get user profile header by username
-+ GET /images/song/:username/:name - get song avatar by author and name
-+ GET /images/playlist/:username/:name - get playlist avatar by username and name
++ GET /images/user/avatar/:_**username**_ - get user avatar by username
++ GET /images/user/profile-header/:_**username**_ - get user profile header by username
++ GET /images/song/:_**username**_/:_**name**_ - get song avatar by author and name
++ GET /images/playlist/:_**username**_/:_**name**_ - get playlist avatar by username and name
 + POST /verify/restore-password - send mail with code for restoring the password by email from request
 + POST /users/restore-password - change user password
 + POST /search/songs - search songs by substring
@@ -20,8 +20,8 @@ Authenticated
 + POST /users/avatar/url - change user avatar url
 + POST /users/profile-header - change user profile header
 + POST /users/change-password - change authenticated user password
-+ POST /users/subscribe/:username - subscribe authenticated user to another user
-+ POST /users/unsubscribe/:username - unsubscribe authenticated user to another user
++ POST /users/subscribe/:**_username_** - subscribe authenticated user to another user
++ POST /users/unsubscribe/:**_username_** - unsubscribe authenticated user to another user
 + PATCH /users/username - change user username
 + PATCH /users/email - change user email
 + PATCH /users/region - change user region
@@ -37,33 +37,38 @@ Authenticated
 + GET /verify/email - verify user email
 + GET /verify/password - send mail with code for restoring the password
 + POST /verify/artist - send verify artist request
-+ GET /songs/:username/:name - get song info by author and song name
-+ GET /songs/audio/:username/:name - get song audio file by author and song name
-+ GET /songs/random/:genre - get random song by genre
-+ GET /songs/:genre - get songs list by genre
++ GET /songs/:**_username_**/:_**name**_ - get song info by author and song name
++ GET /songs/audio/:**_username_**/:**_name_** - get song audio file by author and song name
++ GET /songs/random/:**_genre_** - get random song by genre
++ GET /songs/:**_genre_** - get songs list by genre
 + POST /songs - add new song info
-+ POST /songs/audio/:name - add to song audio file
-+ POST /songs/avatar/:name - add avatar to song
-+ DELETE /songs/:name - remove song by song name
-+ POST /liked/:username/:name - add song to authenticated user liked
-+ DELETE /liked/:username/:name - remove song from authenticated user liked
++ POST /songs/audio/:**_name_** - add to song audio file
++ POST /songs/avatar/:**_name_** - add avatar to song
++ DELETE /songs/:**_name_** - remove song by song name
++ POST /liked/:**_username_**/:**_name_** - add song to authenticated user liked
++ DELETE /liked/:**_username_**/:**_name_** - remove song from authenticated user liked
 + POST /playlists - create new playlist
-+ POST /playlists/avatar/:playlistName - add avatar to playlist
-+ POST /playlists/:playlistName/:author/:songName - add song to playlist
++ POST /playlists/avatar/:**_playlistName_** - add avatar to playlist
++ POST /playlists/:**_playlistName_**/:**_author_**/:**_songName_** - add song to playlist
++ POST /playlists/:**_playlistName_** - add songs list to playlist
 + PATCH /playlists - change playlist name
-+ PATCH /playlists/:playlistName - change playlist access modifier
-+ DELETE /playlists/:playlistName/:author/:songName - remove song from playlist
-+ DELETE /notifications/:id - remove user notification by id
++ PATCH /playlists/:**_playlistName_** - change playlist access modifier
++ DELETE /playlists/:**_playlistName_**/:**_author_**/:**_songName_** - remove song from playlist
++ DELETE /notifications/:**_id_** - remove user notification by id
 + POST /reports - send report
-+ GET /reports/:type - get report by type
-+ PATCH /reports/:id - access report by id
-+ DELETE /report/:id - cancel report by id
++ GET /reports/:**_type_** - get report by type
++ PATCH /reports/:**_id_** - access report by id
++ DELETE /report/:**_id_** - cancel report by id
++ GET /recommendations - get user recommendations song
++ GET /recommendations/might-like - get songs that the user might like
++ GET /artist-statistic/overall - get overall user songs statistic
++ GET /artist-statistic/popular - get most popular user songs
 ___ 
 For moderators
-+ POST /moderator/warning-mail/:username - send to user warning mail
-+ PATCH /moderator/active/:username - change user active
++ POST /moderator/warning-mail/:**_username_** - send to user warning mail
++ PATCH /moderator/active/:**_username_** - change user active
 ___
 Only for admins
-+ GET /admin/user/:username - get user by username
-+ PATCH /admin/user/:username - add to user moderator authority
-+ DELETE /admin/user/:username - delete user by username
++ GET /admin/user/:**_username_** - get user by username
++ PATCH /admin/user/:**_username_** - add to user moderator authority
++ DELETE /admin/user/:**_username_** - delete user by username
