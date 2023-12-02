@@ -19,6 +19,7 @@ public interface SongService {
     SongEntity getRandomSongInfoByGenre(String genre);
     SongEntity getRandomUserSong(UserEntity user);
     List<SongEntity> getRandomMostListenedSongsByGenres(List<Genre> genres);
+    List<SongEntity> getMostPopularSongs(UserEntity user);
     Map<String, String> removeUserSong(String authHeader, String name);
     Map<String, String> updateListenerAndSongStatistic(String authHeader, String author, String name);
     boolean removeUserSongByUserAndName(UserEntity user, String name);

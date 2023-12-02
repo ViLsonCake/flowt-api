@@ -169,6 +169,11 @@ public class SongServiceImpl implements SongService {
     }
 
     @Override
+    public List<SongEntity> getMostPopularSongs(UserEntity user) {
+        return songRepository.getMostListenedSongsByUser(user);
+    }
+
+    @Override
     public Map<String, String> removeUserSong(String authHeader, String name) {
         String username = authUtils.getUsernameFromAuthHeader(authHeader);
         UserEntity user = userService.getUserByUsername(username);
