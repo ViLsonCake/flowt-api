@@ -92,4 +92,12 @@ public class PlaylistController {
     ) {
         return ResponseEntity.ok(playListService.removeSongFromPlaylist(authHeader, playlistName, songAuthor, songName));
     }
+
+    @DeleteMapping("/{playlistName}")
+    public ResponseEntity<Map<String, String>> removePlaylist(
+            @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authHeader,
+            @PathVariable("playlistName") String playlistName
+    ) {
+        return ResponseEntity.ok(playListService.removePlaylist(authHeader, playlistName));
+    }
 }

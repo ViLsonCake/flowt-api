@@ -96,6 +96,7 @@ public class PlaylistServiceImpl implements PlaylistService {
         return playlistAvatarService.deleteAvatar(playlist);
     }
 
+    @Transactional
     @Override
     public Map<String, String> addSongToPlaylist(String authHeader, String playlistName, String songAuthor, String songName) {
         String username = authUtils.getUsernameFromAuthHeader(authHeader);
@@ -136,6 +137,7 @@ public class PlaylistServiceImpl implements PlaylistService {
         return Map.of("message", "Songs saved");
     }
 
+    @Transactional
     @Override
     public Map<String, String> removeSongFromPlaylist(String authHeader, String playlistName, String songAuthor, String songName) {
         String username = authUtils.getUsernameFromAuthHeader(authHeader);
@@ -193,6 +195,15 @@ public class PlaylistServiceImpl implements PlaylistService {
         PlaylistEntity playlist = getPlaylistByUserAndName(user, name);
         playlistRepository.delete(playlist);
         return true;
+    }
+
+    @Override
+    public Map<String, String> removePlaylist(String authHeader, String playlistName) {
+        String username = authUtils.getUsernameFromAuthHeader(authHeader);
+        UserEntity user = userService.getUserByUsername(username);
+        removePlaylistByUserAndName(user, playlistName);
+
+        return Map.of("message", String.format("Playlist '%s' deleted", playlistName));
     }
 
     @Override

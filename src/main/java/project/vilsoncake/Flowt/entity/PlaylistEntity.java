@@ -25,7 +25,7 @@ public class PlaylistEntity {
     @Pattern(regexp = REGEX_PLAYLIST_NAME_PATTERN, message = "Playlist name is not valid")
     @Column(name = "name")
     private String name;
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     private List<SongEntity> songs;
     @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "playlist")
