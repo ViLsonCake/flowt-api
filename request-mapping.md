@@ -54,6 +54,7 @@ Authenticated
 + PATCH /playlists - change playlist name
 + PATCH /playlists/:**_playlistName_** - change playlist access modifier
 + DELETE /playlists/:**_playlistName_**/:**_author_**/:**_songName_** - remove song from playlist
++ DELETE /playlists/:**_playlistName_** - remove user playlist
 + DELETE /notifications/:**_id_** - remove user notification by id
 + POST /reports - send report
 + GET /reports/:**_type_** - get report by type
