@@ -5,5 +5,4 @@ import project.vilsoncake.Flowt.entity.UserEntity;
 
 public interface LastListenedService {
     boolean addSongToLastListenedByUser(UserEntity user, SongEntity song);
-    boolean isSongAlreadyInLastListened(SongEntity newSong, UserEntity user);
 }

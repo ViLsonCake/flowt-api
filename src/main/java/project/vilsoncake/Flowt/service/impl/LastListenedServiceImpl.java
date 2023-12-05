@@ -11,7 +11,7 @@ import project.vilsoncake.Flowt.service.LastListenedService;
 
 import java.util.List;
 
-import static project.vilsoncake.Flowt.constant.NumberConst.LAST_LISTENED_SONG_COUNT;
+import static project.vilsoncake.Flowt.constant.NumberConst.LAST_LISTENED_COUNT;
 
 @Service
 @Slf4j
@@ -24,24 +24,14 @@ public class LastListenedServiceImpl implements LastListenedService {
     public boolean addSongToLastListenedByUser(UserEntity user, SongEntity song) {
         LastListenedEntity lastListenedEntity = lastListenedRepository.findByUser(user);
         List<SongEntity> lastListenedSongs = lastListenedEntity.getSongs();
-        if (!isSongAlreadyInLastListened(song, user)) {
+        if (!lastListenedSongs.contains(song)) {
             lastListenedSongs.add(song);
         }
-        if (lastListenedSongs.size() > LAST_LISTENED_SONG_COUNT) {
+        if (lastListenedSongs.size() > LAST_LISTENED_COUNT) {
             lastListenedSongs.remove(0);
         }
         lastListenedEntity.setSongs(lastListenedSongs);
         lastListenedRepository.save(lastListenedEntity);
         return true;
-    }
-
-    @Override
-    public boolean isSongAlreadyInLastListened(SongEntity newSong, UserEntity user) {
-        for (SongEntity song : user.getLastListened().getSongs()) {
-            if (song.getSongId().equals(newSong.getSongId())) {
-                return true;
-            }
-        }
-        return false;
     }
 }

@@ -10,6 +10,7 @@ import project.vilsoncake.Flowt.dto.PlaylistRequest;
 import project.vilsoncake.Flowt.dto.PlaylistNameDto;
 import project.vilsoncake.Flowt.dto.SongsListDto;
 import project.vilsoncake.Flowt.exception.InvalidExtensionException;
+import project.vilsoncake.Flowt.service.LastListenedPlaylistsService;
 import project.vilsoncake.Flowt.service.PlaylistChangeService;
 import project.vilsoncake.Flowt.service.PlaylistService;
 
@@ -22,6 +23,7 @@ public class PlaylistController {
 
     private final PlaylistService playListService;
     private final PlaylistChangeService playlistChangeService;
+    private final LastListenedPlaylistsService lastListenedPlaylistsService;
 
     @GetMapping("/{username}/{playlistName}")
     public ResponseEntity<PlaylistDto> getPlaylist(
@@ -29,6 +31,15 @@ public class PlaylistController {
             @PathVariable("playlistName") String playlistName
     ) {
         return ResponseEntity.ok(playListService.getPlaylistByNameAndUser(username, playlistName));
+    }
+
+    @GetMapping("/last-listened/{username}/{playlistName}")
+    public ResponseEntity<Map<String, String>> addPlaylistToLastListened(
+            @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authHeader,
+            @PathVariable("username") String username,
+            @PathVariable("playlistName") String playlistName
+    ) {
+        return ResponseEntity.ok(lastListenedPlaylistsService.addPlaylistToLastListened(authHeader, username, playlistName));
     }
 
     @PostMapping

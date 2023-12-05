@@ -1,5 +1,6 @@
 package project.vilsoncake.Flowt.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,6 +19,7 @@ public class LastListenedEntity {
     private Long id;
     @ManyToMany
     private List<SongEntity> songs;
+    @JsonIgnore
     @OneToOne
     @JoinColumn(name = "user_id", unique = true)
     private UserEntity user;

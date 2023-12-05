@@ -29,6 +29,7 @@ public class PlaylistEntity {
     @JsonIgnore
     @ManyToMany(mappedBy = "playlists")
     private List<SavedPlaylistEntity> savedPlaylistEntities;
+    @JsonIgnore
     @ManyToMany(mappedBy = "playlists")
     private List<LastListenedPlaylistEntity> lastListened;
     @JsonIgnore
