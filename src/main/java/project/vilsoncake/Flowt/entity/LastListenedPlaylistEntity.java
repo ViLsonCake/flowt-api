@@ -8,22 +8,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "last_listened")
+@Table(name = "last_listened_playlist")
 @Data
 @NoArgsConstructor
-public class LastListenedEntity {
+public class LastListenedPlaylistEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", updatable = false)
     private Long id;
     @ManyToMany
-    private List<SongEntity> songs;
+    private List<PlaylistEntity> playlists;
     @OneToOne
     @JoinColumn(name = "user_id", unique = true)
     private UserEntity user;
 
-    public LastListenedEntity(UserEntity user) {
-        this.songs = new ArrayList<>();
+    public LastListenedPlaylistEntity(UserEntity user) {
+        this.playlists = new ArrayList<>();
         this.user = user;
     }
 }

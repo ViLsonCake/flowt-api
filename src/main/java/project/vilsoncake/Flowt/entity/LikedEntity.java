@@ -18,7 +18,7 @@ public class LikedEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "liked_id", updatable = false)
     private Long likedId;
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     private List<SongEntity> songs;
     @JsonIgnore
     @OneToOne
