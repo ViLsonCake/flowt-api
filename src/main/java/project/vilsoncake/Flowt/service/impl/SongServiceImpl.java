@@ -146,8 +146,6 @@ public class SongServiceImpl implements SongService {
         }
 
         int randomSongIndex = new Random().nextInt(0, songs.size() - 1);
-
-        // Get random song
         return songs.get(randomSongIndex);
     }
 

@@ -14,7 +14,6 @@ import project.vilsoncake.Flowt.exception.InvalidExtensionException;
 import project.vilsoncake.Flowt.exception.MinioFileException;
 import project.vilsoncake.Flowt.service.*;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -29,6 +28,7 @@ public class UserController {
     private final LikedService likedService;
     private final SongService songService;
     private final FollowerService followerService;
+    private final SavedPlaylistService savedPlaylistService;
 
     @PostMapping("/avatar")
     public ResponseEntity<Map<String, String>> addAvatar(
@@ -113,6 +113,15 @@ public class UserController {
             @RequestParam(required = false, defaultValue = "10") int size
     ) {
         return ResponseEntity.ok(likedService.getLikedSongs(authHeader, page, size));
+    }
+
+    @GetMapping("/saved-playlists")
+    public ResponseEntity<SavedPlaylistsDto> getSavedPlaylists(
+            @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authHeader,
+            @RequestParam(required = false, defaultValue = "0") int page,
+            @RequestParam(required = false, defaultValue = "10") int size
+    ) {
+        return ResponseEntity.ok(savedPlaylistService.getUserSavedPlaylists(authHeader, page, size));
     }
 
     @GetMapping("/songs")

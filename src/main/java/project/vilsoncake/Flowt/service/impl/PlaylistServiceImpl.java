@@ -197,6 +197,7 @@ public class PlaylistServiceImpl implements PlaylistService {
         return true;
     }
 
+    @Transactional
     @Override
     public Map<String, String> removePlaylist(String authHeader, String playlistName) {
         String username = authUtils.getUsernameFromAuthHeader(authHeader);

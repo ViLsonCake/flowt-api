@@ -7,9 +7,9 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class LikedSongsDto {
+@AllArgsConstructor
+public class SavedPlaylistsDto {
     private int count;
-    private List<SongDto> songs;
+    private List<PlaylistDto> playlists;
 }

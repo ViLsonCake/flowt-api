@@ -26,6 +26,7 @@ public class PlaylistEntity {
     private String name;
     @ManyToMany
     private List<SongEntity> songs;
+    @JsonIgnore
     @ManyToMany(mappedBy = "playlists")
     private List<SavedPlaylistEntity> savedPlaylistEntities;
     @ManyToMany(mappedBy = "playlists")
