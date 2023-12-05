@@ -9,5 +9,5 @@ public class SendReportDto {
     private WhomReportType whomType;
     private ReportContentType contentType;
     private String contentTypeName;
-    private String WhomName;
+    private String whomName;
 }
