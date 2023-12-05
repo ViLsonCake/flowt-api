@@ -9,7 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.vilsoncake.Flowt.dto.*;
-import project.vilsoncake.Flowt.entity.LastListenedEntity;
+import project.vilsoncake.Flowt.entity.LastListenedPlaylistEntity;
 import project.vilsoncake.Flowt.entity.NotificationEntity;
 import project.vilsoncake.Flowt.entity.PlaylistEntity;
 import project.vilsoncake.Flowt.entity.UserEntity;
@@ -165,10 +165,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public LastListenedEntity getUserLastListened(String authHeader) {
+    public LastListenedSongsDto getLastListenedSongs(String authHeader) {
         String username = authUtils.getUsernameFromAuthHeader(authHeader);
         UserEntity user = getUserByUsername(username);
-        return user.getLastListened();
+        return new LastListenedSongsDto(user.getLastListened().getSongs().stream().map(SongDto::fromSongEntity).toList());
+    }
+
+    @Override
+    public LastListenedPlaylistsDto getLastListenedPlaylists(String authHeader) {
+        String username = authUtils.getUsernameFromAuthHeader(authHeader);
+        UserEntity user = getUserByUsername(username);
+        return new LastListenedPlaylistsDto(user.getLastListenedPlaylists().getPlaylists().stream().map(PlaylistDto::fromPlaylistEntity).toList());
     }
 
     @Override

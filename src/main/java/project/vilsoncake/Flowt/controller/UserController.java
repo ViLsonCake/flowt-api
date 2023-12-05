@@ -7,7 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import project.vilsoncake.Flowt.dto.*;
-import project.vilsoncake.Flowt.entity.LastListenedEntity;
 import project.vilsoncake.Flowt.entity.NotificationEntity;
 import project.vilsoncake.Flowt.entity.PlaylistEntity;
 import project.vilsoncake.Flowt.exception.InvalidExtensionException;
@@ -143,9 +142,14 @@ public class UserController {
         return ResponseEntity.ok(userService.getUserNotifications(authHeader));
     }
 
-    @GetMapping("/last-listened")
-    public ResponseEntity<LastListenedEntity> getUserLastListened(@RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authHeader) {
-        return ResponseEntity.ok(userService.getUserLastListened(authHeader));
+    @GetMapping("/last-listened/songs")
+    public ResponseEntity<LastListenedSongsDto> getUserLastListened(@RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authHeader) {
+        return ResponseEntity.ok(userService.getLastListenedSongs(authHeader));
+    }
+
+    @GetMapping("/last-listened/playlists")
+    public ResponseEntity<LastListenedPlaylistsDto> getLastListenedPlaylists(@RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authHeader) {
+        return ResponseEntity.ok(userService.getLastListenedPlaylists(authHeader));
     }
 
     @PatchMapping("/username")
