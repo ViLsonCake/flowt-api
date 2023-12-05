@@ -33,7 +33,9 @@ Authenticated
 + GET /users/songs - get authenticated user songs list
 + GET /users/playlists - get authenticated user playlists list
 + GET /users/notifications - get authenticated user notifications list
-+ GET /users/last-listened - get authenticated user 15 last listened songs
++ GET /users/last-listened/songs - get authenticated user 15 last listened songs
++ GET /users/last-listened/playlists - get authenticated user 15 last listened playlists
++ GET /users/saved-playlists - get authenticated user saved playlists
 + GET /verify/email - verify user email
 + GET /verify/password - send mail with code for restoring the password
 + POST /verify/artist - send verify artist request
@@ -64,7 +66,9 @@ Authenticated
 + GET /recommendations/might-like - get songs that the user might like
 + GET /artist-statistic/overall - get overall user songs statistic
 + GET /artist-statistic/popular - get most popular user songs
-___ 
++ POST /saved-playlists - add playlist to saved
++ DELETE /saved-playlists - remove playlist from saved
+___
 For moderators
 + POST /moderator/warning-mail/:**_username_** - send to user warning mail
 + PATCH /moderator/active/:**_username_** - change user active
