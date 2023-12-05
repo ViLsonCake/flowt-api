@@ -16,11 +16,6 @@ public class SavedPlaylistController {
 
     private final SavedPlaylistService savedPlaylistService;
 
-    @GetMapping
-    public ResponseEntity<?> getUserSavedPlaylists(@RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authHeader) {
-        return null;
-    }
-
     @PostMapping
     public ResponseEntity<Map<String, String>> addPlaylistToSaved(
             @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authHeader,
