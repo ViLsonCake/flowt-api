@@ -46,6 +46,7 @@ Authenticated
 + POST /songs - add new song info
 + POST /songs/audio/:**_name_** - add to song audio file
 + POST /songs/avatar/:**_name_** - add avatar to song
++ PATCH /songs/statistic/:**_username_**/:**_name_**
 + DELETE /songs/:**_name_** - remove song by song name
 + POST /liked/:**_username_**/:**_name_** - add song to authenticated user liked
 + DELETE /liked/:**_username_**/:**_name_** - remove song from authenticated user liked
