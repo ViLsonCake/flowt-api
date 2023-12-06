@@ -185,6 +185,7 @@ public class SongServiceImpl implements SongService {
         return Map.of("message", String.format("Song '%s' removed", name));
     }
 
+    @Transactional
     @Override
     public Map<String, String> updateListenerAndSongStatistic(String authHeader, String author, String name) {
         String username = authUtils.getUsernameFromAuthHeader(authHeader);
