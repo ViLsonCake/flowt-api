@@ -13,7 +13,7 @@ import project.vilsoncake.Flowt.entity.UserEntity;
 import project.vilsoncake.Flowt.entity.enumerated.NotificationType;
 import project.vilsoncake.Flowt.exception.InvalidExtensionException;
 import project.vilsoncake.Flowt.exception.MinioFileException;
-import project.vilsoncake.Flowt.properties.MinioProperties;
+import project.vilsoncake.Flowt.property.MinioProperties;
 import project.vilsoncake.Flowt.service.*;
 import project.vilsoncake.Flowt.utils.AuthUtils;
 import project.vilsoncake.Flowt.utils.FileUtils;
@@ -84,7 +84,7 @@ public class UserManagementServiceImpl implements UserManagementService {
         String filename = user.getProfileHeader().getFilename();
 
         // Save file data in minio storage
-        minioFileService.saveFile(minioProperties.getUserProfileHatBucket(), filename, image);
+        minioFileService.saveFile(minioProperties.getUserProfileHeaderBucket(), filename, image);
 
         return Map.of("username", username);
     }
@@ -110,7 +110,7 @@ public class UserManagementServiceImpl implements UserManagementService {
             throw new MinioFileException("File not found");
         }
 
-        return minioFileService.getFileContent(minioProperties.getUserProfileHatBucket(), profileHeader.getFilename());
+        return minioFileService.getFileContent(minioProperties.getUserProfileHeaderBucket(), profileHeader.getFilename());
     }
 
     @Override

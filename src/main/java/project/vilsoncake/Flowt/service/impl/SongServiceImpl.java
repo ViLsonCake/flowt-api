@@ -17,7 +17,7 @@ import project.vilsoncake.Flowt.exception.MinioFileException;
 import project.vilsoncake.Flowt.exception.SongAlreadyExistByUserException;
 import project.vilsoncake.Flowt.exception.SongNotFoundException;
 import project.vilsoncake.Flowt.exception.UserEmailNotVerifiedException;
-import project.vilsoncake.Flowt.properties.MinioProperties;
+import project.vilsoncake.Flowt.property.MinioProperties;
 import project.vilsoncake.Flowt.repository.SongRepository;
 import project.vilsoncake.Flowt.service.*;
 import project.vilsoncake.Flowt.utils.AuthUtils;

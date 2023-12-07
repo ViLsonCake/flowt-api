@@ -20,7 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import project.vilsoncake.Flowt.properties.MinioProperties;
+import project.vilsoncake.Flowt.property.MinioProperties;
 
 import static project.vilsoncake.Flowt.entity.enumerated.Role.ADMIN;
 import static project.vilsoncake.Flowt.entity.enumerated.Role.MODERATOR;

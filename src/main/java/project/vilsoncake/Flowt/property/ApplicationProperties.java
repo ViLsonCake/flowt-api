@@ -1,4 +1,4 @@
-package project.vilsoncake.Flowt.properties;
+package project.vilsoncake.Flowt.property;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

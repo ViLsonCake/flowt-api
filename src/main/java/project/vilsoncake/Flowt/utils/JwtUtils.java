@@ -8,7 +8,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import project.vilsoncake.Flowt.dto.JwtTokensDto;
-import project.vilsoncake.Flowt.properties.JwtProperties;
+import project.vilsoncake.Flowt.property.JwtProperties;
 
 import java.util.Date;
 import java.util.HashMap;

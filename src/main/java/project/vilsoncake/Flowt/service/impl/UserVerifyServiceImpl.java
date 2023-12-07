@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import project.vilsoncake.Flowt.properties.ApplicationProperties;
+import project.vilsoncake.Flowt.property.ApplicationProperties;
 import project.vilsoncake.Flowt.entity.*;
 import project.vilsoncake.Flowt.entity.enumerated.NotificationType;
 import project.vilsoncake.Flowt.exception.AccountAlreadyVerifiedException;

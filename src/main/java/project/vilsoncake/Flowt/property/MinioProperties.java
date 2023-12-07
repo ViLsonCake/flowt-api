@@ -1,4 +1,4 @@
-package project.vilsoncake.Flowt.properties;
+package project.vilsoncake.Flowt.property;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 public class MinioProperties {
     private String audioBucket;
     private String userAvatarBucket;
-    private String userProfileHatBucket;
+    private String userProfileHeaderBucket;
     private String songAvatarBucket;
     private String playlistAvatarBucket;
     private String url;

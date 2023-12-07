@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import project.vilsoncake.Flowt.dto.*;
-import project.vilsoncake.Flowt.properties.MinioProperties;
+import project.vilsoncake.Flowt.property.MinioProperties;
 import project.vilsoncake.Flowt.entity.PlaylistAvatarEntity;
 import project.vilsoncake.Flowt.entity.PlaylistEntity;
 import project.vilsoncake.Flowt.entity.SongEntity;

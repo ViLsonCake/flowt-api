@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import project.vilsoncake.Flowt.entity.UserEntity;
-import project.vilsoncake.Flowt.properties.JwtProperties;
+import project.vilsoncake.Flowt.property.JwtProperties;
 import project.vilsoncake.Flowt.repository.TokenRepository;
 import project.vilsoncake.Flowt.service.TokenService;
 import project.vilsoncake.Flowt.service.UserService;

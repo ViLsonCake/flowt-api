@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
-import project.vilsoncake.Flowt.properties.MailProperties;
+import project.vilsoncake.Flowt.property.MailProperties;
 import project.vilsoncake.Flowt.service.MailVerifyService;
 
 @Service
