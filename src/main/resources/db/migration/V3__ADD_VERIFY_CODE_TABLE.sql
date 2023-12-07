@@ -1,5 +1,0 @@
-CREATE TABLE IF NOT EXISTS verify_code (
-    id SERIAL PRIMARY KEY,
-    code TEXT NOT NULL UNIQUE,
-    user_id BIGINT NOT NULL UNIQUE
-);

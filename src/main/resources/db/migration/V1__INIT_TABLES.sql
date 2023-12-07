@@ -18,7 +18,7 @@ CREATE TABLE user_ (
 );
 
 CREATE TABLE user_role (
-    user_id BIGINT NOT NULL UNIQUE,
+    user_id BIGINT NOT NULL,
     roles VARCHAR(64) NOT NULL
 );
 
@@ -29,10 +29,16 @@ CREATE TABLE user_avatar (
     user_id BIGINT NOT NULL
 );
 
-CREATE TABLE subscribe (
-    id BIGINT PRIMARY KEY,
-    subscribed_id BIGINT NOT NULL,
-    user_id BIGINT NOT NULL
+CREATE TABLE token (
+    token_id SERIAL PRIMARY KEY,
+    token TEXT NOT NULL DEFAULT '',
+    user_id BIGINT NOT NULL UNIQUE
+);
+
+CREATE TABLE verify_code (
+    id SERIAL PRIMARY KEY,
+    code TEXT NOT NULL UNIQUE,
+    user_id BIGINT NOT NULL UNIQUE
 );
 
 CREATE TABLE follower (
