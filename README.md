@@ -52,9 +52,12 @@ MAX_FILE_SIZE=100MB
 MAX_REQUEST_SIZE=100MB
 
 WEB_CLIENT_GOOGLE_TOKEN_URL=https://accounts.google.com/o/oauth2/token
+WEB_CLIENT_GOOGLE_USER_INFO=https://www.googleapis.com/oauth2/v3/userinfo
 GOOGLE_CLIENT_ID=...
 GOOGLE_CLIENT_SECRET=...
 GOOGLE_REDIRECT_URI=...
+
+FACEBOOK_USER_INFO_URL=https://graph.facebook.com/v18.0/me?access_token=%s&fields=%s
 ```
 
 3. Start application
