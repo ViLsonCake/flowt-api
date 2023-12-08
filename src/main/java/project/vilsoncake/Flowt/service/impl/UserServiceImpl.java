@@ -62,6 +62,7 @@ public class UserServiceImpl implements UserService {
         user.setEmail(registrationDto.getEmail());
         user.setPassword(passwordEncoder.encode(registrationDto.getPassword()));
         user.getRoles().add(USER);
+        user.getUserAvatar().setDefaultAvatarUrl(registrationDto.getUsername());
         userRepository.save(user);
 
         // Generate verify code and save

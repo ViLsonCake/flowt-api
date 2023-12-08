@@ -42,4 +42,8 @@ public class UserAvatarEntity {
     public void setDefaultAvatarUrl() {
         this.avatarUrl = UrlConst.USERS_AVATAR_URL + user.getUsername();
     }
+
+    public void setDefaultAvatarUrl(String username) {
+        this.avatarUrl = UrlConst.USERS_AVATAR_URL + username;
+    }
 }
