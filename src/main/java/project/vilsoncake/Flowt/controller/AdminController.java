@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import project.vilsoncake.Flowt.dto.ChangeAuthorityDto;
-import project.vilsoncake.Flowt.dto.UserDto;
+import project.vilsoncake.Flowt.dto.AuthenticatedUserDto;
 import project.vilsoncake.Flowt.service.UserChangeService;
 import project.vilsoncake.Flowt.service.UserService;
 
@@ -19,8 +19,8 @@ public class AdminController {
     private final UserService userService;
 
     @GetMapping("/user/{username}")
-    public ResponseEntity<UserDto> getUser(@PathVariable("username") String username) {
-        return ResponseEntity.ok(userService.getUserDtoByUsername(username));
+    public ResponseEntity<AuthenticatedUserDto> getUser(@PathVariable("username") String username) {
+        return ResponseEntity.ok(userService.getAuthenticatedUserDtoByUsername(username));
     }
 
     @PatchMapping("/user/{username}")

@@ -67,8 +67,13 @@ public class UserController {
     }
 
     @GetMapping("/authenticated")
-    public ResponseEntity<UserDto> getAuthenticatedUserDto(@RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authHeader) {
+    public ResponseEntity<AuthenticatedUserDto> getAuthenticatedUserDto(@RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authHeader) {
         return ResponseEntity.ok(userService.getAuthenticatedUserDto(authHeader));
+    }
+
+    @GetMapping("/public/{username}")
+    public ResponseEntity<UserDto> getPublicUserDto(@PathVariable("username") String username) {
+        return ResponseEntity.ok(userService.getPublicUserDtoByUsername(username));
     }
 
     @PostMapping("/subscribe/{username}")

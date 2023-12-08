@@ -9,7 +9,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.vilsoncake.Flowt.dto.*;
-import project.vilsoncake.Flowt.entity.LastListenedPlaylistEntity;
 import project.vilsoncake.Flowt.entity.NotificationEntity;
 import project.vilsoncake.Flowt.entity.PlaylistEntity;
 import project.vilsoncake.Flowt.entity.UserEntity;
@@ -80,13 +79,18 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public UserDto getAuthenticatedUserDto(String authHeader) {
+    public AuthenticatedUserDto getAuthenticatedUserDto(String authHeader) {
         String username = authUtils.getUsernameFromAuthHeader(authHeader);
-        return UserDto.fromUser(getUserByUsername(username));
+        return AuthenticatedUserDto.fromUser(getUserByUsername(username));
     }
 
     @Override
-    public UserDto getUserDtoByUsername(String username) {
+    public AuthenticatedUserDto getAuthenticatedUserDtoByUsername(String username) {
+        return AuthenticatedUserDto.fromUser(getUserByUsername(username));
+    }
+
+    @Override
+    public UserDto getPublicUserDtoByUsername(String username) {
         return UserDto.fromUser(getUserByUsername(username));
     }
 

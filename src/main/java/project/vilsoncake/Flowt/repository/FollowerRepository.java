@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.transaction.annotation.Transactional;
 import project.vilsoncake.Flowt.entity.FollowerEntity;
-import project.vilsoncake.Flowt.entity.UserEntity;
 
 public interface FollowerRepository extends CrudRepository<FollowerEntity, Long> {
     @Modifying

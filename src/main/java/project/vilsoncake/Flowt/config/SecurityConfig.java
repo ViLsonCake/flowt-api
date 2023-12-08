@@ -53,6 +53,7 @@ public class SecurityConfig {
                         .requestMatchers("/verify/restore-password").permitAll()
                         .requestMatchers("/verify/**").fullyAuthenticated()
                         .requestMatchers("/users/restore-password").permitAll()
+                        .requestMatchers("/users/public/**").permitAll()
                         .requestMatchers("/users/**").fullyAuthenticated()
                         .requestMatchers("/search/**").permitAll()
                         .requestMatchers("/reports").permitAll()
