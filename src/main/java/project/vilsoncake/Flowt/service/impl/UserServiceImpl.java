@@ -28,7 +28,7 @@ import project.vilsoncake.Flowt.utils.MailUtils;
 import java.util.List;
 import java.util.Map;
 
-import static project.vilsoncake.Flowt.entity.enumerated.Role.USER;
+import static project.vilsoncake.Flowt.entity.enumerated.Role.*;
 
 @Service
 @Slf4j
@@ -101,7 +101,9 @@ public class UserServiceImpl implements UserService {
 
         return new UsersPageDto(
                 users.getTotalPages(),
-                users.getContent().stream().map(UserDto::fromUser).toList()
+                users.getContent()
+                        .stream().filter(user -> !user.getRoles().contains(ADMIN) && !user.getRoles().contains(MODERATOR)).toList()
+                        .stream().map(UserDto::fromUser).toList()
         );
     }
 
