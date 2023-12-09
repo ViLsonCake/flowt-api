@@ -93,21 +93,39 @@ public class UserController {
     }
 
     @GetMapping("/subscribes")
-    public ResponseEntity<SubscribesDto> getUserSubscribes(
+    public ResponseEntity<SubscribesDto> getAuthenticatedUserSubscribes(
             @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authHeader,
             @RequestParam(required = false, defaultValue = "0") int page,
             @RequestParam(required = false, defaultValue = "10") int size
     ) {
-        return ResponseEntity.ok(followerService.getUserSubscribes(authHeader, page, size));
+        return ResponseEntity.ok(followerService.getAuthenticatedUserSubscribes(authHeader, page, size));
     }
 
     @GetMapping("/followers")
-    public ResponseEntity<FollowersDto> getUserFollowers(
+    public ResponseEntity<FollowersDto> getAuthenticatedUserFollowers(
             @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authHeader,
             @RequestParam(required = false, defaultValue = "0") int page,
             @RequestParam(required = false, defaultValue = "10") int size
     ) {
-        return ResponseEntity.ok(followerService.getUserFollowers(authHeader, page, size));
+        return ResponseEntity.ok(followerService.getAuthenticatedUserFollowers(authHeader, page, size));
+    }
+
+    @GetMapping("/subscribes/{username}")
+    public ResponseEntity<SubscribesDto> getUserSubscribes(
+            @PathVariable("username") String username,
+            @RequestParam(required = false, defaultValue = "0") int page,
+            @RequestParam(required = false, defaultValue = "10") int size
+    ) {
+        return ResponseEntity.ok(followerService.getUserSubscribesByUsername(username, page, size));
+    }
+
+    @GetMapping("/followers/{username}")
+    public ResponseEntity<FollowersDto> getUserFollowers(
+            @PathVariable("username") String username,
+            @RequestParam(required = false, defaultValue = "0") int page,
+            @RequestParam(required = false, defaultValue = "10") int size
+    ) {
+        return ResponseEntity.ok(followerService.getUserFollowersByUsername(username, page, size));
     }
 
     @GetMapping("/liked")

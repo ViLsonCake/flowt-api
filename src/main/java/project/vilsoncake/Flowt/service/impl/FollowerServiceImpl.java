@@ -31,12 +31,19 @@ public class FollowerServiceImpl implements FollowerService {
     }
 
     @Override
-    public FollowersDto getUserFollowers(String authHeader, int page, int size) {
-        if (page < 0 || size < 1) {
-            return null;
-        }
-
+    public FollowersDto getAuthenticatedUserFollowers(String authHeader, int page, int size) {
         String username = authUtils.getUsernameFromAuthHeader(authHeader);
+        return getUserFollowersByUsername(username, page, size);
+    }
+
+    @Override
+    public SubscribesDto getAuthenticatedUserSubscribes(String authHeader, int page, int size) {
+        String username = authUtils.getUsernameFromAuthHeader(authHeader);
+        return getUserSubscribesByUsername(username, page, size);
+    }
+
+    @Override
+    public FollowersDto getUserFollowersByUsername(String username, int page, int size) {
         UserEntity user = userService.getUserByUsername(username);
         Page<FollowerEntity> followers = followerRepository.findAllByFollowerId(user.getUserId(), PageRequest.of(page, size));
 
@@ -47,12 +54,7 @@ public class FollowerServiceImpl implements FollowerService {
     }
 
     @Override
-    public SubscribesDto getUserSubscribes(String authHeader, int page, int size) {
-        if (page < 0 || size < 1) {
-            return null;
-        }
-
-        String username = authUtils.getUsernameFromAuthHeader(authHeader);
+    public SubscribesDto getUserSubscribesByUsername(String username, int page, int size) {
         UserEntity user = userService.getUserByUsername(username);
         Page<FollowerEntity> followers = followerRepository.findAllByUserId(user.getUserId(), PageRequest.of(page, size));
 

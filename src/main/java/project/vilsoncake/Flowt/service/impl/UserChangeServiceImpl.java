@@ -56,6 +56,7 @@ public class UserChangeServiceImpl implements UserChangeService {
         }
 
         user.setUsername(usernameDto.getNewUsername());
+        user.getUserAvatar().setDefaultAvatarUrl(usernameDto.getNewUsername());
         userRepository.save(user);
 
         reportService.cancelReportByWhomTypeAndContentTypeAndWhom(USER, NAME, user);
