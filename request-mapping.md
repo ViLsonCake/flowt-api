@@ -10,10 +10,13 @@ Permit all
 + GET /images/song/:_**username**_/:_**name**_ - get song avatar by author and name
 + GET /images/playlist/:_**username**_/:_**name**_ - get playlist avatar by username and name
 + POST /verify/restore-password - send mail with code for restoring the password by email from request
++ GET /users/public/:**_username_** - get public user dto
++ GET /users/subscribes/:**_username_** - get user subscribes by username
++ GET /users/followers/:**_username_** - get user followers by username
 + POST /users/restore-password - change user password
-+ POST /search/songs - search songs by substring
++ POST /search/songs - search songs by substring order by listens count
 + POST /search/playlists - search playlists by substring
-+ POST /search/users - search users by substring
++ POST /search/users - search users by substring order by follower count
 ___
 Authenticated
 + POST /users/avatar - change user avatar file
@@ -43,7 +46,7 @@ Authenticated
 + GET /songs/audio/:**_username_**/:**_name_** - get song audio file by author and song name
 + GET /songs/random/:**_genre_** - get random song by genre
 + GET /songs/:**_genre_** - get songs list by genre
-+ POST /songs - add new song info
++ POST /songs - add new song entity
 + POST /songs/audio/:**_name_** - add to song audio file
 + POST /songs/avatar/:**_name_** - add avatar to song
 + PATCH /songs/statistic/:**_username_**/:**_name_** - update song statistic
@@ -74,7 +77,7 @@ For moderators
 + POST /moderator/warning-mail/:**_username_** - send to user warning mail
 + PATCH /moderator/active/:**_username_** - change user active
 ___
-Only for admins
+For admins
 + GET /admin/user/:**_username_** - get user by username
 + PATCH /admin/user/:**_username_** - add to user moderator authority
 + DELETE /admin/user/:**_username_** - delete user by username
