@@ -116,7 +116,7 @@ public class UserChangeServiceImpl implements UserChangeService {
     }
 
     @Override
-    public ChangeAuthorityDto changeUserAuthority(String username) {
+    public ExtendedUserDto changeUserAuthority(String username) {
         UserEntity user = userRepository.findByUsername(username).orElseThrow(() ->
                 new UsernameNotFoundException("Username not found"));
 
@@ -127,8 +127,7 @@ public class UserChangeServiceImpl implements UserChangeService {
             user.getRoles().remove(MODERATOR);
         }
         userRepository.save(user);
-
-        return new ChangeAuthorityDto(user.getUsername(), user.getEmail(), user.getRoles(), user.isActive());
+        return ExtendedUserDto.fromUser(user);
     }
 
     @Override

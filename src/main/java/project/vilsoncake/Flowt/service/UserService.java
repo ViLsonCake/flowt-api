@@ -9,7 +9,7 @@ import java.util.Map;
 public interface UserService {
     Map<String, String> addUser(RegistrationDto registrationDto);
     AuthenticatedUserDto getAuthenticatedUserDto(String authHeader);
-    AuthenticatedUserDto getAuthenticatedUserDtoByUsername(String username);
+    ExtendedUserDto getAuthenticatedUserDtoByUsername(String username);
     UserDto getPublicUserDtoByUsername(String username);
     UsersPageDto getUsersDtoBySubstring(SubstringDto substring, int page, int size);
     UserEntity getUserByUsername(String username);

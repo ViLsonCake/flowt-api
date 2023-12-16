@@ -86,8 +86,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public AuthenticatedUserDto getAuthenticatedUserDtoByUsername(String username) {
-        return AuthenticatedUserDto.fromUser(getUserByUsername(username));
+    public ExtendedUserDto getAuthenticatedUserDtoByUsername(String username) {
+        return ExtendedUserDto.fromUser(getUserByUsername(username));
     }
 
     @Override

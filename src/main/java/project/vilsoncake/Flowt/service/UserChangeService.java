@@ -10,6 +10,6 @@ public interface UserChangeService {
     Map<String, String> changeUserEmail(String authHeader, EmailDto newEmail);
     Map<String, String> changeUserRegion(String authHeader, RegionDto newRegion);
     Map<String, String> changeUserDescription(String authHeader, DescriptionDto newDescription);
-    ChangeAuthorityDto changeUserAuthority(String username);
+    ExtendedUserDto changeUserAuthority(String username);
     Map<String, Boolean> changeUserActive(String username);
 }
