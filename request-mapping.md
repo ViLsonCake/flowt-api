@@ -62,10 +62,7 @@ Authenticated
 + DELETE /playlists/:**_playlistName_**/:**_author_**/:**_songName_** - remove song from playlist
 + DELETE /playlists/:**_playlistName_** - remove user playlist
 + DELETE /notifications/:**_id_** - remove user notification by id
-+ POST /reports - send report
-+ GET /reports/:**_type_** - get report by type
-+ PATCH /reports/:**_id_** - access report by id
-+ DELETE /report/:**_id_** - cancel report by id
++ POST /reports - send report to entity
 + GET /recommendations - get user recommendations song
 + GET /recommendations/might-like - get songs that the user might like
 + GET /artist-statistic/overall - get overall user songs statistic
@@ -76,6 +73,9 @@ ___
 For moderators
 + POST /moderator/warning-mail/:**_username_** - send to user warning mail
 + PATCH /moderator/active/:**_username_** - change user active
++ GET /reports/:**_type_** - get report by type
++ PATCH /reports/:**_id_** - access report by id
++ DELETE /report/:**_id_** - decline report by id
 ___
 For admins
 + GET /admin/user/:**_username_** - get user by username
