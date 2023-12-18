@@ -2,10 +2,12 @@ package project.vilsoncake.Flowt.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import project.vilsoncake.Flowt.dto.PlaylistsPageDto;
 import project.vilsoncake.Flowt.dto.SongsResponse;
-import project.vilsoncake.Flowt.dto.SubstringDto;
 import project.vilsoncake.Flowt.dto.UsersPageDto;
 import project.vilsoncake.Flowt.service.PlaylistService;
 import project.vilsoncake.Flowt.service.SongService;
