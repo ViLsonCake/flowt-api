@@ -20,30 +20,30 @@ public class SearchController {
     private final PlaylistService playlistService;
     private final UserService userService;
 
-    @PostMapping("/songs")
+    @GetMapping("/songs")
     public ResponseEntity<SongsResponse> searchSongsBySubstring(
-            @RequestBody SubstringDto substringDto,
+            @RequestParam String substring,
             @RequestParam(required = false, defaultValue = "0") int page,
             @RequestParam(required = false, defaultValue = "10") int size
     ) {
-        return ResponseEntity.ok(songService.getSongsBySubstring(substringDto, page, size));
+        return ResponseEntity.ok(songService.getSongsBySubstring(substring, page, size));
     }
 
-    @PostMapping("/playlists")
+    @GetMapping("/playlists")
     public ResponseEntity<PlaylistsPageDto> searchPlaylistsBySubstring(
-            @RequestBody SubstringDto substringDto,
+            @RequestParam String substring,
             @RequestParam(required = false, defaultValue = "0") int page,
             @RequestParam(required = false, defaultValue = "10") int size
     ) {
-        return ResponseEntity.ok(playlistService.getPublicPlaylistsBySubstring(substringDto, page, size));
+        return ResponseEntity.ok(playlistService.getPublicPlaylistsBySubstring(substring, page, size));
     }
 
-    @PostMapping("/users")
+    @GetMapping("/users")
     public ResponseEntity<UsersPageDto> searchUsersBySubstring(
-            @RequestBody SubstringDto substringDto,
+            @RequestParam String substring,
             @RequestParam(required = false, defaultValue = "0") int page,
             @RequestParam(required = false, defaultValue = "10") int size
     ) {
-        return ResponseEntity.ok(userService.getUsersDtoBySubstring(substringDto, page, size));
+        return ResponseEntity.ok(userService.getUsersDtoBySubstring(substring, page, size));
     }
 }

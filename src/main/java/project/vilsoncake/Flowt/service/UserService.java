@@ -11,7 +11,7 @@ public interface UserService {
     AuthenticatedUserDto getAuthenticatedUserDto(String authHeader);
     ExtendedUserDto getAuthenticatedUserDtoByUsername(String username);
     UserDto getPublicUserDtoByUsername(String username);
-    UsersPageDto getUsersDtoBySubstring(SubstringDto substring, int page, int size);
+    UsersPageDto getUsersDtoBySubstring(String substring, int page, int size);
     UserEntity getUserByUsername(String username);
     UserEntity getUserByEmail(String email);
     Map<String, List<NotificationEntity>> getUserNotifications(String authHeader);

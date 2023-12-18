@@ -180,8 +180,8 @@ public class PlaylistServiceImpl implements PlaylistService {
     }
 
     @Override
-    public PlaylistsPageDto getPublicPlaylistsBySubstring(SubstringDto substringDto, int page, int size) {
-        Page<PlaylistEntity> playlists = playlistRepository.findByIsPrivateFalseAndNameContainingIgnoreCase(substringDto.getSubstring(), PageRequest.of(page, size));
+    public PlaylistsPageDto getPublicPlaylistsBySubstring(String substring, int page, int size) {
+        Page<PlaylistEntity> playlists = playlistRepository.findByIsPrivateFalseAndNameContainingIgnoreCase(substring, PageRequest.of(page, size));
 
         return new PlaylistsPageDto(
                 playlists.getTotalPages(),

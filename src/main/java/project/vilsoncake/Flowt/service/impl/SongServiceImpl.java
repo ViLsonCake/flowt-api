@@ -120,8 +120,8 @@ public class SongServiceImpl implements SongService {
     }
 
     @Override
-    public SongsResponse getSongsBySubstring(SubstringDto substringDto, int page, int size) {
-        Page<SongEntity> songsOnPage = songRepository.findByNameContainingIgnoreCaseOrderByListensDesc(substringDto.getSubstring(), PageRequest.of(page, size));
+    public SongsResponse getSongsBySubstring(String substring, int page, int size) {
+        Page<SongEntity> songsOnPage = songRepository.findByNameContainingIgnoreCaseOrderByListensDesc(substring, PageRequest.of(page, size));
 
         return new SongsResponse(
                 songsOnPage.getTotalPages(),
