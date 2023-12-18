@@ -14,9 +14,9 @@ Permit all
 + GET /users/subscribes/:**_username_** - get user subscribes by username
 + GET /users/followers/:**_username_** - get user followers by username
 + POST /users/restore-password - change user password
-+ POST /search/songs - search songs by substring order by listens count
-+ POST /search/playlists - search playlists by substring
-+ POST /search/users - search users by substring order by follower count
++ GET /search/songs - search songs by substring order by listens count
++ GET /search/playlists - search playlists by substring
++ GET /search/users - search users by substring order by follower count
 ___
 Authenticated
 + POST /users/avatar - change user avatar file
