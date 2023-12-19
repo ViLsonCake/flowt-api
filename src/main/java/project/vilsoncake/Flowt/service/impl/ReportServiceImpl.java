@@ -1,5 +1,6 @@
 package project.vilsoncake.Flowt.service.impl;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -69,6 +70,7 @@ public class ReportServiceImpl implements ReportService {
         return reportRepository.findAll();
     }
 
+    @Transactional
     @Override
     public Map<String, String> accessReportById(Long id) {
         if (reportRepository.findById(id).isEmpty()) {
@@ -90,6 +92,7 @@ public class ReportServiceImpl implements ReportService {
         return Map.of("message", "Report checked");
     }
 
+    @Transactional
     @Override
     public Map<String, String> cancelReportById(Long id) {
         if (reportRepository.findById(id).isEmpty()) {
@@ -112,6 +115,7 @@ public class ReportServiceImpl implements ReportService {
         return true;
     }
 
+    @Transactional
     @Override
     public boolean removeAvatarFromEntityFromReport(ReportEntity report) {
         if (report.getWhomType().equals(USER)) {
