@@ -2,7 +2,6 @@ package project.vilsoncake.Flowt.service;
 
 import project.vilsoncake.Flowt.dto.SongRequest;
 import project.vilsoncake.Flowt.dto.SongsResponse;
-import project.vilsoncake.Flowt.dto.SubstringDto;
 import project.vilsoncake.Flowt.entity.SongEntity;
 import project.vilsoncake.Flowt.entity.UserEntity;
 import project.vilsoncake.Flowt.entity.enumerated.Genre;
@@ -10,7 +9,6 @@ import project.vilsoncake.Flowt.exception.MinioFileException;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public interface SongService {
     Map<String, String> saveNewSongEntity(String authHeader, SongRequest songRequest);
