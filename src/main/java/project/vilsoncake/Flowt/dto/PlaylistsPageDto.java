@@ -11,5 +11,5 @@ import java.util.List;
 @NoArgsConstructor
 public class PlaylistsPageDto {
     private int count;
-    private List<PlaylistRequest> playlists;
+    private List<PlaylistDto> playlists;
 }

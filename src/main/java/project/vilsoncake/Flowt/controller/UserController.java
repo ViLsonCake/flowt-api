@@ -156,7 +156,7 @@ public class UserController {
     }
 
     @GetMapping("/playlists")
-    public ResponseEntity<Map<String, List<PlaylistEntity>>> getUserPlaylists(@RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authHeader) {
+    public ResponseEntity<Map<String, List<PlaylistDto>>> getUserPlaylists(@RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authHeader) {
         return ResponseEntity.ok(userService.getUserPlaylists(authHeader));
     }
 

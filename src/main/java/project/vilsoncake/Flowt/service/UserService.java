@@ -15,7 +15,7 @@ public interface UserService {
     UserEntity getUserByUsername(String username);
     UserEntity getUserByEmail(String email);
     Map<String, List<NotificationEntity>> getUserNotifications(String authHeader);
-    Map<String, List<PlaylistEntity>> getUserPlaylists(String authHeader);
+    Map<String, List<PlaylistDto>> getUserPlaylists(String authHeader);
     LastListenedSongsDto getLastListenedSongs(String authHeader);
     LastListenedPlaylistsDto getLastListenedPlaylists(String authHeader);
     Map<String, String> changeUserPasswordByUsername(String authHeader, ChangePasswordDto changePasswordDto);

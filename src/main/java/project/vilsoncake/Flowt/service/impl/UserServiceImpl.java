@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.vilsoncake.Flowt.dto.*;
 import project.vilsoncake.Flowt.entity.NotificationEntity;
-import project.vilsoncake.Flowt.entity.PlaylistEntity;
 import project.vilsoncake.Flowt.entity.UserEntity;
 import project.vilsoncake.Flowt.entity.enumerated.NotificationType;
 import project.vilsoncake.Flowt.exception.EmailAlreadyExistException;
@@ -164,11 +163,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Map<String, List<PlaylistEntity>> getUserPlaylists(String authHeader) {
+    public Map<String, List<PlaylistDto>> getUserPlaylists(String authHeader) {
         String username = authUtils.getUsernameFromAuthHeader(authHeader);
         UserEntity user = getUserByUsername(username);
 
-        return Map.of("playlists", user.getPlaylists());
+        return Map.of("playlists", user.getPlaylists().stream().map(PlaylistDto::fromPlaylistEntity).toList());
     }
 
     @Override
