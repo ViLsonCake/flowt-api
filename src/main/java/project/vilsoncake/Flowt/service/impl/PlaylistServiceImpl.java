@@ -185,7 +185,7 @@ public class PlaylistServiceImpl implements PlaylistService {
 
         return new PlaylistsPageDto(
                 playlists.getTotalPages(),
-                playlists.getContent().stream().map(PlaylistDto::fromPlaylistEntity).toList()
+                playlists.getContent().stream().map(LightPlaylistDto::fromEntity).toList()
         );
     }
 
