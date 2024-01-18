@@ -25,9 +25,10 @@ public class ListenedEntity {
     @ManyToOne
     private UserListenedStatisticEntity userListenedStatistics;
 
-    public ListenedEntity(String songName, Genre genre, String author) {
+    public ListenedEntity(String songName, Genre genre, String author, UserListenedStatisticEntity userListenedStatistics) {
         this.songName = songName;
         this.genre = genre;
         this.author = author;
+        this.userListenedStatistics = userListenedStatistics;
     }
 }

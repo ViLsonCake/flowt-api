@@ -21,10 +21,10 @@ public interface SongRepository extends CrudRepository<SongEntity, Long> {
     List<SongEntity> findAllByGenre(Genre genre);
     Boolean existsByNameAndUser(String name, UserEntity user);
     Page<SongEntity> findByNameContainingIgnoreCaseOrderByListensDesc(String substring, Pageable pageable);
-    @Query(value = "SELECT * FROM song WHERE user_id = :user.getUserId() ORDER BY RANDOM() LIMIT 1", nativeQuery = true)
-    SongEntity getRandomUserSong(UserEntity user);
+    @Query(value = "SELECT * FROM song WHERE user_id = :userId ORDER BY RANDOM() LIMIT 1", nativeQuery = true)
+    SongEntity getRandomUserSong(Long userId);
     @Query(value = "SELECT * FROM song WHERE genre = :genre ORDER BY listens DESC LIMIT 15", nativeQuery = true)
-    List<SongEntity> getMostListenedSongsByGenre(Genre genre);
+    List<SongEntity> getMostListenedSongsByGenre(String genre);
     @Query(value = "SELECT * FROM song WHERE user_id = :user.getUserId() ORDER BY listens DESC LIMIT 10", nativeQuery = true)
     List<SongEntity> getMostListenedSongsByUser(UserEntity user);
 }

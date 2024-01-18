@@ -150,14 +150,14 @@ public class SongServiceImpl implements SongService {
 
     @Override
     public SongEntity getRandomUserSong(UserEntity user) {
-        return songRepository.getRandomUserSong(user);
+        return songRepository.getRandomUserSong(user.getUserId());
     }
 
     @Override
     public List<SongEntity> getRandomMostListenedSongsByGenres(List<Genre> genres) {
         List<SongEntity> randomSongs = new ArrayList<>();
         genres.forEach(genre -> {
-            List<SongEntity> mostListenedSongsByGenre = songRepository.getMostListenedSongsByGenre(genre);
+            List<SongEntity> mostListenedSongsByGenre = songRepository.getMostListenedSongsByGenre(genre.toString());
             List<SongEntity> randomSongsFromList = songUtils.getRandomSongsFromList(mostListenedSongsByGenre);
             randomSongs.addAll(randomSongsFromList);
         });
@@ -188,28 +188,30 @@ public class SongServiceImpl implements SongService {
     @Override
     public Map<String, String> updateListenerAndSongStatistic(String authHeader, String author, String name) {
         String username = authUtils.getUsernameFromAuthHeader(authHeader);
-        UserEntity user = userService.getUserByUsername(username);
-        SongEntity song = findByNameAndUser(name, user);
-        Country userCountry = Country.valueOf(user.getRegion().toUpperCase());
+        UserEntity authenticatedUser = userService.getUserByUsername(username);
+        UserEntity songAuthor = userService.getUserByUsername(author);
+        SongEntity song = findByNameAndUser(name, songAuthor);
+        Country userCountry = Country.valueOf(authenticatedUser.getRegion().toUpperCase());
 
         // Update song statistic
         List<ListeningEntity> listeningEntities = song.getRegionStatistic().getListeningEntities();
         listeningEntities.add(new ListeningEntity(
                 userCountry.getRegion(),
                 userCountry,
-                user.getUsername(),
+                authenticatedUser.getUsername(),
                 song.getRegionStatistic()
         ));
 
         // Update last listened
-        lastListenedService.addSongToLastListenedByUser(user, song);
+        lastListenedService.addSongToLastListenedByUser(authenticatedUser, song);
 
         // Update user statistic
-        List<ListenedEntity> listenedEntities = user.getListenedStatistic().getListenedEntities();
+        List<ListenedEntity> listenedEntities = authenticatedUser.getListenedStatistic().getListenedEntities();
         listenedEntities.add(new ListenedEntity(
                 song.getName(),
                 song.getGenre(),
-                song.getUser().getUsername()
+                song.getUser().getUsername(),
+                authenticatedUser.getListenedStatistic()
         ));
 
         return Map.of("message", "Statistic updated");

@@ -35,15 +35,16 @@ public class RecommendationServiceImpl implements RecommendationService {
             UserEntity artist = userService.getUserByUsername(mostListenedArtist);
             SongEntity randomSong;
             int iteratedSongCount = 0;
+            int triesToGetRandomSong = 0;
             int artistSongCount = artist.getSongs().size();
             do {
                 randomSong = songService.getRandomUserSong(artist);
-                iteratedSongCount++;
-            } while (iteratedSongCount >= artistSongCount || !listenedService.existsBySongs(randomSong));
-
-            if (iteratedSongCount < artistSongCount) {
-                songsMightLike.add(SongDto.fromSongEntity(randomSong));
-            }
+                if (!listenedService.existsBySongs(randomSong) || !songsMightLike.contains(SongDto.fromSongEntity(randomSong))) {
+                    songsMightLike.add(SongDto.fromSongEntity(randomSong));
+                    iteratedSongCount++;
+                }
+                triesToGetRandomSong++;
+            } while (iteratedSongCount <= artistSongCount && triesToGetRandomSong <= iteratedSongCount + 5);
         });
 
         return songsMightLike;

@@ -29,13 +29,13 @@ public class ListenedServiceImpl implements ListenedService {
 
     @Override
     public List<String> getMostListenedArtists(UserEntity user) {
-        return listenedRepository.getMostListenedArtists(user.getListenedStatistic())
-                .stream().map(ListenedEntity::getAuthor).toList();
+        return listenedRepository.getMostListenedArtists(user.getListenedStatistic().getId());
+//                .stream().map(ListenedEntity::getAuthor).toList();
     }
 
     @Override
     public List<Genre> getMostListenedGenres(UserEntity user) {
-        return listenedRepository.getMostListenedGenres(user.getListenedStatistic())
-                .stream().map(ListenedEntity::getGenre).toList();
+         return listenedRepository.getMostListenedGenres(user.getListenedStatistic().getId());
+//                 .stream().map(ListenedEntity::getGenre).toList();
     }
 }
