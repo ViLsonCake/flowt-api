@@ -5,19 +5,22 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import project.vilsoncake.Flowt.dto.ArtistVerifyRequestDto;
 import project.vilsoncake.Flowt.dto.ArtistVerifyPageDto;
+import project.vilsoncake.Flowt.dto.ArtistVerifyRequestDto;
 import project.vilsoncake.Flowt.dto.ArtistVerifyResponseDto;
 import project.vilsoncake.Flowt.entity.ArtistVerifyRequestEntity;
+import project.vilsoncake.Flowt.entity.PersonalDataEntity;
 import project.vilsoncake.Flowt.entity.UserEntity;
+import project.vilsoncake.Flowt.entity.UserLinkEntity;
 import project.vilsoncake.Flowt.exception.ArtistAlreadyVerifiedException;
 import project.vilsoncake.Flowt.exception.ArtistVerifyRequestAlreadyCheckedException;
 import project.vilsoncake.Flowt.exception.ArtistVerifyRequestNotFoundException;
 import project.vilsoncake.Flowt.repository.ArtistVerifyRequestRepository;
+import project.vilsoncake.Flowt.repository.LinkRepository;
+import project.vilsoncake.Flowt.repository.PersonalDataRepository;
 import project.vilsoncake.Flowt.service.ArtistVerifyService;
 import project.vilsoncake.Flowt.service.MailVerifyService;
 import project.vilsoncake.Flowt.service.UserService;
-import project.vilsoncake.Flowt.utils.ArtistVerifyUtils;
 import project.vilsoncake.Flowt.utils.AuthUtils;
 
 import java.util.Map;
@@ -30,11 +33,13 @@ import static project.vilsoncake.Flowt.constant.MessageConst.ARTIST_VERIFY_SUBJE
 public class ArtistVerifyServiceImpl implements ArtistVerifyService {
 
     private final ArtistVerifyRequestRepository artistVerifyRequestRepository;
+    private final PersonalDataRepository personalDataRepository;
+    private final LinkRepository linkRepository;
     private final UserService userService;
     private final MailVerifyService mailVerifyService;
     private final AuthUtils authUtils;
-    private final ArtistVerifyUtils artistVerifyUtils;
 
+    @Transactional
     @Override
     public Map<String, String> saveNewArtistVerifyRequest(String authHeader, ArtistVerifyRequestDto artistVerifyRequestDto) {
         String username = authUtils.getUsernameFromAuthHeader(authHeader);
@@ -44,8 +49,26 @@ public class ArtistVerifyServiceImpl implements ArtistVerifyService {
             throw new ArtistAlreadyVerifiedException(String.format("Artist \"%s\" is already verified", username));
         }
 
-        ArtistVerifyRequestEntity artistVerifyRequest = artistVerifyUtils.artistVerifyDtoToEntity(artistVerifyRequestDto, sender);
+        ArtistVerifyRequestEntity artistVerifyRequest = new ArtistVerifyRequestEntity();
+        artistVerifyRequest.setUser(sender);
         artistVerifyRequestRepository.save(artistVerifyRequest);
+
+        PersonalDataEntity personalData = new PersonalDataEntity(
+                artistVerifyRequestDto.getPersonalDataDto().getName(),
+                artistVerifyRequestDto.getPersonalDataDto().getSurname(),
+                artistVerifyRequestDto.getPersonalDataDto().getBirthDate(),
+                artistVerifyRequestDto.getPersonalDataDto().getSex(),
+                artistVerifyRequestDto.getPersonalDataDto().getCountry(),
+                artistVerifyRequestDto.getPersonalDataDto().getPassportNumber(),
+                artistVerifyRequest
+        );
+        personalDataRepository.save(personalData);
+        artistVerifyRequestDto.getLinks().forEach(linkDto -> {
+            UserLinkEntity userLinkEntity = new UserLinkEntity();
+            userLinkEntity.setUrl(linkDto.getUrl());
+            userLinkEntity.setRequest(artistVerifyRequest);
+            linkRepository.save(userLinkEntity);
+        });
 
         return Map.of("username", username);
     }

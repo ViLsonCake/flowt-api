@@ -18,5 +18,5 @@ CREATE TABLE IF NOT EXISTS personal_data (
 CREATE TABLE IF NOT EXISTS link (
     id SERIAL PRIMARY KEY,
     url TEXT NOT NULL,
-    request_id BIGINT NOT NULL UNIQUE
+    request_id BIGINT NOT NULL
 );
