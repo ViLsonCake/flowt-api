@@ -25,6 +25,6 @@ public interface SongRepository extends CrudRepository<SongEntity, Long> {
     SongEntity getRandomUserSong(Long userId);
     @Query(value = "SELECT * FROM song WHERE genre = :genre ORDER BY listens DESC LIMIT 15", nativeQuery = true)
     List<SongEntity> getMostListenedSongsByGenre(String genre);
-    @Query(value = "SELECT * FROM song WHERE user_id = :user.getUserId() ORDER BY listens DESC LIMIT 10", nativeQuery = true)
-    List<SongEntity> getMostListenedSongsByUser(UserEntity user);
+    @Query(value = "SELECT * FROM song WHERE user_id = :userId ORDER BY listens DESC LIMIT 10", nativeQuery = true)
+    List<SongEntity> getMostListenedSongsByUser(Long userId);
 }

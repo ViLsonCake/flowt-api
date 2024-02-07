@@ -167,7 +167,7 @@ public class SongServiceImpl implements SongService {
 
     @Override
     public List<SongEntity> getMostPopularSongs(UserEntity user) {
-        return songRepository.getMostListenedSongsByUser(user);
+        return songRepository.getMostListenedSongsByUser(user.getUserId());
     }
 
     @Override
