@@ -14,7 +14,7 @@ Permit all
 + GET /users/subscribes/:**_username_** - get user subscribes by username
 + GET /users/followers/:**_username_** - get user followers by username
 + POST /users/restore-password - change user password
-+ GET /songs/:**_username_**/:_**name**_ - get song info by author and song name
++ GET /songs/info/:**_username_**/:_**name**_ - get song info by author and song name
 + GET /songs/audio/:**_username_**/:**_name_** - get song audio file by author and song name
 + GET /songs/random/:**_genre_** - get random song by genre
 + GET /songs/user-songs/:**_username_** - get user songs by username
