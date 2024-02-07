@@ -14,6 +14,10 @@ Permit all
 + GET /users/subscribes/:**_username_** - get user subscribes by username
 + GET /users/followers/:**_username_** - get user followers by username
 + POST /users/restore-password - change user password
++ GET /songs/:**_username_**/:_**name**_ - get song info by author and song name
++ GET /songs/audio/:**_username_**/:**_name_** - get song audio file by author and song name
++ GET /songs/random/:**_genre_** - get random song by genre
++ GET /songs/user-songs/:**_username_** - get user songs by username
 + GET /search/songs - search songs by substring order by listens count
 + GET /search/playlists - search playlists by substring
 + GET /search/users - search users by substring order by follower count
@@ -42,9 +46,6 @@ Authenticated
 + GET /verify/email - verify user email
 + GET /verify/password - send mail with code for restoring the password
 + POST /verify/artist - send verify artist request
-+ GET /songs/:**_username_**/:_**name**_ - get song info by author and song name
-+ GET /songs/audio/:**_username_**/:**_name_** - get song audio file by author and song name
-+ GET /songs/random/:**_genre_** - get random song by genre
 + GET /songs/:**_genre_** - get songs list by genre
 + POST /songs - add new song entity
 + POST /songs/audio/:**_name_** - add to song audio file
