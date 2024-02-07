@@ -25,7 +25,7 @@ public class SongController {
     private final SongService songService;
     private final SongChangeService songChangeService;
 
-    @GetMapping("/{username}/{songName}")
+    @GetMapping("/info/{username}/{songName}")
     public ResponseEntity<SongEntity> getSongInfo(
             @PathVariable("username") String username,
             @PathVariable("songName") String songName
