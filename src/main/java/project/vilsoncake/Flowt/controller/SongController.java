@@ -6,6 +6,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import project.vilsoncake.Flowt.dto.SongDto;
 import project.vilsoncake.Flowt.dto.SongNameDto;
 import project.vilsoncake.Flowt.dto.SongRequest;
 import project.vilsoncake.Flowt.dto.SongsResponse;
@@ -58,7 +59,7 @@ public class SongController {
     }
 
     @GetMapping("/random/{genre}")
-    public ResponseEntity<SongEntity> getRandomSongByGenre(
+    public ResponseEntity<SongDto> getRandomSongByGenre(
             @PathVariable("genre") String genre
     ) {
         return ResponseEntity.ok(songService.getRandomSongInfoByGenre(genre));
