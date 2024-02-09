@@ -19,7 +19,7 @@ public class CorsConfig {
     @Bean
     public CorsFilter corsFilter() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.addAllowedOrigin(applicationProperties.getClientUrl());
+        corsConfiguration.addAllowedOrigin(applicationProperties.getProxyClientUrl());
         corsConfiguration.setAllowedHeaders(Arrays.asList("Authorization", "access-control-allow-origin", "*"));
         corsConfiguration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE"));
         corsConfiguration.setAllowCredentials(true);
