@@ -1,5 +1,6 @@
 package project.vilsoncake.Flowt.service;
 
+import project.vilsoncake.Flowt.dto.SongDto;
 import project.vilsoncake.Flowt.dto.SongRequest;
 import project.vilsoncake.Flowt.dto.SongsResponse;
 import project.vilsoncake.Flowt.entity.SongEntity;
@@ -14,7 +15,7 @@ public interface SongService {
     Map<String, String> saveNewSongEntity(String authHeader, SongRequest songRequest);
     boolean removeSongAvatarByUserAndName(UserEntity user, String name);
     SongEntity getSongInfo(String username, String name);
-    SongEntity getRandomSongInfoByGenre(String genre);
+    SongDto getRandomSongInfoByGenre(String genre);
     SongEntity getRandomUserSong(UserEntity user);
     List<SongEntity> getRandomMostListenedSongsByGenres(List<Genre> genres);
     List<SongEntity> getMostPopularSongs(UserEntity user);
