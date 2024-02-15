@@ -85,7 +85,7 @@ public class UserVerifyServiceImpl implements UserVerifyService {
 
     @Override
     public Map<String, String> sendChangePasswordMessageByUsername(String username) {
-        UserEntity user = userRepository.findByUsername(username).orElseThrow(() ->
+        UserEntity user = userRepository.findByUsernameIgnoreCase(username).orElseThrow(() ->
                 new UsernameNotFoundException("User not found"));
 
         // Generate code and save in redis

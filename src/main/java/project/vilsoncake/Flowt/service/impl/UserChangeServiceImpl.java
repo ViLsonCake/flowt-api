@@ -46,7 +46,7 @@ public class UserChangeServiceImpl implements UserChangeService {
         }
 
         String username = authUtils.getUsernameFromAuthHeader(authHeader);
-        UserEntity user = userRepository.findByUsername(username).orElseThrow(() ->
+        UserEntity user = userRepository.findByUsernameIgnoreCase(username).orElseThrow(() ->
                 new UsernameNotFoundException("Username not found"));
 
         // Check whether the user is obliged to change username due to violations
@@ -77,7 +77,7 @@ public class UserChangeServiceImpl implements UserChangeService {
         }
 
         String username = authUtils.getUsernameFromAuthHeader(authHeader);
-        UserEntity user = userRepository.findByUsername(username).orElseThrow(() ->
+        UserEntity user = userRepository.findByUsernameIgnoreCase(username).orElseThrow(() ->
                 new UsernameNotFoundException("Username not found"));
 
         // Save email
@@ -90,7 +90,7 @@ public class UserChangeServiceImpl implements UserChangeService {
     @Override
     public Map<String, String> changeUserRegion(String authHeader, RegionDto regionDto) {
         String username = authUtils.getUsernameFromAuthHeader(authHeader);
-        UserEntity user = userRepository.findByUsername(username).orElseThrow(() ->
+        UserEntity user = userRepository.findByUsernameIgnoreCase(username).orElseThrow(() ->
                 new UsernameNotFoundException("Username not found"));
 
         // Save new region
@@ -103,7 +103,7 @@ public class UserChangeServiceImpl implements UserChangeService {
     @Override
     public Map<String, String> changeUserDescription(String authHeader, DescriptionDto descriptionDto) {
         String username = authUtils.getUsernameFromAuthHeader(authHeader);
-        UserEntity user = userRepository.findByUsername(username).orElseThrow(() ->
+        UserEntity user = userRepository.findByUsernameIgnoreCase(username).orElseThrow(() ->
                 new UsernameNotFoundException("Username not found"));
 
         // Save new description
@@ -117,7 +117,7 @@ public class UserChangeServiceImpl implements UserChangeService {
 
     @Override
     public ExtendedUserDto changeUserAuthority(String username) {
-        UserEntity user = userRepository.findByUsername(username).orElseThrow(() ->
+        UserEntity user = userRepository.findByUsernameIgnoreCase(username).orElseThrow(() ->
                 new UsernameNotFoundException("Username not found"));
 
         // Add to user moderator role or delete if user has
@@ -132,7 +132,7 @@ public class UserChangeServiceImpl implements UserChangeService {
 
     @Override
     public Map<String, Boolean> changeUserActive(String username) {
-        UserEntity user = userRepository.findByUsername(username).orElseThrow(() ->
+        UserEntity user = userRepository.findByUsernameIgnoreCase(username).orElseThrow(() ->
                 new UsernameNotFoundException("Username not found"));
 
         // Save active

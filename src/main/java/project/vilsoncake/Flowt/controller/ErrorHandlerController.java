@@ -34,7 +34,7 @@ public class ErrorHandlerController {
         validationDto.setMessage(exception.getMessage());
 
         return ResponseEntity
-                .status(HttpStatus.UNAUTHORIZED)
+                .status(HttpStatus.BAD_REQUEST)
                 .body(validationDto);
     }
 
@@ -42,7 +42,7 @@ public class ErrorHandlerController {
     public ResponseEntity<String> minioFileException(MinioFileException exception) {
         log.warn(exception.getMessage());
         return ResponseEntity
-                .status(HttpStatus.NOT_FOUND)
+                .status(HttpStatus.BAD_REQUEST)
                 .body(exception.getMessage());
     }
 
