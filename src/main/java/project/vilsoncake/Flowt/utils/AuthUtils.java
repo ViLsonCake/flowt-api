@@ -4,11 +4,9 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureException;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 @Component
-@Slf4j
 @RequiredArgsConstructor
 public class AuthUtils {
 
@@ -23,10 +21,9 @@ public class AuthUtils {
             try {
                 username = jwtUtils.getUsernameFromAccess(jwt);
             } catch (ExpiredJwtException e) {
-                log.info("Token time is expired :(");
                 username = e.getClaims().getSubject();
-            } catch (SignatureException | MalformedJwtException e) {
-                log.info("Invalid token signature");
+            } catch (SignatureException | MalformedJwtException ignored) {
+
             }
         }
         return username;
