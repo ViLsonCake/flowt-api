@@ -191,7 +191,7 @@ public class SongServiceImpl implements SongService {
         UserEntity authenticatedUser = userService.getUserByUsername(username);
         UserEntity songAuthor = userService.getUserByUsername(author);
         SongEntity song = findByNameAndUser(name, songAuthor);
-        Country userCountry = Country.valueOf(authenticatedUser.getRegion().toUpperCase());
+        Country userCountry = Country.fromUser(authenticatedUser);
 
         // Update song statistic
         List<ListeningEntity> listeningEntities = song.getRegionStatistic().getListeningEntities();
