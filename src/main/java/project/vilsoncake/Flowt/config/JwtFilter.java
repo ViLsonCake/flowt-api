@@ -1,8 +1,5 @@
 package project.vilsoncake.Flowt.config;
 
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.SignatureException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -39,14 +36,8 @@ public class JwtFilter extends OncePerRequestFilter {
 
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             jwt = authHeader.substring(7);
-            try {
-                username = jwtUtils.getUsernameFromAccess(jwt);
-                user = userDetailsService.loadUserByUsername(username);
-            } catch (ExpiredJwtException e) {
-                log.info("Token time is expired :(");
-            } catch (SignatureException | MalformedJwtException e) {
-                log.info("Invalid token signature");
-            }
+            username = jwtUtils.getUsernameFromAccess(jwt);
+            user = userDetailsService.loadUserByUsername(username);
         }
 
         if (username != null && user != null && SecurityContextHolder.getContext().getAuthentication() == null) {

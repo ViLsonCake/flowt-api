@@ -156,16 +156,13 @@ public class AuthServiceImpl implements AuthService {
 
     private String getUsernameFromRefresh(String refreshToken) {
         if (!tokenService.isTokenExists(refreshToken)) {
-            log.warn("Token not found");
             throw new TokenNotFoundException("Token not found");
         }
         try {
             return jwtUtils.getUsernameFromRefresh(refreshToken);
         } catch (ExpiredJwtException e) {
-            log.warn("Token time is expired :(");
-            throw new TokenNotFoundException("Token time is expired :(");
+            throw new TokenNotFoundException("Token time is expired");
         } catch (SignatureException | MalformedJwtException e) {
-            log.warn("Invalid token signature");
             throw new TokenNotFoundException("Invalid token signature");
         }
     }
