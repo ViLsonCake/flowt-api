@@ -13,6 +13,7 @@ import project.vilsoncake.Flowt.exception.VerifyCodeNotFoundException;
 import project.vilsoncake.Flowt.repository.UserRepository;
 import project.vilsoncake.Flowt.repository.VerifyCodeRepository;
 import project.vilsoncake.Flowt.service.*;
+import project.vilsoncake.Flowt.utils.AuthUtils;
 import project.vilsoncake.Flowt.utils.MailUtils;
 import project.vilsoncake.Flowt.utils.ReportUtils;
 
@@ -32,6 +33,7 @@ public class UserVerifyServiceImpl implements UserVerifyService {
     private final MailVerifyService mailVerifyService;
     private final RedisService redisService;
     private final ApplicationProperties applicationProperties;
+    private final AuthUtils authUtils;
     private final MailUtils mailUtils;
     private final ReportUtils reportUtils;
 
@@ -84,7 +86,8 @@ public class UserVerifyServiceImpl implements UserVerifyService {
     }
 
     @Override
-    public Map<String, String> sendChangePasswordMessageByUsername(String username) {
+    public Map<String, String> sendChangePasswordMessageByUsername(String authHeader) {
+        String username = authUtils.getUsernameFromAuthHeader(authHeader);
         UserEntity user = userRepository.findByUsernameIgnoreCase(username).orElseThrow(() ->
                 new UsernameNotFoundException("User not found"));
 
