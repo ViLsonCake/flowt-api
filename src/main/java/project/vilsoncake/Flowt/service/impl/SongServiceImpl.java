@@ -170,6 +170,7 @@ public class SongServiceImpl implements SongService {
         return songRepository.getMostListenedSongsByUser(user.getUserId());
     }
 
+    @Transactional
     @Override
     public Map<String, String> removeUserSong(String authHeader, String name) {
         String username = authUtils.getUsernameFromAuthHeader(authHeader);
