@@ -54,7 +54,8 @@ public class LikedServiceImpl implements LikedService {
     public Map<String, String> removeSongFromLiked(String authHeader, String author, String name) {
         String username = authUtils.getUsernameFromAuthHeader(authHeader);
         UserEntity user = userService.getUserByUsername(username);
-        SongEntity song = songService.findByNameAndUser(name, user);
+        UserEntity songAuthor = userService.getUserByUsername(author);
+        SongEntity song = songService.findByNameAndUser(name, songAuthor);
         Map<String, String> response = new HashMap<>();
 
         if (user.getLiked().getSongs().contains(song)) {
