@@ -11,6 +11,6 @@ import java.util.Optional;
 public interface PlaylistRepository extends CrudRepository<PlaylistEntity, Long> {
     Optional<PlaylistEntity> findByUserAndName(UserEntity user, String name);
     Boolean existsByUserAndName(UserEntity user, String name);
-    Page<PlaylistEntity> findByUserAndPrivateFalse(UserEntity user, Pageable pageable);
-    Page<PlaylistEntity> findByPrivateFalseAndNameContainingIgnoreCase(String substring, Pageable pageable);
+    Page<PlaylistEntity> findByUserAndIsPrivateFalse(UserEntity user, Pageable pageable);
+    Page<PlaylistEntity> findByIsPrivateFalseAndNameContainingIgnoreCase(String substring, Pageable pageable);
 }

@@ -181,7 +181,7 @@ public class PlaylistServiceImpl implements PlaylistService {
 
     @Override
     public PlaylistsPageDto getPublicPlaylistsBySubstring(String substring, int page, int size) {
-        Page<PlaylistEntity> playlists = playlistRepository.findByPrivateFalseAndNameContainingIgnoreCase(substring, PageRequest.of(page, size));
+        Page<PlaylistEntity> playlists = playlistRepository.findByIsPrivateFalseAndNameContainingIgnoreCase(substring, PageRequest.of(page, size));
 
         return new PlaylistsPageDto(
                 playlists.getTotalPages(),
@@ -214,10 +214,9 @@ public class PlaylistServiceImpl implements PlaylistService {
     }
 
     @Override
-    public PlaylistsPageDto getPublicPlaylistsByUser(String authHeader, int page, int size) {
-        String username = authUtils.getUsernameFromAuthHeader(authHeader);
+    public PlaylistsPageDto getPublicPlaylistsByUser(String username, int page, int size) {
         UserEntity user = userService.getUserByUsername(username);
-        Page<PlaylistEntity> playlistPages = playlistRepository.findByUserAndPrivateFalse(user, PageRequest.of(page, size));
+        Page<PlaylistEntity> playlistPages = playlistRepository.findByUserAndIsPrivateFalse(user, PageRequest.of(page, size));
 
         return new PlaylistsPageDto(
                 playlistPages.getTotalPages(),

@@ -18,7 +18,7 @@ public interface PlaylistService {
     Map<String, String> addSongsToPlaylist(String authHeader, String playlistName, SongsListDto songsListDto);
     Map<String, String> removeSongFromPlaylist(String authHeader, String playlistName, String songAuthor, String songName);
     PlaylistEntity getPlaylistByUserAndName(UserEntity user, String name);
-    PlaylistsPageDto getPublicPlaylistsByUser(String authHeader, int page, int size);
+    PlaylistsPageDto getPublicPlaylistsByUser(String username, int page, int size);
     PlaylistsPageDto getPublicPlaylistsBySubstring(String substring, int page, int size);
     byte[] getPlaylistAvatar(String username, String playlistName) throws MinioFileException;
     boolean removePlaylistByUserAndName(UserEntity user, String name);
