@@ -1,6 +1,6 @@
 ### Request mapping
 ___
-Permit all
+#### Permit all
 + POST /auth/registration - registration new user
 + POST /auth/login - create access and refresh jwt tokens
 + POST /auth/oauth/google - login user by google authentication
@@ -21,8 +21,9 @@ Permit all
 + GET /search/songs - search songs by substring order by listens count
 + GET /search/playlists - search playlists by substring
 + GET /search/users - search users by substring order by follower count
++ GET /playlists/info/:**_username_** - get user playlists by username
 ___
-Authenticated
+#### Authenticated
 + POST /users/avatar - change user avatar file
 + POST /users/avatar/url - change user avatar url
 + POST /users/profile-header - change user profile header
@@ -71,14 +72,14 @@ Authenticated
 + POST /saved-playlists - add playlist to saved
 + DELETE /saved-playlists - remove playlist from saved
 ___
-For moderators
+#### For moderators
 + POST /moderator/warning-mail/:**_username_** - send to user warning mail
 + PATCH /moderator/active/:**_username_** - change user active
 + GET /reports/:**_type_** - get report by type
 + PATCH /reports/:**_id_** - access report by id
 + DELETE /report/:**_id_** - decline report by id
 ___
-For admins
+#### For admins
 + GET /admin/user/:**_username_** - get user by username
 + PATCH /admin/user/:**_username_** - add to user moderator authority
 + DELETE /admin/user/:**_username_** - delete user by username
