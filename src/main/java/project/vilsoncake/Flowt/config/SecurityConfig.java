@@ -63,6 +63,7 @@ public class SecurityConfig {
                         .requestMatchers("/songs/**").authenticated()
                         .requestMatchers("/search/**").permitAll()
                         .requestMatchers("/reports").permitAll()
+                        .requestMatchers("/playlists/info/**").permitAll()
                         .requestMatchers("/reports/**").hasAnyAuthority(ADMIN.getAuthority(), MODERATOR.getAuthority())
                         .requestMatchers("/admin/**").hasAuthority(ADMIN.getAuthority())
                         .requestMatchers("/moderator/**").hasAnyAuthority(ADMIN.getAuthority(), MODERATOR.getAuthority())

@@ -5,10 +5,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import project.vilsoncake.Flowt.dto.PlaylistDto;
-import project.vilsoncake.Flowt.dto.PlaylistRequest;
-import project.vilsoncake.Flowt.dto.PlaylistNameDto;
-import project.vilsoncake.Flowt.dto.SongsListDto;
+import project.vilsoncake.Flowt.dto.*;
 import project.vilsoncake.Flowt.exception.InvalidExtensionException;
 import project.vilsoncake.Flowt.service.LastListenedPlaylistsService;
 import project.vilsoncake.Flowt.service.PlaylistChangeService;
@@ -31,6 +28,15 @@ public class PlaylistController {
             @PathVariable("playlistName") String playlistName
     ) {
         return ResponseEntity.ok(playListService.getPlaylistByNameAndUser(username, playlistName));
+    }
+
+    @GetMapping("/info/{username}")
+    public ResponseEntity<PlaylistsPageDto> getUserPlaylists(
+            @PathVariable("username") String username,
+            @RequestParam(required = false, defaultValue = "0") int page,
+            @RequestParam(required = false, defaultValue = "10") int size
+    ) {
+        return ResponseEntity.ok(playListService.getPublicPlaylistsByUser(username, page, size));
     }
 
     @GetMapping("/last-listened/{username}/{playlistName}")
