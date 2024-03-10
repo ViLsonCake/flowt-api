@@ -11,6 +11,7 @@ import project.vilsoncake.Flowt.exception.VerifyCodeNotFoundException;
 import project.vilsoncake.Flowt.service.ArtistVerifyService;
 import project.vilsoncake.Flowt.service.UserVerifyService;
 
+import java.io.IOException;
 import java.util.Map;
 
 @RestController
@@ -27,7 +28,7 @@ public class VerifyController {
     }
 
     @GetMapping("/password")
-    public ResponseEntity<Map<String, String>> changePassword(@RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authHeader) {
+    public ResponseEntity<Map<String, String>> changePassword(@RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authHeader) throws IOException {
         return ResponseEntity.ok(userVerifyService.sendChangePasswordMessageByUsername(authHeader));
     }
 
@@ -40,7 +41,7 @@ public class VerifyController {
     }
 
     @PostMapping("/restore-password")
-    public ResponseEntity<Map<String, String>> restorePassword(@RequestBody PasswordCodeDto restorePasswordDto) {
+    public ResponseEntity<Map<String, String>> restorePassword(@RequestBody PasswordCodeDto restorePasswordDto) throws IOException {
         return ResponseEntity.ok(userVerifyService.sendChangePasswordMessageByEmail(restorePasswordDto.getEmail()));
     }
 }

@@ -3,11 +3,12 @@ package project.vilsoncake.Flowt.service;
 import project.vilsoncake.Flowt.dto.*;
 import project.vilsoncake.Flowt.entity.*;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
 public interface UserService {
-    Map<String, String> addUser(RegistrationDto registrationDto);
+    Map<String, String> addUser(RegistrationDto registrationDto) throws IOException;
     AuthenticatedUserDto getAuthenticatedUserDto(String authHeader);
     ExtendedUserDto getAuthenticatedUserDtoByUsername(String username);
     UserDto getPublicUserDtoByUsername(String username);

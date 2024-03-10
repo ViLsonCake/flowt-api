@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body style="
+  font-family: 'Hind Siliguri', sans-serif;
+  background-color: #f5f5f5;
+  margin: 0;
+  padding: 0;
+">
+<div style="
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: #f5f5f5;
+    padding: 20px;
+    width: 500px;
+    position: relative;
+  ">
+    <div style="
+      height: 400px;
+      width: 400px;
+      background-color: #aad3ff;
+      border-radius: 50%;
+      opacity: 0.2;
+      margin-right: 20px;
+      position: absolute;
+      left: -80px;
+      bottom: 12px;
+      z-index: 1;
+    "></div>
+    <div style="
+      display: flex;
+      position: relative;
+      flex-direction: column;
+      align-items: center;
+      z-index: 2;
+    ">
+        <h1 style="
+      font-size: 26px;
+      font-weight: 700;
+      margin-bottom: 20px;
+    ">Hello, ${username}</h1>
+        <h2 style="
+        font-size: 26px;
+        font-weight: 700;
+        margin-bottom: 20px;
+      ">Verify your email</h2>
+        <p style="
+        font-size: 18px;
+        font-weight: 500;
+        margin-bottom: 20px;
+      ">Please click the link below to verify your email address.</p>
+        <a class="link" href="${verify-url}"
+           style="
+          height: 45px;
+          width: 200px;
+          background-color: #007bff;
+          color: #f5f5f5;
+          text-align: center;
+          font-size: 18px;
+          font-weight: 600;
+          border-radius: 5px;
+          margin-top: 20px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          outline: none;
+          text-decoration: none;
+          transition: 0.15s ease;
+        "
+           onmouseover="
+          this.style.backgroundColor='#0069d9';
+          this.style.color='#f5f5f5'
+        "
+           onmouseout="
+          this.style.backgroundColor='#007bff';
+          this.style.color='#f5f5f5';
+        "
+        >Verify email</a>
+    </div>
+    <div style="
+      height: 350px;
+      width: 350px;
+      background-color: #87c0fc;
+      opacity: 0.2;
+      border-radius: 50%;
+      margin-left: 20px;
+      right: -125px;
+      top: 125px;
+      position: absolute;
+      z-index: 1;
+    "></div>
+</div>
+</body>
+</html>

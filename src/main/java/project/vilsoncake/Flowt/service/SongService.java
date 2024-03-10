@@ -8,6 +8,7 @@ import project.vilsoncake.Flowt.entity.UserEntity;
 import project.vilsoncake.Flowt.entity.enumerated.Genre;
 import project.vilsoncake.Flowt.exception.MinioFileException;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -26,8 +27,8 @@ public interface SongService {
     SongsResponse getSongsByUsername(String username, int page, int size);
     SongsResponse getSongsByGenre(String genre, int page, int size);
     SongsResponse getSongsBySubstring(String substring, int page, int size);
-    byte[] getSongAudioFile(String author, String name) throws MinioFileException;
+    byte[] getSongAudioFile(String author, String name) throws MinioFileException, IOException;
     SongEntity findByNameAndUser(String name, UserEntity user);
     byte[] getSongAvatarBySongName(String username, String name) throws MinioFileException;
-    void incrementSongListens(SongEntity song, UserEntity user);
+    void incrementSongListens(SongEntity song, UserEntity user) throws IOException;
 }

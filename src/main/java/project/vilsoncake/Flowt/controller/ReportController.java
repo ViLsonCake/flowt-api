@@ -9,6 +9,7 @@ import project.vilsoncake.Flowt.dto.SendReportDto;
 import project.vilsoncake.Flowt.entity.enumerated.WhomReportType;
 import project.vilsoncake.Flowt.service.ReportService;
 
+import java.io.IOException;
 import java.util.Map;
 
 @RestController
@@ -36,7 +37,7 @@ public class ReportController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Map<String, String>> accessReport(@PathVariable("id") Long id) {
+    public ResponseEntity<Map<String, String>> accessReport(@PathVariable("id") Long id) throws IOException {
         return ResponseEntity.ok(reportService.accessReportById(id));
     }
 

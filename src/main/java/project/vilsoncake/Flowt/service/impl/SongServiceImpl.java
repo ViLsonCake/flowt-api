@@ -23,6 +23,7 @@ import project.vilsoncake.Flowt.utils.AuthUtils;
 import project.vilsoncake.Flowt.utils.MailUtils;
 import project.vilsoncake.Flowt.utils.SongUtils;
 
+import java.io.IOException;
 import java.util.*;
 
 @Service
@@ -230,7 +231,7 @@ public class SongServiceImpl implements SongService {
 
     @Transactional
     @Override
-    public byte[] getSongAudioFile(String author, String name) throws MinioFileException {
+    public byte[] getSongAudioFile(String author, String name) throws MinioFileException, IOException {
         UserEntity user = userService.getUserByUsername(author);
         SongEntity song = findByNameAndUser(name, user);
 
@@ -260,7 +261,7 @@ public class SongServiceImpl implements SongService {
 
     @Transactional
     @Override
-    public void incrementSongListens(SongEntity song, UserEntity user) {
+    public void incrementSongListens(SongEntity song, UserEntity user) throws IOException {
         song.setListens(song.getListens() + 1);
         mailUtils.sendCongratulationsMessagesIfNeed(song, user);
     }

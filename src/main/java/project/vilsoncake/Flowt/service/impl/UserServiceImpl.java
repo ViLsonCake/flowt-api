@@ -24,6 +24,7 @@ import project.vilsoncake.Flowt.service.UserVerifyService;
 import project.vilsoncake.Flowt.utils.AuthUtils;
 import project.vilsoncake.Flowt.utils.MailUtils;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -43,7 +44,7 @@ public class UserServiceImpl implements UserService {
     private final MailUtils mailUtils;
 
     @Override
-    public Map<String, String> addUser(RegistrationDto registrationDto) {
+    public Map<String, String> addUser(RegistrationDto registrationDto) throws IOException {
         // Handle exception
         if (userRepository.existsUserByUsername(registrationDto.getUsername())) {
             throw new UsernameAlreadyExistException("Username already exists");

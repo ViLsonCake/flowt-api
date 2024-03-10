@@ -1,26 +1,35 @@
 package project.vilsoncake.Flowt.service.impl;
 
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import project.vilsoncake.Flowt.property.ApplicationProperties;
-import project.vilsoncake.Flowt.entity.*;
+import project.vilsoncake.Flowt.entity.ReportEntity;
+import project.vilsoncake.Flowt.entity.UserEntity;
+import project.vilsoncake.Flowt.entity.VerifyCodeEntity;
 import project.vilsoncake.Flowt.entity.enumerated.NotificationType;
 import project.vilsoncake.Flowt.exception.AccountAlreadyVerifiedException;
 import project.vilsoncake.Flowt.exception.VerifyCodeNotFoundException;
+import project.vilsoncake.Flowt.property.ApplicationProperties;
 import project.vilsoncake.Flowt.repository.UserRepository;
 import project.vilsoncake.Flowt.repository.VerifyCodeRepository;
-import project.vilsoncake.Flowt.service.*;
+import project.vilsoncake.Flowt.service.MailVerifyService;
+import project.vilsoncake.Flowt.service.NotificationService;
+import project.vilsoncake.Flowt.service.RedisService;
+import project.vilsoncake.Flowt.service.UserVerifyService;
 import project.vilsoncake.Flowt.utils.AuthUtils;
 import project.vilsoncake.Flowt.utils.MailUtils;
 import project.vilsoncake.Flowt.utils.ReportUtils;
 
+import java.io.IOException;
 import java.util.Map;
-import java.util.UUID;
 
-import static project.vilsoncake.Flowt.constant.MessageConst.*;
+import static project.vilsoncake.Flowt.constant.MessageConst.RESTORE_PASSWORD_SUBJECT;
+import static project.vilsoncake.Flowt.constant.MessageConst.VERIFY_EMAIL_SUBJECT;
+import static project.vilsoncake.Flowt.constant.UrlConst.RESTORE_PASSWORD_TEMPLATE;
+import static project.vilsoncake.Flowt.constant.UrlConst.VERIFY_EMAIL_TEMPLATE;
 
 @Service
 @Slf4j
@@ -38,18 +47,27 @@ public class UserVerifyServiceImpl implements UserVerifyService {
     private final ReportUtils reportUtils;
 
     @Override
-    public Map<String, String> sendVerifyMailAndNotification(UserEntity user) {
-        // Send verify mail
+    public Map<String, String> sendVerifyMailAndNotification(UserEntity user) throws IOException {
+        String htmlTemplate = mailVerifyService.readFile(VERIFY_EMAIL_TEMPLATE);
+        String htmlCode = mailVerifyService.insertValuesInTemplate(
+                VERIFY_EMAIL_TEMPLATE,
+                htmlTemplate,
+                Map.of(
+                        "username", user.getUsername(),
+                        "url", applicationProperties.getVerifyUrl() + user.getVerifyCode().getCode()
+                )
+        );
+
         Thread mailThread = new Thread(() -> {
-            mailVerifyService.sendMessage(
-                    user.getEmail(),
-                    VERIFY_EMAIL_SUBJECT,
-                    String.format(
-                            VERIFY_EMAIL_TEXT,
-                            user.getUsername(),
-                            (applicationProperties.getVerifyUrl() + user.getVerifyCode().getCode())
-                    )
-            );
+            try {
+                mailVerifyService.sendMessage(
+                        user.getEmail(),
+                        VERIFY_EMAIL_SUBJECT,
+                        htmlCode
+                );
+            } catch (MessagingException | IOException e) {
+                throw new RuntimeException(e);
+            }
         });
         mailThread.start();
 
@@ -86,7 +104,7 @@ public class UserVerifyServiceImpl implements UserVerifyService {
     }
 
     @Override
-    public Map<String, String> sendChangePasswordMessageByUsername(String authHeader) {
+    public Map<String, String> sendChangePasswordMessageByUsername(String authHeader) throws IOException {
         String username = authUtils.getUsernameFromAuthHeader(authHeader);
         UserEntity user = userRepository.findByUsernameIgnoreCase(username).orElseThrow(() ->
                 new UsernameNotFoundException("User not found"));
@@ -94,16 +112,26 @@ public class UserVerifyServiceImpl implements UserVerifyService {
         // Generate code and save in redis
         String code = redisService.saveNewPasswordCode(username);
 
+        String htmlTemplate = mailVerifyService.readFile(RESTORE_PASSWORD_TEMPLATE);
+        String htmlCode = mailVerifyService.insertValuesInTemplate(
+                RESTORE_PASSWORD_TEMPLATE,
+                htmlTemplate,
+                Map.of(
+                        "username", username,
+                        "code", code
+                )
+        );
+
         Thread mailThread = new Thread(() -> {
-            mailVerifyService.sendMessage(
-                    user.getEmail(),
-                    RESTORE_PASSWORD_SUBJECT,
-                    String.format(
-                            RESTORE_PASSWORD_TEXT,
-                            user.getUsername(),
-                            code
-                    )
-            );
+            try {
+                mailVerifyService.sendMessage(
+                        user.getEmail(),
+                        RESTORE_PASSWORD_SUBJECT,
+                        htmlCode
+                );
+            } catch (MessagingException | IOException e) {
+                throw new RuntimeException(e);
+            }
         });
         mailThread.start();
 
@@ -111,23 +139,33 @@ public class UserVerifyServiceImpl implements UserVerifyService {
     }
 
     @Override
-    public Map<String, String> sendChangePasswordMessageByEmail(String email) {
+    public Map<String, String> sendChangePasswordMessageByEmail(String email) throws IOException {
         UserEntity user = userRepository.findByEmail(email).orElseThrow(() ->
                 new UsernameNotFoundException("User not found"));
 
         // Generate code and save in redis
         String code = redisService.saveNewPasswordCode(user.getUsername());
 
+        String htmlTemplate = mailVerifyService.readFile(RESTORE_PASSWORD_TEMPLATE);
+        String htmlCode = mailVerifyService.insertValuesInTemplate(
+                RESTORE_PASSWORD_TEMPLATE,
+                htmlTemplate,
+                Map.of(
+                        "username", user.getUsername(),
+                        "code", code
+                )
+        );
+
         Thread mailThread = new Thread(() -> {
-            mailVerifyService.sendMessage(
-                    user.getEmail(),
-                    RESTORE_PASSWORD_SUBJECT,
-                    String.format(
-                            RESTORE_PASSWORD_TEXT,
-                            user.getUsername(),
-                            code
-                    )
-            );
+            try {
+                mailVerifyService.sendMessage(
+                        user.getEmail(),
+                        RESTORE_PASSWORD_SUBJECT,
+                        htmlCode
+                );
+            } catch (MessagingException | IOException e) {
+                throw new RuntimeException(e);
+            }
         });
         mailThread.start();
 
@@ -135,14 +173,29 @@ public class UserVerifyServiceImpl implements UserVerifyService {
     }
 
     @Override
-    public boolean sendWarningMessage(ReportEntity report) {
+    public boolean sendWarningMessage(ReportEntity report) throws IOException {
         String message = reportUtils.createReportMessage(report);
+
+        String htmlTemplate = mailVerifyService.readFile(RESTORE_PASSWORD_TEMPLATE);
+        String htmlCode = mailVerifyService.insertValuesInTemplate(
+                RESTORE_PASSWORD_TEMPLATE,
+                htmlTemplate,
+                Map.of(
+                        "username", report.getWhom().getUsername(),
+                        "message", message
+                )
+        );
+
         Thread mailThread = new Thread(() -> {
-            mailVerifyService.sendMessage(
-                    report.getWhom().getEmail(),
-                    "Flowt warning",
-                    message
-            );
+            try {
+                mailVerifyService.sendMessage(
+                        report.getWhom().getEmail(),
+                        "Flowt warning",
+                        htmlCode
+                );
+            } catch (MessagingException | IOException e) {
+                throw new RuntimeException(e);
+            }
         });
         mailThread.start();
         notificationService.addNotification(
@@ -151,13 +204,5 @@ public class UserVerifyServiceImpl implements UserVerifyService {
                 report.getWhom()
         );
         return true;
-    }
-
-    private String generateCode() {
-        String uuid;
-        do {
-            uuid = UUID.randomUUID().toString();
-        } while (verifyCodeRepository.existsByCode(uuid));
-        return uuid;
     }
 }

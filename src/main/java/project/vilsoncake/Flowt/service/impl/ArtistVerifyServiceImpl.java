@@ -1,5 +1,6 @@
 package project.vilsoncake.Flowt.service.impl;
 
+import jakarta.mail.MessagingException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -23,10 +24,12 @@ import project.vilsoncake.Flowt.service.MailVerifyService;
 import project.vilsoncake.Flowt.service.UserService;
 import project.vilsoncake.Flowt.utils.AuthUtils;
 
+import java.io.IOException;
 import java.util.Map;
 
 import static project.vilsoncake.Flowt.constant.MessageConst.ARTIST_VERIFY_MESSAGE;
 import static project.vilsoncake.Flowt.constant.MessageConst.ARTIST_VERIFY_SUBJECT;
+import static project.vilsoncake.Flowt.constant.UrlConst.VERIFY_EMAIL_TEMPLATE;
 
 @Service
 @RequiredArgsConstructor
@@ -75,7 +78,7 @@ public class ArtistVerifyServiceImpl implements ArtistVerifyService {
 
     @Transactional
     @Override
-    public Map<String, String> verifyArtistByUsername(String username) {
+    public Map<String, String> verifyArtistByUsername(String username) throws IOException {
         UserEntity user = userService.getUserByUsername(username);
         user.setArtistVerify(true);
 
@@ -88,15 +91,25 @@ public class ArtistVerifyServiceImpl implements ArtistVerifyService {
 
         artistVerifyRequest.setChecked(true);
 
+        String htmlTemplate = mailVerifyService.readFile(VERIFY_EMAIL_TEMPLATE);
+        String htmlCode = mailVerifyService.insertValuesInTemplate(
+                VERIFY_EMAIL_TEMPLATE,
+                htmlTemplate,
+                Map.of(
+                        "username", user.getUsername()
+                )
+        );
+
         Thread mailThread = new Thread(() -> {
-            mailVerifyService.sendMessage(
-                    user.getEmail(),
-                    ARTIST_VERIFY_SUBJECT,
-                    String.format(
-                            ARTIST_VERIFY_MESSAGE,
-                            user.getUsername()
-                    )
-            );
+            try {
+                mailVerifyService.sendMessage(
+                        user.getEmail(),
+                        ARTIST_VERIFY_SUBJECT,
+                        htmlCode
+                );
+            } catch (MessagingException | IOException e) {
+                throw new RuntimeException(e);
+            }
         });
         mailThread.start();
 

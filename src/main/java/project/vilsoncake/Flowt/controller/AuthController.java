@@ -9,6 +9,7 @@ import project.vilsoncake.Flowt.dto.*;
 import project.vilsoncake.Flowt.service.AuthService;
 import project.vilsoncake.Flowt.service.UserService;
 
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Map;
 
@@ -21,7 +22,7 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/registration")
-    public ResponseEntity<Map<String, String>> registrationUser(@RequestBody RegistrationDto registrationDto) {
+    public ResponseEntity<Map<String, String>> registrationUser(@RequestBody RegistrationDto registrationDto) throws IOException {
         return ResponseEntity.ok(userService.addUser(registrationDto));
     }
 

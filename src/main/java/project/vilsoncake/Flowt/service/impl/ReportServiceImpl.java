@@ -17,6 +17,7 @@ import project.vilsoncake.Flowt.repository.ReportRepository;
 import project.vilsoncake.Flowt.service.*;
 import project.vilsoncake.Flowt.utils.AuthUtils;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.Map;
 
@@ -72,7 +73,7 @@ public class ReportServiceImpl implements ReportService {
 
     @Transactional
     @Override
-    public Map<String, String> accessReportById(Long id) {
+    public Map<String, String> accessReportById(Long id) throws IOException {
         if (reportRepository.findById(id).isEmpty()) {
             throw new ReportNotFoundException(String.format("Report with id %s not found", id));
         }

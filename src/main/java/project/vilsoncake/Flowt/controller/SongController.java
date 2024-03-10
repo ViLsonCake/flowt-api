@@ -16,6 +16,7 @@ import project.vilsoncake.Flowt.exception.MinioFileException;
 import project.vilsoncake.Flowt.service.SongChangeService;
 import project.vilsoncake.Flowt.service.SongService;
 
+import java.io.IOException;
 import java.util.Map;
 
 @RestController
@@ -38,7 +39,7 @@ public class SongController {
     public ResponseEntity<byte[]> getSongAudioFile(
             @PathVariable("author") String author,
             @PathVariable("songName") String songName
-    ) throws MinioFileException {
+    ) throws MinioFileException, IOException {
         byte[] bytes = songService.getSongAudioFile(author, songName);
 
         return ResponseEntity.ok()

@@ -7,6 +7,7 @@ import project.vilsoncake.Flowt.dto.ArtistVerifyPageDto;
 import project.vilsoncake.Flowt.service.ArtistVerifyService;
 import project.vilsoncake.Flowt.service.UserChangeService;
 
+import java.io.IOException;
 import java.util.Map;
 
 @RestController
@@ -31,7 +32,7 @@ public class ModeratorController {
     }
 
     @PatchMapping("/artist/{username}")
-    public ResponseEntity<Map<String, String>> verifyArtist(@PathVariable("username") String username) {
+    public ResponseEntity<Map<String, String>> verifyArtist(@PathVariable("username") String username) throws IOException {
         return ResponseEntity.ok(artistVerifyService.verifyArtistByUsername(username));
     }
 
